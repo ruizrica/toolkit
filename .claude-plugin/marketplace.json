@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "ricardo-claude-config",
+  "version": "1.0.0",
+  "description": "A marketplace of Claude Code plugins featuring multi-agent orchestration, TDD workflows, and advanced productivity commands",
+  "owner": {
+    "name": "Ricardo"
+  },
+  "plugins": [
+    {
+      "name": "rr-config",
+      "version": "1.0.0",
+      "source": "./plugins/rr-config",
+      "description": "Complete Claude Code power-user configuration with multi-agent orchestration, TDD workflows, and advanced productivity commands"
+    }
+  ]
+}

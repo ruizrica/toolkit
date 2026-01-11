@@ -1,0 +1,27 @@
+{
+  "name": "rr-config",
+  "description": "Complete Claude Code power-user configuration with multi-agent orchestration, TDD workflows, and advanced productivity commands",
+  "version": "1.0.0",
+  "author": {
+    "name": "Ricardo"
+  },
+  "agents": [
+    "./agents/gemini-agent.md",
+    "./agents/cursor-agent.md",
+    "./agents/codex-agent.md",
+    "./agents/qwen-agent.md",
+    "./agents/opencode-agent.md",
+    "./agents/groq-agent.md",
+    "./agents/crush-agent.md",
+    "./agents/droid-agent.md"
+  ],
+  "commands": [
+    "./commands/team.md",
+    "./commands/review.md",
+    "./commands/handbook.md",
+    "./commands/@implement.md",
+    "./commands/save.md",
+    "./commands/stable.md",
+    "./commands/haiku.md"
+  ]
+}
