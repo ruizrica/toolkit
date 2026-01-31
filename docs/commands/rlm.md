@@ -127,5 +127,4 @@ Each chunk analyzer returns structured JSON:
 
 ## See Also
 
-- [rlm-subcall agent](../agents/rlm-subcall.md) - The chunk analyzer
 - [gemini-agent](../agents/gemini.md) - Alternative for large codebases (1M tokens)

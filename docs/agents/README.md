@@ -1,6 +1,6 @@
 # Agents Overview
 
-The Toolkit includes 9 specialized agents that can be invoked via the Task tool. Each agent is optimized for specific use cases and leverages different AI models and CLI tools.
+The Toolkit includes 8 specialized agents that can be invoked as slash commands. Each agent is optimized for specific use cases and leverages different AI models and CLI tools.
 
 ## Quick Reference
 
@@ -14,7 +14,6 @@ The Toolkit includes 9 specialized agents that can be invoked via the Task tool.
 | [groq-agent](groq.md) | Fast inference | Groq CLI | Quick completions, rapid iteration |
 | [crush-agent](crush.md) | Media optimization | Crush CLI | Image/video compression |
 | [droid-agent](droid.md) | Enterprise development | Droid CLI | Architecture, enterprise integration |
-| [rlm-subcall](rlm-subcall.md) | Document chunk analysis | N/A | RLM workflow support |
 
 ---
 
@@ -53,9 +52,6 @@ The format is: `/toolkit:<agent-name> <your prompt>`
 
 **Media Processing**
 - [crush-agent](crush.md) - Image and video compression
-
-**Document Processing**
-- [rlm-subcall](rlm-subcall.md) - Chunk analysis for RLM workflow
 
 ---
 

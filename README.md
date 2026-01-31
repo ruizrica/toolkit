@@ -106,7 +106,6 @@ Runs CodeRabbit review, creates parallel fix tasks, and verifies completion.
 | **groq-agent** | Fast inference, rapid iteration | [→](docs/agents/groq.md) |
 | **crush-agent** | Media compression/optimization | [→](docs/agents/crush.md) |
 | **droid-agent** | Enterprise development, Jira/Notion | [→](docs/agents/droid.md) |
-| **rlm-subcall** | Document chunk analysis for /rlm | [→](docs/agents/rlm-subcall.md) |
 
 ### Using Agents
 
