@@ -1,27 +1,17 @@
-# Toolkit
+<p align="center">
+  <img src="toolkit.png" alt="Toolkit" width="400">
+</p>
 
-A marketplace of Claude Code plugins featuring multi-agent orchestration, TDD workflows, and advanced productivity commands.
+<p align="center">
+  <strong>A Claude Code plugin with multi-agent orchestration, TDD workflows, and advanced productivity commands.</strong>
+</p>
 
-## Plugins
+---
 
-| Plugin | Description |
-|--------|-------------|
-| **[toolkit](plugins/toolkit/)** | Complete power-user configuration with 8 specialized agents, 6 core commands, and 7 optional MCP commands |
-
-## Features
-
-- **8 Specialized Agents** - Leverage different AI models and tools for specific tasks
-- **6 Core Commands** - Productivity workflows for common development tasks
-- **7 Optional MCP Commands** - Advanced orchestration requiring external MCP servers
-- **TDD-First Philosophy** - Global instructions emphasizing test-driven development
-- **Context Fork Support** - All commands use Claude Code 2.1's isolated context feature
-
-## Quick Start
-
-### Installation
+## Installation
 
 ```bash
-# Clone this marketplace
+# Clone this repository
 git clone https://github.com/ruizrica/toolkit.git
 
 # Install the toolkit plugin
@@ -30,10 +20,7 @@ claude plugins add ./toolkit/plugins/toolkit
 
 ### Setup Scripts (Required for /handbook and /review)
 
-The `/handbook` and `/review` commands require Python scripts:
-
 ```bash
-# Copy scripts to your Claude slash_commands directory
 mkdir -p ~/.claude/slash_commands
 cp plugins/toolkit/scripts/handbook.py ~/.claude/slash_commands/
 cp plugins/toolkit/scripts/coderabbit_workflow.py ~/.claude/slash_commands/
@@ -41,38 +28,60 @@ cp plugins/toolkit/scripts/coderabbit_workflow.py ~/.claude/slash_commands/
 
 ---
 
-## Commands Reference
+## Commands (12)
 
 ### Core Commands
 
-| Command | Description | Usage |
-|---------|-------------|-------|
-| `/team` | Coordinate multi-agent team for parallel feature implementation | `/team [feature description]` |
-| `/review` | CodeRabbit review + parallel fixes + verification | `/review [--base main] [--type all]` |
-| `/handbook` | Generate comprehensive project handbook | `/handbook [--path .] [--output HANDBOOK.md]` |
-| `/@implement` | Process @implement comments into documentation | `/@implement [file or directory]` |
-| `/save` | Git: stage, commit, rebase, merge | `/save` |
-| `/stable` | Create stable checkpoint with tags/branches | `/stable [checkpoint name]` |
+| Command | Description |
+|---------|-------------|
+| `/team` | Coordinate multi-agent team for parallel feature implementation |
+| `/review` | CodeRabbit review + parallel fixes + verification |
+| `/handbook` | Generate comprehensive AI-optimized project handbook |
+| `/@implement` | Process @implement comments in code into documentation |
+| `/haiku` | Spawn team of 10 Haiku agents managed by Opus |
+| `/rlm` | Recursive Language Model workflow for large documents |
+| `/gherkin` | Extract business rules from code into Gherkin specs |
 
-### Optional MCP Commands
+### Session Management
 
-These commands require external MCP servers (Commander, Photon):
+| Command | Description |
+|---------|-------------|
+| `/compact` | Save minimal session state before `/clear` |
+| `/restore` | Restore session from `.plans/session-state.json` |
 
-| Command | Description | Requires |
-|---------|-------------|----------|
-| `/commander-task` | Plan and execute single task with full tracking | Commander MCP |
-| `/commander-plan` | Break down features into CodeRabbit-style microtasks | Commander MCP |
-| `/commander-execute` | Execute pending tasks with intelligent orchestration | Commander MCP |
-| `/photon-compact` | Compact session state before context limits | Photon MCP |
-| `/photon-restore` | Restore session from Photon snapshot | Photon MCP |
-| `/photon-index` | Index codebase for semantic search | Photon MCP |
-| `/haiku` | Spawn team of Haiku agents managed by Opus | - |
+### Git Workflow
+
+| Command | Description |
+|---------|-------------|
+| `/setup` | Create WIP branch and worktree for isolated development |
+| `/save` | Commit changes, merge WIP to main, cleanup worktree |
+| `/stable` | Create stable checkpoint with tags and documentation |
 
 ---
 
-## Agents Reference
+## Optional MCP Commands (6)
 
-### Available Agents
+These commands require external MCP servers (Commander or Photon):
+
+### Commander MCP
+
+| Command | Description |
+|---------|-------------|
+| `/commander-task` | Plan and execute single task with full tracking |
+| `/commander-plan` | Break down features into CodeRabbit-style microtasks |
+| `/commander-execute` | Execute pending tasks with intelligent orchestration |
+
+### Photon MCP
+
+| Command | Description |
+|---------|-------------|
+| `/photon-compact` | Compact session state to Photon memory |
+| `/photon-restore` | Restore session from Photon snapshot |
+| `/photon-index` | Index codebase for semantic search |
+
+---
+
+## Agents (9)
 
 | Agent | Specialty | Best For |
 |-------|-----------|----------|
@@ -84,18 +93,17 @@ These commands require external MCP servers (Commander, Photon):
 | **groq-agent** | Fast inference, lightweight tasks | Quick code completions, rapid iteration |
 | **crush-agent** | Media compression/optimization | Image/video optimization, compression quality |
 | **droid-agent** | Enterprise code generation | Architecture analysis, enterprise workflows |
+| **rlm-subcall** | Chunk analysis for RLM workflow | Processing large documents in chunks |
 
 ### Using Agents
 
 Agents are invoked via the Task tool:
 
 ```
-Use Task tool with:
-- subagent_type: "gemini-agent"
+Task tool with:
+- subagent_type: "toolkit:gemini-agent"
 - prompt: "Analyze the authentication module..."
 ```
-
-Or reference in commands for automatic selection based on task type.
 
 ---
 
@@ -103,17 +111,31 @@ Or reference in commands for automatic selection based on task type.
 
 ### /team - Multi-Agent Coordination
 
-Spawns multiple agents to work on a feature in parallel:
+Spawns multiple specialized agents to work on a feature in parallel:
 
 ```bash
 /team Implement user authentication with OAuth support
 ```
 
 **Workflow:**
-1. Parses feature requirements
-2. Creates parallel agent tasks
+1. Analyzes task and breaks into parallel work streams
+2. Spawns relevant agents (gemini, cursor, codex, qwen, etc.)
 3. Coordinates implementation across agents
 4. Synthesizes results
+
+### /haiku - Haiku Team
+
+Orchestrates a team of 10 Haiku agents managed by Opus:
+
+```bash
+/haiku Analyze and document all API endpoints
+```
+
+**Team Structure:**
+- 1 Opus orchestrator
+- 4 Context Haiku agents (parallel context gathering)
+- 4 Implementation Haiku agents (parallel execution)
+- 2 Validator Haiku agents (verification)
 
 ### /review - CodeRabbit Review Workflow
 
@@ -126,7 +148,6 @@ Orchestrates complete code review and fix workflow:
 **Options:**
 - `--base <branch>` - Branch to compare against (default: main)
 - `--type <all|committed|uncommitted>` - What to review
-- `--verify-only` - Run verification without fixes
 
 **Workflow:**
 1. Run CodeRabbit review
@@ -134,7 +155,36 @@ Orchestrates complete code review and fix workflow:
 3. Create parallel fix tasks
 4. Apply fixes concurrently
 5. Verify all issues resolved
-6. Commit changes
+
+### /gherkin - Business Logic Capture
+
+Extract business rules from code into living Gherkin documentation:
+
+```bash
+/gherkin ./src/pages                              # Code analysis only
+/gherkin ./src --url http://localhost:3000        # Code + visual analysis
+/gherkin validate ./src --against .specs/auth.feature  # Validate implementation
+```
+
+**Features:**
+- Parallel Haiku agents analyze pages, components, APIs, and UI
+- Generates `.specs/` folder with feature files
+- Supports validation mode to check code against specs
+- Uses `agent-browser` for visual analysis (auto-installed if needed)
+
+### /rlm - Recursive Language Model
+
+Process very large documents that exceed context limits:
+
+```bash
+/rlm context=./large_contract.pdf query="What are the termination clauses?"
+```
+
+**Architecture:**
+- Root LLM orchestrates the workflow
+- Python REPL handles chunking and state
+- Sub-LLM (Haiku) analyzes chunks in parallel
+- Results synthesized into final answer
 
 ### /handbook - Project Documentation
 
@@ -143,11 +193,6 @@ Generates comprehensive AI-optimized project handbook:
 ```bash
 /handbook --path ./my-project --output HANDBOOK.md
 ```
-
-**Options:**
-- `--path <path>` - Project path (default: current directory)
-- `--output <file>` - Output filename
-- `--verbose` - Show detailed progress
 
 **Output Structure:**
 - Layer 1: System Overview (Purpose, Tech Stack, Architecture)
@@ -180,19 +225,30 @@ function validateEmail(email: string): boolean {
 }
 ```
 
-### /save - Git Workflow
+### /setup + /save - Git Worktree Workflow
 
-Streamlined git workflow command:
+Isolated development using git worktrees:
 
 ```bash
-/save
+/setup   # Creates wip-YYYYMMDD-HHMMSS branch and ../project-wip worktree
+# ... do your work ...
+/save    # Commits, merges to main, cleans up worktree and branch
 ```
 
-**Actions:**
-1. Stage all changes
-2. Generate descriptive commit message
-3. Rebase from main branch
-4. Merge to main
+**Benefits:**
+- Keep main branch clean
+- Isolated development environment
+- Automatic cleanup on merge
+
+### /compact + /restore - Session Management
+
+Save and restore session state across `/clear`:
+
+```bash
+/compact  # Before /clear - saves state to .plans/session-state.json
+/clear    # Clear context
+/restore  # Resume seamlessly - immediately continues work
+```
 
 ### /stable - Checkpoint Creation
 
@@ -203,44 +259,9 @@ Creates stable checkpoint with documentation:
 ```
 
 **Creates:**
-- Git tag with annotation
-- Feature branch backup
+- Annotated git tag: `stable-YYYYMMDD-HHMMSS`
+- Checkpoint branch
 - Checkpoint documentation
-
----
-
-## Context Fork
-
-All commands use `context: fork` (Claude Code 2.1 feature) which:
-
-- Runs commands in **isolated sub-agent context**
-- Keeps main conversation **clean and uncluttered**
-- Returns only **final results** to main thread
-- Uses **general-purpose** agent type for broad capabilities
-
----
-
-## CLAUDE.md Philosophy
-
-The included `CLAUDE.md` establishes:
-
-### Core Principles
-- Pragmatic, simplicity-first approach
-- Smallest changes to achieve goals
-- Never rewrite without permission
-- TDD for all development
-
-### Code Standards
-- ABOUTME comments in all files
-- Match existing code style
-- No over-engineering
-- Root cause debugging only
-
-### Testing Requirements
-- Write failing tests first
-- Unit, integration, AND E2E tests
-- Never mock in E2E tests
-- Test output must be pristine
 
 ---
 
@@ -252,8 +273,9 @@ toolkit/
 │   └── marketplace.json      # Marketplace manifest
 ├── plugins/
 │   └── toolkit/              # Main plugin
-│       ├── plugin.json       # Plugin metadata
-│       ├── agents/           # 8 specialized agents
+│       ├── .claude-plugin/
+│       │   └── plugin.json   # Plugin metadata
+│       ├── agents/           # 9 specialized agents
 │       │   ├── gemini-agent.md
 │       │   ├── cursor-agent.md
 │       │   ├── codex-agent.md
@@ -261,28 +283,34 @@ toolkit/
 │       │   ├── opencode-agent.md
 │       │   ├── groq-agent.md
 │       │   ├── crush-agent.md
-│       │   └── droid-agent.md
-│       ├── commands/         # 6 core commands
+│       │   ├── droid-agent.md
+│       │   └── rlm-subcall.md
+│       ├── commands/         # 12 commands
 │       │   ├── team.md
 │       │   ├── review.md
 │       │   ├── handbook.md
 │       │   ├── @implement.md
+│       │   ├── setup.md
 │       │   ├── save.md
-│       │   └── stable.md
-│       ├── scripts/          # Python scripts for commands
+│       │   ├── stable.md
+│       │   ├── haiku.md
+│       │   ├── rlm.md
+│       │   ├── compact.md
+│       │   ├── restore.md
+│       │   └── gherkin.md
+│       ├── scripts/          # Python scripts
 │       │   ├── handbook.py
-│       │   └── coderabbit_workflow.py
+│       │   ├── coderabbit_workflow.py
+│       │   └── rlm_repl.py
 │       └── optional/         # MCP-dependent commands
 │           ├── commander-task.md
 │           ├── commander-plan.md
 │           ├── commander-execute.md
 │           ├── photon-compact.md
 │           ├── photon-restore.md
-│           ├── photon-index.md
-│           └── haiku.md
+│           └── photon-index.md
 ├── CLAUDE.md                 # Global instructions template
-├── README.md                 # This documentation
-├── README.html               # HTML version
+├── toolkit.png               # Logo
 └── LICENSE                   # MIT license
 ```
 
@@ -292,58 +320,15 @@ toolkit/
 
 ### Core Commands
 - Claude Code 2.1+
-- Python 3.8+ (for /handbook and /review scripts)
+- Python 3.8+ (for /handbook, /review, /rlm scripts)
 
-### Optional MCP Commands
-- **Commander MCP** - Task orchestration server
-- **Photon MCP** - Memory and semantic search server
-
----
-
-## Customization
-
-### Modifying Commands
-
-Edit markdown files in `commands/` directory. Command frontmatter format:
-
-```yaml
----
-description: "What the command does"
-argument-hint: "[arguments format]"
-allowed-tools: ["Tool1", "Tool2"]
-context: fork
-agent: general-purpose
----
-```
-
-### Adding Agents
-
-Create new `.md` files in `agents/` directory. Agent format:
-
-```yaml
----
-name: my-agent
-description: What this agent specializes in
-model: claude-sonnet-4-5
----
-
-# Agent Name
-
-System prompt and instructions...
-```
-
-### Updating CLAUDE.md
-
-Modify `CLAUDE.md` to match your team's conventions and workflows.
+### Optional
+- **agent-browser** - For /gherkin visual analysis (`npm install -g agent-browser`)
+- **Commander MCP** - For task orchestration commands
+- **Photon MCP** - For memory and semantic search commands
 
 ---
 
 ## License
 
 MIT License - See [LICENSE](LICENSE) file.
-
----
-
-## Credits
-
-Created by Ricardo for productive Claude Code development workflows.

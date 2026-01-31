@@ -10,7 +10,7 @@ claude plugins add ./plugins/toolkit
 
 ## Contents
 
-### Agents (8)
+### Agents (9)
 
 | Agent | Specialty |
 |-------|-----------|
@@ -22,8 +22,9 @@ claude plugins add ./plugins/toolkit
 | groq-agent | Fast inference, lightweight tasks |
 | crush-agent | Media compression/optimization |
 | droid-agent | Enterprise code generation |
+| rlm-subcall | Chunk analysis for RLM workflow |
 
-### Commands (6)
+### Commands (12)
 
 | Command | Description |
 |---------|-------------|
@@ -31,10 +32,16 @@ claude plugins add ./plugins/toolkit
 | `/review` | CodeRabbit review + parallel fixes + verification |
 | `/handbook` | Generate comprehensive project handbook |
 | `/@implement` | Process @implement comments into documentation |
-| `/save` | Git: stage, commit, rebase, merge |
-| `/stable` | Create stable checkpoint with tags/branches |
+| `/haiku` | Spawn team of 10 Haiku agents managed by Opus |
+| `/rlm` | Recursive Language Model for large documents |
+| `/gherkin` | Extract business rules into Gherkin specs |
+| `/setup` | Create WIP branch and worktree |
+| `/save` | Commit, merge WIP to main, cleanup |
+| `/stable` | Create stable checkpoint with tags |
+| `/compact` | Save session state before /clear |
+| `/restore` | Restore session from saved state |
 
-### Optional MCP Commands (7)
+### Optional MCP Commands (6)
 
 Located in `optional/` - require Commander or Photon MCP servers:
 
@@ -46,7 +53,6 @@ Located in `optional/` - require Commander or Photon MCP servers:
 | `/photon-compact` | Photon MCP |
 | `/photon-restore` | Photon MCP |
 | `/photon-index` | Photon MCP |
-| `/haiku` | - |
 
 ## Setup Scripts
 

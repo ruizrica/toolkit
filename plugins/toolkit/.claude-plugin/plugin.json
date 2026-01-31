@@ -27,6 +27,7 @@
     "./commands/haiku.md",
     "./commands/rlm.md",
     "./commands/compact.md",
-    "./commands/restore.md"
+    "./commands/restore.md",
+    "./commands/gherkin.md"
   ]
 }
