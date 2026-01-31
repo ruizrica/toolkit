@@ -97,37 +97,3 @@ The format is: `/toolkit:<agent-name> <your prompt>`
 | Enterprise | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | N/A | ✅ |
 | Offline | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
 | Speed | Medium | Medium | Medium | Medium | Varies | Fast | Fast | Medium |
-
----
-
-## Common Patterns
-
-### Investigation → Implementation
-
-1. Use [gemini-agent](gemini.md) to analyze codebase architecture
-2. Use [codex-agent](codex.md) to generate new code
-3. Use [cursor-agent](cursor.md) to review and refactor
-
-### Cost-Optimized Workflow
-
-1. Start with [groq-agent](groq.md) for quick prototypes
-2. Use [opencode-agent](opencode.md) with budget models for iteration
-3. Escalate to premium models only when needed
-
-### Enterprise Workflow
-
-1. Use [droid-agent](droid.md) with Jira integration
-2. Follow transparent review process
-3. Maintain audit trail
-
----
-
-## Requirements
-
-Most agents auto-install their CLI tools. Common requirements:
-
-- **Node.js 18+** - For npm-based CLIs
-- **Python 3.8+** - For some agents
-- **API Keys** - Each agent requires appropriate API credentials
-
-See individual agent documentation for specific setup instructions.
