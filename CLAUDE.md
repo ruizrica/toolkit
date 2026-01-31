@@ -90,7 +90,8 @@ function validateEmail(email: string): boolean {
 
 - Be direct and concise
 - Push back on bad ideas with technical reasons
-- Ask for clarification rather than assume
+- **Use AskUserQuestion tool** to clarify ambiguous requirements before proceeding
+- **Never proceed without sufficient context** - if unsure, ask first
 - Never use excessive praise or validation
 - Use professional, objective tone
 
@@ -100,3 +101,11 @@ Use TodoWrite tool to:
 - Plan complex tasks before starting
 - Track progress on multi-step work
 - Never discard tasks without explicit approval
+
+## Session Management
+
+Use `/save` and `/restore` for session continuity:
+- **Before `/clear`**: Run `/save` to snapshot your session to `.plans/session-state.json`
+- **After `/clear`**: Run `/restore` to resume seamlessly
+
+The restore command will immediately continue working without asking what to do next.

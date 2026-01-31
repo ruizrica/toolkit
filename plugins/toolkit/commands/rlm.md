@@ -29,15 +29,15 @@ If arguments are missing, ask the user for:
 ### 1. Initialize the REPL
 
 ```bash
-python3 ~/.claude/plugins/cache/rr-tools/rr-config/scripts/rlm_repl.py init <context_path>
-python3 ~/.claude/plugins/cache/rr-tools/rr-config/scripts/rlm_repl.py status
+python3 ~/.claude/plugins/cache/toolkit/toolkit/scripts/rlm_repl.py init <context_path>
+python3 ~/.claude/plugins/cache/toolkit/toolkit/scripts/rlm_repl.py status
 ```
 
 ### 2. Scout the Context
 
 ```bash
-python3 ~/.claude/plugins/cache/rr-tools/rr-config/scripts/rlm_repl.py exec -c "print(peek(0, 3000))"
-python3 ~/.claude/plugins/cache/rr-tools/rr-config/scripts/rlm_repl.py exec -c "print(peek(len(content)-3000, len(content)))"
+python3 ~/.claude/plugins/cache/toolkit/toolkit/scripts/rlm_repl.py exec -c "print(peek(0, 3000))"
+python3 ~/.claude/plugins/cache/toolkit/toolkit/scripts/rlm_repl.py exec -c "print(peek(len(content)-3000, len(content)))"
 ```
 
 ### 3. Choose a Chunking Strategy
@@ -48,7 +48,7 @@ python3 ~/.claude/plugins/cache/rr-tools/rr-config/scripts/rlm_repl.py exec -c "
 ### 4. Materialize Chunks
 
 ```bash
-python3 ~/.claude/plugins/cache/rr-tools/rr-config/scripts/rlm_repl.py exec <<'PY'
+python3 ~/.claude/plugins/cache/toolkit/toolkit/scripts/rlm_repl.py exec <<'PY'
 paths = write_chunks('.claude/rlm_state/chunks', size=150000, overlap=500)
 print(f"Created {len(paths)} chunks")
 print(paths)
@@ -61,7 +61,7 @@ For each chunk file, spawn the `rlm-subcall` agent:
 
 ```
 Task tool with:
-- subagent_type: "rr-config:rlm-subcall"
+- subagent_type: "toolkit:rlm-subcall"
 - model: haiku
 - prompt: Include the query and chunk file path
 ```

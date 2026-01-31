@@ -1,4 +1,4 @@
-# Ricardo's Claude Code Configuration
+# Toolkit
 
 A marketplace of Claude Code plugins featuring multi-agent orchestration, TDD workflows, and advanced productivity commands.
 
@@ -6,7 +6,7 @@ A marketplace of Claude Code plugins featuring multi-agent orchestration, TDD wo
 
 | Plugin | Description |
 |--------|-------------|
-| **[rr-config](plugins/rr-config/)** | Complete power-user configuration with 8 specialized agents, 6 core commands, and 7 optional MCP commands |
+| **[toolkit](plugins/toolkit/)** | Complete power-user configuration with 8 specialized agents, 6 core commands, and 7 optional MCP commands |
 
 ## Features
 
@@ -22,10 +22,10 @@ A marketplace of Claude Code plugins featuring multi-agent orchestration, TDD wo
 
 ```bash
 # Clone this marketplace
-git clone https://github.com/ricardo/ricardo-claude-config.git
+git clone https://github.com/ruizrica/toolkit.git
 
-# Install the rr-config plugin
-claude plugins add ./ricardo-claude-config/plugins/rr-config
+# Install the toolkit plugin
+claude plugins add ./toolkit/plugins/toolkit
 ```
 
 ### Setup Scripts (Required for /handbook and /review)
@@ -35,8 +35,8 @@ The `/handbook` and `/review` commands require Python scripts:
 ```bash
 # Copy scripts to your Claude slash_commands directory
 mkdir -p ~/.claude/slash_commands
-cp plugins/rr-config/scripts/handbook.py ~/.claude/slash_commands/
-cp plugins/rr-config/scripts/coderabbit_workflow.py ~/.claude/slash_commands/
+cp plugins/toolkit/scripts/handbook.py ~/.claude/slash_commands/
+cp plugins/toolkit/scripts/coderabbit_workflow.py ~/.claude/slash_commands/
 ```
 
 ---
@@ -247,11 +247,11 @@ The included `CLAUDE.md` establishes:
 ## Directory Structure
 
 ```
-ricardo-claude-config/
+toolkit/
 ├── .claude-plugin/
 │   └── marketplace.json      # Marketplace manifest
 ├── plugins/
-│   └── rr-config/            # Main plugin
+│   └── toolkit/              # Main plugin
 │       ├── plugin.json       # Plugin metadata
 │       ├── agents/           # 8 specialized agents
 │       │   ├── gemini-agent.md

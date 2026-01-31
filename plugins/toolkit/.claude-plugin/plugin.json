@@ -1,5 +1,5 @@
 {
-  "name": "rr-tools",
+  "name": "toolkit",
   "description": "Complete Claude Code power-user configuration with multi-agent orchestration, TDD workflows, and advanced productivity commands",
   "version": "1.0.0",
   "author": {
@@ -21,9 +21,12 @@
     "./commands/review.md",
     "./commands/handbook.md",
     "./commands/@implement.md",
+    "./commands/setup.md",
     "./commands/save.md",
     "./commands/stable.md",
     "./commands/haiku.md",
-    "./commands/rlm.md"
+    "./commands/rlm.md",
+    "./commands/compact.md",
+    "./commands/restore.md"
   ]
 }

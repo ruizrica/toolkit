@@ -1,11 +1,11 @@
-# rr-config
+# Toolkit
 
 Complete Claude Code power-user configuration with multi-agent orchestration, TDD workflows, and advanced productivity commands.
 
 ## Installation
 
 ```bash
-claude plugins add ./plugins/rr-config
+claude plugins add ./plugins/toolkit
 ```
 
 ## Contents
