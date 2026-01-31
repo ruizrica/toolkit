@@ -29,32 +29,6 @@ The format is: `/toolkit:<agent-name> <your prompt>`
 
 ---
 
-## Selection Guide
-
-### By Task Type
-
-**Large Codebase Analysis**
-- [gemini-agent](gemini.md) - Best for codebases >100KB with 1M token context window
-- [droid-agent](droid.md) - Enterprise-grade analysis with transparent review
-
-**Code Generation**
-- [codex-agent](codex.md) - Natural language to code conversion
-- [groq-agent](groq.md) - Fast, lightweight code generation
-- [opencode-agent](opencode.md) - Access to 75+ models for comparison
-
-**Code Review & Refactoring**
-- [cursor-agent](cursor.md) - Advanced review with session continuity
-- [droid-agent](droid.md) - Enterprise workflows with approval process
-
-**Workflow Automation**
-- [qwen-agent](qwen.md) - Git automation, batch operations
-- [droid-agent](droid.md) - Jira/Notion/Slack integration
-
-**Media Processing**
-- [crush-agent](crush.md) - Image and video compression
-
----
-
 ### By Speed vs. Capability
 
 | Priority | Agent | Notes |
