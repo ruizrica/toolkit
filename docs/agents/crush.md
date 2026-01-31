@@ -25,10 +25,8 @@ An expert media optimization specialist with deep knowledge of the Crush CLI too
 
 ## Invocation
 
-```
-Task tool with:
-- subagent_type: "toolkit:crush-agent"
-- prompt: "Check if my product images were processed correctly"
+```bash
+/toolkit:crush-agent Check if my product images were processed correctly
 ```
 
 ## Examples

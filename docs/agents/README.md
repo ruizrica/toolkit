@@ -20,13 +20,13 @@ The Toolkit includes 9 specialized agents that can be invoked via the Task tool.
 
 ## How to Invoke Agents
 
-Agents are invoked via the Task tool with the `toolkit:` prefix:
+Invoke any agent as a slash command with the `toolkit:` prefix:
 
+```bash
+/toolkit:gemini-agent Analyze the authentication module for security issues
 ```
-Task tool with:
-- subagent_type: "toolkit:gemini-agent"
-- prompt: "Analyze the authentication module for security issues"
-```
+
+The format is: `/toolkit:<agent-name> <your prompt>`
 
 ---
 

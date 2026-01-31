@@ -29,10 +29,8 @@ A specialized agent that interfaces with qwen-code CLI to provide state-of-the-a
 
 ## Invocation
 
-```
-Task tool with:
-- subagent_type: "toolkit:qwen-agent"
-- prompt: "Analyze the architecture of this project and find optimization opportunities"
+```bash
+/toolkit:qwen-agent Analyze the architecture of this project and find optimization opportunities
 ```
 
 ## Examples

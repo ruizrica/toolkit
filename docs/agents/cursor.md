@@ -28,10 +28,8 @@ A specialized agent that interfaces with Cursor CLI to provide advanced code ana
 
 ## Invocation
 
-```
-Task tool with:
-- subagent_type: "toolkit:cursor-agent"
-- prompt: "Review the authentication module for security vulnerabilities"
+```bash
+/toolkit:cursor-agent Review the authentication module for security vulnerabilities
 ```
 
 ## Examples

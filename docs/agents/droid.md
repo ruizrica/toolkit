@@ -28,10 +28,8 @@ A specialized agent that interfaces with Factory's Droid CLI to provide enterpri
 
 ## Invocation
 
-```
-Task tool with:
-- subagent_type: "toolkit:droid-agent"
-- prompt: "Analyze this project and explain the architecture"
+```bash
+/toolkit:droid-agent Analyze this project and explain the architecture
 ```
 
 ## Examples

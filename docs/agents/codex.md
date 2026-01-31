@@ -29,10 +29,8 @@ A specialized agent that interfaces with OpenAI Codex CLI to provide advanced co
 
 ## Invocation
 
-```
-Task tool with:
-- subagent_type: "toolkit:codex-agent"
-- prompt: "Create a function that validates email addresses using regex"
+```bash
+/toolkit:codex-agent Create a function that validates email addresses using regex
 ```
 
 ## Examples

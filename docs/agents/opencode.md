@@ -26,10 +26,8 @@ A specialized agent that interfaces with OpenCode CLI to provide access to 75+ A
 
 ## Invocation
 
-```
-Task tool with:
-- subagent_type: "toolkit:opencode-agent"
-- prompt: "Refactor this authentication module using Claude 3.5 Sonnet"
+```bash
+/toolkit:opencode-agent Refactor this authentication module using Claude 3.5 Sonnet
 ```
 
 ## Model Selection Strategy

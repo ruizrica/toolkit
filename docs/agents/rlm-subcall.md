@@ -25,11 +25,10 @@ This agent is automatically invoked by the `/rlm` command. Direct use is typical
 
 ## Invocation
 
-```
-Task tool with:
-- subagent_type: "toolkit:rlm-subcall"
-- model: haiku
-- prompt: "Query: What are the termination clauses?\nChunk file: .claude/rlm_state/chunks/chunk_0001.txt"
+This agent is typically invoked automatically by the `/rlm` command, not directly. If needed:
+
+```bash
+/toolkit:rlm-subcall Query: What are the termination clauses? Chunk file: .claude/rlm_state/chunks/chunk_0001.txt
 ```
 
 ## Input Format

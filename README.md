@@ -110,10 +110,10 @@ Runs CodeRabbit review, creates parallel fix tasks, and verifies completion.
 
 ### Using Agents
 
-```
-Task tool with:
-- subagent_type: "toolkit:gemini-agent"
-- prompt: "Analyze the authentication module..."
+Invoke any agent as a slash command:
+
+```bash
+/toolkit:gemini-agent Analyze the authentication module for security issues
 ```
 
 ---

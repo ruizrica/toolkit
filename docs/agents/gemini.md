@@ -26,10 +26,8 @@ A specialized agent that interfaces with Google Gemini CLI for advanced codebase
 
 ## Invocation
 
-```
-Task tool with:
-- subagent_type: "toolkit:gemini-agent"
-- prompt: "Analyze the authentication module for security issues"
+```bash
+/toolkit:gemini-agent Analyze the authentication module for security issues
 ```
 
 ## Examples

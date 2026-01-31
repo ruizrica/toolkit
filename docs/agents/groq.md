@@ -27,10 +27,8 @@ A specialized agent that interfaces with groq-code-cli to provide lightning-fast
 
 ## Invocation
 
-```
-Task tool with:
-- subagent_type: "toolkit:groq-agent"
-- prompt: "Quickly generate a React component for a user profile"
+```bash
+/toolkit:groq-agent Quickly generate a React component for a user profile
 ```
 
 ## Examples
