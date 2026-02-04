@@ -4,7 +4,7 @@
 
 # /setup
 
-Create a WIP branch and worktree for isolated development. This command sets up a separate working directory where you can make changes without affecting the main branch.
+Create a WIP branch and worktree for isolated development. This command sets up a separate working directory within `.specbook/worktrees/` where you can make changes without affecting the main branch.
 
 ## Usage
 
@@ -21,7 +21,7 @@ This command takes no arguments. It automatically generates names based on the c
 1. **Verify** - Confirm we're in a git repository
 2. **Generate Names** - Create timestamp-based branch name: `wip-YYYYMMDD-HHMMSS`
 3. **Create Branch** - Create the WIP branch from current HEAD
-4. **Create Worktree** - Set up sibling directory: `../<project>-wip`
+4. **Create Worktree** - Set up directory in `.specbook/worktrees/wip-YYYYMMDD-HHMMSS`
 5. **Report** - Display the worktree path and instructions
 
 ## What Gets Created
@@ -29,27 +29,28 @@ This command takes no arguments. It automatically generates names based on the c
 | Item | Example | Description |
 |------|---------|-------------|
 | Branch | `wip-20260130-103000` | New branch for development |
-| Worktree | `../myproject-wip/` | Separate working directory |
+| Worktree | `.specbook/worktrees/wip-20260130-103000/` | Separate working directory |
 
 ## Directory Structure
 
 Before:
 ```
-projects/
-└── myproject/          ← You are here
-    ├── src/
-    └── ...
+myproject/             ← You are here
+├── src/
+├── .specbook/
+└── ...
 ```
 
 After:
 ```
-projects/
-├── myproject/          ← Main worktree (unchanged)
-│   ├── src/
-│   └── ...
-└── myproject-wip/      ← New WIP worktree
-    ├── src/
-    └── ...
+myproject/             ← Main worktree (unchanged)
+├── src/
+├── .specbook/
+│   └── worktrees/     ← New worktrees directory
+│       └── wip-20260130-103000/   ← New WIP worktree
+│           ├── src/
+│           └── ...
+└── ...
 ```
 
 ## Output Example
@@ -57,11 +58,11 @@ projects/
 ```
 Created WIP worktree:
 
-📁 Worktree: ../myproject-wip
+📁 Worktree: .specbook/worktrees/wip-20260130-103000
 🌿 Branch: wip-20260130-103000
 
-To work in the worktree:
-  cd ../myproject-wip
+You can work in the worktree without changing directories.
+The agent will handle operations in the worktree context.
 
 When done, run /save to merge back to main
 ```
@@ -79,7 +80,8 @@ When done, run /save to merge back to main
 git rev-parse --git-dir           # Verify git repo
 git checkout main                 # Switch to main
 git branch wip-YYYYMMDD-HHMMSS    # Create WIP branch
-git worktree add ../project-wip wip-YYYYMMDD-HHMMSS  # Create worktree
+mkdir -p .specbook/worktrees      # Create worktrees directory
+git worktree add .specbook/worktrees/wip-YYYYMMDD-HHMMSS wip-YYYYMMDD-HHMMSS  # Create worktree
 ```
 
 ## Requirements
@@ -101,12 +103,12 @@ git worktree add ../project-wip wip-YYYYMMDD-HHMMSS  # Create worktree
 # Create isolated workspace
 /setup
 
-# Change to worktree
-cd ../myproject-wip
+# The agent will now work in .specbook/worktrees/wip-YYYYMMDD-HHMMSS
+# No need to change directories - you stay in your project root
 
-# ... do your development work ...
+# ... agent does development work in the worktree ...
 
-# Merge back to main
+# Merge back to main when ready
 /save
 ```
 

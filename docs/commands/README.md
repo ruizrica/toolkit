@@ -72,7 +72,7 @@ Commands for preserving context across `/clear` operations.
 
 Commands for isolated development using git worktrees.
 
-- **[/setup](setup.md)** - Create a WIP branch and worktree for isolated development. The worktree is created as a sibling directory.
+- **[/setup](setup.md)** - Create a WIP branch and worktree for isolated development. The worktree is created in `.specbook/worktrees/` within the project directory.
 
 - **[/save](save.md)** - Commit all changes, merge WIP branch to main, and cleanup the worktree and branch. Handles merge conflicts interactively.
 

@@ -109,3 +109,35 @@ Use `/save` and `/restore` for session continuity:
 - **After `/clear`**: Run `/restore` to resume seamlessly
 
 The restore command will immediately continue working without asking what to do next.
+
+## Toolkit Commands
+
+**IMPORTANT: For any non-trivial task, prefer `/haiku` to leverage parallel Haiku agents managed by Opus.** This provides faster, more thorough results through parallel execution.
+
+### Primary Command (Use by Default)
+
+- **`/haiku [task]`** - Spawn a team of 10 Haiku agents managed by Opus. Use this for:
+  - Research and analysis tasks
+  - Implementation tasks
+  - Code reviews and audits
+  - Any task that benefits from parallel exploration
+  - **When in doubt, use `/haiku`**
+
+### When NOT to Use /haiku
+
+Only skip `/haiku` for truly simple tasks:
+- Single-line fixes or typo corrections
+- Reading a specific file
+- Running a single command
+- Answering a quick question from memory
+
+### Other Toolkit Commands
+
+- **`/team [task]`** - Coordinate multiple specialized agents (gemini, cursor, codex, qwen, etc.) for complex implementation
+- **`/review [options]`** - Run CodeRabbit review with parallel agent fixes
+- **`/handbook`** - Generate comprehensive project documentation
+- **`/gherkin [path]`** - Extract business rules into living Gherkin documentation
+- **`/rlm context=<path> query=<question>`** - Process large documents that exceed context limits
+- **`/setup`** - Create WIP branch and worktree for isolated development
+- **`/save [message]`** - Commit and merge WIP back to main
+- **`/restore`** - Resume session from saved state after `/clear`

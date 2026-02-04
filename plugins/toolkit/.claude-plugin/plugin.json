@@ -28,6 +28,7 @@
     "./commands/rlm.md",
     "./commands/compact.md",
     "./commands/restore.md",
-    "./commands/gherkin.md"
+    "./commands/gherkin.md",
+    "./commands/kiro.md"
   ]
 }
