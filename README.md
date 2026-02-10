@@ -49,6 +49,29 @@ Runs CodeRabbit review, creates parallel fix tasks, and verifies completion.
 /restore    # Resume seamlessly
 ```
 
+### Spec-Driven Development
+```bash
+/kiro Add user authentication with OAuth
+```
+Generates requirements, design, and tasks using Kiro methodology, then executes with parallel agents.
+
+### Sandboxed Bash (just-bash)
+
+A sandboxed bash interpreter from [Vercel Labs](https://github.com/vercel-labs/just-bash) that lets Claude run commands safely with a read-only filesystem, no network access, and in-memory-only writes. Includes 75+ built-in commands (jq, yq, xan, sqlite3, rg, awk, sed, etc.).
+
+```bash
+# Explore a codebase safely (read-only, can't break anything)
+just-bash -c 'find . -name "*.ts" | wc -l'
+
+# Process JSON/CSV/YAML data
+just-bash -c 'cat data.json | jq ".items[] | .name"'
+
+# Test destructive scripts safely (writes stay in memory)
+just-bash --allow-write -c 'rm -rf src && echo "nothing happened on disk"'
+```
+
+The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches Claude when to use the sandbox vs regular Bash. See [docs](docs/skills/just-bash.md) for the full command list and usage patterns.
+
 ### Git Worktree Workflow
 ```bash
 /setup      # Create isolated worktree
@@ -62,7 +85,7 @@ Runs CodeRabbit review, creates parallel fix tasks, and verifies completion.
 
 | Section | Description |
 |---------|-------------|
-| [Commands](docs/commands/README.md) | All 12 commands with usage and examples |
+| [Commands](docs/commands/README.md) | All 13 commands with usage and examples |
 | [Agents](docs/agents/README.md) | All 9 specialized agents with invocation patterns |
 | [Skills](docs/skills/README.md) | Skill reference files for CLI tools |
 | [Optional Commands](docs/optional/README.md) | MCP-dependent commands (Commander + Photon) |
@@ -82,6 +105,7 @@ Runs CodeRabbit review, creates parallel fix tasks, and verifies completion.
 | `/@implement` | Process @implement comments | [→](docs/commands/implement.md) |
 | `/rlm` | Large document processing | [→](docs/commands/rlm.md) |
 | `/gherkin` | Extract business rules to Gherkin | [→](docs/commands/gherkin.md) |
+| `/kiro` | Spec-driven development with Kiro methodology | [→](docs/commands/kiro.md) |
 
 ### Session & Git
 

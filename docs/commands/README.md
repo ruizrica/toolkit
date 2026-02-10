@@ -1,6 +1,6 @@
 # Commands Overview
 
-The Toolkit provides 12 commands organized into three categories: Core Commands for development workflows, Session Management for context preservation, and Git Workflow for version control.
+The Toolkit provides 13 commands organized into three categories: Core Commands for development workflows, Session Management for context preservation, and Git Workflow for version control.
 
 ## Quick Reference
 
@@ -13,6 +13,7 @@ The Toolkit provides 12 commands organized into three categories: Core Commands 
 | [/@implement](implement.md) | Process @implement comments | Core |
 | [/rlm](rlm.md) | Large document processing | Core |
 | [/gherkin](gherkin.md) | Extract business rules to Gherkin | Core |
+| [/kiro](kiro.md) | Spec-driven development with Kiro methodology | Core |
 | [/compact](compact.md) | Save session state before /clear | Session |
 | [/restore](restore.md) | Restore session after /clear | Session |
 | [/setup](setup.md) | Create WIP branch and worktree | Git |
@@ -48,6 +49,10 @@ Commands for feature development, code review, and documentation.
 ### Specification
 
 - **[/gherkin](gherkin.md)** - Extract business rules from code into living Gherkin documentation. Supports both code analysis and visual analysis via browser.
+
+### Spec-Driven Development
+
+- **[/kiro](kiro.md)** - Spec-driven development using the Kiro methodology. Generates EARS-format requirements, design documents, and task breakdowns through interactive Q&A phases, then executes with parallel agents (Cursor or Haiku).
 
 ---
 
