@@ -41,6 +41,14 @@ claude plugins add ./plugins/toolkit
 | `/compact` | Save session state before /clear |
 | `/restore` | Restore session from saved state |
 
+### Skills (1)
+
+| Skill | Description |
+|-------|-------------|
+| just-bash | Sandboxed bash execution (read-only FS, no network, in-memory writes) |
+
+Skills are reference files installed to `~/.claude/skills/` that teach Claude when and how to use specific CLI tools.
+
 ### Optional MCP Commands (6)
 
 Located in `optional/` - require Commander or Photon MCP servers:

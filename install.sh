@@ -247,6 +247,40 @@ install_agent_browser() {
     fi
 }
 
+install_just_bash() {
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "✓ Would install just-bash"
+        return 0
+    fi
+
+    if command -v just-bash &> /dev/null; then
+        echo "✓ just-bash ready"
+        return 0
+    fi
+
+    if command -v npm &> /dev/null; then
+        npm install -g just-bash 2>/dev/null && echo "✓ just-bash installed" || print_warning "Run: npm install -g just-bash"
+    else
+        print_warning "Run: npm install -g just-bash"
+    fi
+}
+
+install_skills() {
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "✓ Would install skill files"
+        return 0
+    fi
+
+    local skills_src="$BASE_DIR/plugins/toolkit/skills"
+    local skills_dst="$HOME/.claude/skills"
+
+    if [[ -d "$skills_src" ]]; then
+        mkdir -p "$skills_dst"
+        cp "$skills_src/"*.md "$skills_dst/" 2>/dev/null || true
+        echo "✓ Skills installed"
+    fi
+}
+
 # -----------------------------------------------------------------------------
 # Configuration
 # -----------------------------------------------------------------------------
@@ -282,6 +316,12 @@ perform_uninstall() {
     rm -f "$SLASH_COMMANDS_DIR/handbook.py" 2>/dev/null
     rm -f "$SLASH_COMMANDS_DIR/rlm_repl.py" 2>/dev/null
     echo "✓ Python scripts removed"
+    echo ""
+
+    # Remove skill files
+    print_status "Removing skill files..."
+    rm -f "$HOME/.claude/skills/just-bash.md" 2>/dev/null
+    echo "✓ Skill files removed"
     echo ""
 
     # Remove repository
@@ -384,7 +424,9 @@ main() {
     clone_repository
     register_plugin
     install_python_scripts
+    install_skills
     install_agent_browser
+    install_just_bash
     save_config
 
     echo ""

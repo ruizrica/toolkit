@@ -64,6 +64,7 @@ Runs CodeRabbit review, creates parallel fix tasks, and verifies completion.
 |---------|-------------|
 | [Commands](docs/commands/README.md) | All 12 commands with usage and examples |
 | [Agents](docs/agents/README.md) | All 9 specialized agents with invocation patterns |
+| [Skills](docs/skills/README.md) | Skill reference files for CLI tools |
 | [Optional Commands](docs/optional/README.md) | MCP-dependent commands (Commander + Photon) |
 
 ---
@@ -107,6 +108,16 @@ Runs CodeRabbit review, creates parallel fix tasks, and verifies completion.
 | **crush-agent** | Media compression/optimization | [→](docs/agents/crush.md) |
 | **droid-agent** | Enterprise development, Jira/Notion | [→](docs/agents/droid.md) |
 
+---
+
+## Skills
+
+Skills are reference files installed to `~/.claude/skills/` that teach Claude when and how to use specific CLI tools.
+
+| Skill | Description | Docs |
+|-------|-------------|------|
+| **just-bash** | Sandboxed bash (read-only FS, no network, 75+ commands) | [→](docs/skills/just-bash.md) |
+
 ### Using Agents
 
 Invoke any agent as a slash command:
@@ -125,6 +136,7 @@ Invoke any agent as a slash command:
 
 ### Optional
 - **agent-browser** - For /gherkin visual analysis (`npm install -g agent-browser`)
+- **just-bash** - Sandboxed bash for safe exploration (`npm install -g just-bash`)
 - **Commander MCP** - For task orchestration commands
 - **Photon MCP** - For memory and semantic search commands
 
@@ -137,11 +149,13 @@ agent-toolkit/
 ├── plugins/toolkit/
 │   ├── agents/          # 9 specialized agents
 │   ├── commands/        # 12 commands
+│   ├── skills/          # Skill reference files
 │   ├── scripts/         # Python scripts
 │   └── optional/        # MCP-dependent commands
 ├── docs/
 │   ├── commands/        # Command documentation
 │   ├── agents/          # Agent documentation
+│   ├── skills/          # Skill documentation
 │   └── optional/        # MCP commands documentation
 ├── assets/              # Images
 ├── CLAUDE.md            # Global instructions template
