@@ -8,7 +8,7 @@ ABOUTME: Covers installation, usage, security model, and when to use it vs regul
 A sandboxed bash interpreter from [Vercel Labs](https://github.com/vercel-labs/just-bash) that provides safe command execution with:
 - **Read-only filesystem** via OverlayFS
 - **No network access**
-- **75+ built-in commands** (jq, yq, xan, sqlite3, rg, awk, sed, etc.)
+- **75+ built-in commands** (jq, xan, rg, awk, sed, grep, find, etc.)
 - **In-memory writes** that never touch disk
 
 ## Installation
@@ -24,7 +24,7 @@ The toolkit installer handles this automatically.
 | Use just-bash | Use regular Bash |
 |---------------|-----------------|
 | Exploring files safely | git operations |
-| Data processing (CSV, JSON, YAML) | npm/pip/package managers |
+| Data processing (CSV, JSON) | npm/pip/package managers |
 | Testing shell scripts | Running dev servers |
 | Bulk file analysis | Anything needing network |
 | Untrusted input processing | Real filesystem writes |
@@ -45,7 +45,7 @@ just-bash -c 'xan frequency data.csv -s status'
 just-bash --allow-write -c 'echo test > /tmp/file && cat /tmp/file'
 
 # Scope to a project
-just-bash -c 'tree -L 2' --root /path/to/project
+just-bash -c 'find . -type d | head -20' --root /path/to/project
 
 # JSON output for parsing
 just-bash --json -c 'echo hello'
@@ -54,6 +54,13 @@ just-bash --json -c 'echo hello'
 ## Skill File Location
 
 Installed to `~/.claude/skills/just-bash.md` - Claude reads this to understand when and how to use the tool.
+
+## Known Issues (v1.0.0)
+
+- `yq` broken - "Dynamic require of process" error
+- `sqlite3` broken - "DataView constructor" error
+- `jq` older build - missing `-R` and `-s` flags
+- No process substitution (`<()` syntax)
 
 ## Resources
 

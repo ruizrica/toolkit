@@ -12,7 +12,7 @@ Use this skill when you need to:
 - Process and transform data files (CSV, JSON, YAML, text)
 - Test shell scripts in an isolated sandbox
 - Run exploratory commands where mistakes can't cause damage
-- Execute complex pipelines (grep, awk, sed, jq, yq, xan, sqlite3)
+- Execute complex pipelines (grep, awk, sed, jq, xan, rg)
 - Validate scripts before running them for real
 
 **When to use just-bash vs the regular Bash tool:**
@@ -82,7 +82,10 @@ echo 'find . -name "*.ts" | head -5' | just-bash
 `awk` `sed` `grep` `egrep` `fgrep` `rg` `cut` `tr` `sort` `uniq` `wc` `head` `tail` `tac` `rev` `nl` `fold` `expand` `unexpand` `column` `comm` `join` `paste` `split` `strings`
 
 ### Data Formats
-`jq` (JSON) `yq` (YAML) `xan` (CSV) `sqlite3` (SQL) `html-to-markdown`
+`jq` (JSON - older build, lacks `-R`/`-s` flags) `xan` (CSV) `html-to-markdown`
+
+### Broken in v1.0.0
+`yq` (YAML - "Dynamic require of process" error) `sqlite3` (SQL - "DataView constructor" error)
 
 ### File Operations
 `ls` `find` `cat` `cp` `mv` `rm` `mkdir` `rmdir` `ln` `touch` `chmod` `stat` `file` `tree` `du` `basename` `dirname` `readlink`
@@ -148,30 +151,20 @@ cat /tmp/output/package.json
 '
 ```
 
-### Pattern 5: YAML/Config Validation
+### Pattern 5: Text Processing Pipeline
 
 ```bash
-# Check and transform YAML configs
+# Combine awk, sed, sort for analysis
 just-bash -c '
-yq eval ".services | keys" docker-compose.yml
-yq eval ".services[].image" docker-compose.yml
+echo "=== Functions per file ==="
+rg -c "function " --type ts 2>/dev/null | sort -t: -k2 -rn | head -10
+
+echo "=== Lines by extension ==="
+find . -type f -not -path "./.git/*" | sed "s/.*\.//" | sort | uniq -c | sort -rn | head -10
 ' --root /path/to/project
 ```
 
-### Pattern 6: SQL on CSV Data
-
-```bash
-# Query CSV files with SQL via sqlite3
-just-bash --allow-write -c '
-sqlite3 :memory: <<SQL
-.mode csv
-.import users.csv users
-SELECT department, COUNT(*) as cnt FROM users GROUP BY department ORDER BY cnt DESC;
-SQL
-'
-```
-
-### Pattern 7: JSON Output for Programmatic Use
+### Pattern 6: JSON Output for Programmatic Use
 
 ```bash
 # Get structured output
@@ -186,7 +179,7 @@ just-bash --json -c 'echo "hello world"'
 3. **Use `--allow-write` for temp files** - writes stay in memory, safe to experiment
 4. **Chain with pipes** - all standard Unix pipelines work (grep | sort | uniq -c | head)
 5. **Use `--root`** to scope the sandbox to a specific project directory
-6. **Combine tools** - jq for JSON, yq for YAML, xan for CSV, sqlite3 for SQL queries on data
+6. **Combine tools** - jq for JSON, xan for CSV, rg for search, awk/sed for transforms
 7. **Test destructive scripts safely** - rm, mv, overwrites all happen in memory with --allow-write
 
 ## Limitations
@@ -196,3 +189,8 @@ just-bash --json -c 'echo "hello world"'
 - No interactive commands (no vim, nano, less, etc.)
 - No package managers or language runtimes (except python with --python flag)
 - No system administration commands (no sudo, systemctl, etc.)
+- No process substitution (`<()` syntax not supported)
+- `jq` is an older build - `-R` (raw input) and `-s` (slurp) flags are missing
+- `yq` is broken in v1.0.0 ("Dynamic require of process" error)
+- `sqlite3` is broken in v1.0.0 ("DataView constructor" error)
+- `tree` lacks some flags (e.g. `--dirsfirst`)
