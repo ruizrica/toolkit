@@ -29,6 +29,7 @@
     "./commands/compact.md",
     "./commands/restore.md",
     "./commands/gherkin.md",
-    "./commands/kiro.md"
+    "./commands/kiro.md",
+    "./commands/just-bash.md"
   ]
 }
