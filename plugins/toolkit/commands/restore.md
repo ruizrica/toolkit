@@ -37,7 +37,25 @@ If backups exist, use AskUserQuestion:
 }
 ```
 
-### Step 3: Parse and Restore
+### Step 3: Load Daily Log Context
+
+Read recent daily logs to bootstrap memory context:
+
+```bash
+# Today's date
+date +%Y-%m-%d
+# Yesterday's date (macOS)
+date -v-1d +%Y-%m-%d
+```
+
+1. Read `~/.claude/agent-memory/daily-logs/{today}.md` (if exists)
+2. Read `~/.claude/agent-memory/daily-logs/{yesterday}.md` (if exists)
+
+If either file exists, include the entries in your context. These provide continuity across sessions — you'll know what was done earlier today and yesterday.
+
+**Do not output the full daily log.** Just internalize the context for your own use.
+
+### Step 4: Parse and Restore
 
 The session state can be in two formats. Detect by checking for `$schema`:
 
@@ -65,7 +83,7 @@ The session state can be in two formats. Detect by checking for `$schema`:
 }
 ```
 
-### Step 4: Output and Continue
+### Step 5: Output and Continue
 
 Output format:
 ```
@@ -77,7 +95,7 @@ Restoring session...
 ---
 ```
 
-### Step 5: Restore Todos
+### Step 6: Restore Todos
 
 Convert todos to TodoWrite format:
 
@@ -86,7 +104,7 @@ Convert todos to TodoWrite format:
 
 Use TodoWrite to restore the task list.
 
-### Step 6: Immediately Continue
+### Step 7: Immediately Continue
 
 **DO NOT ask the user what to do next.**
 
@@ -114,16 +132,18 @@ Restoring session...
 
 1. **FAST**: Minimal parsing, immediate action
 2. **BOTH SCHEMAS**: Support v1 (tier-based) and v2 (flat) formats
-3. **RESTORE TODOS**: Always restore the todo list
-4. **NO QUESTIONS**: After successful restore, immediately continue working
-5. **FILES FIRST**: If `files` array exists, read the first one
+3. **DAILY LOGS**: Read today's and yesterday's logs for cross-session context
+4. **RESTORE TODOS**: Always restore the todo list
+5. **NO QUESTIONS**: After successful restore, immediately continue working
+6. **FILES FIRST**: If `files` array exists, read the first one
 
 ## Begin Execution
 
 1. Read `.plans/session-state.json`
 2. If missing, check backups and ask user
-3. Detect schema version ($schema field)
-4. Extract: continue prompt, task, todos, files
-5. Output restoration summary
-6. Restore todos via TodoWrite
-7. Immediately continue working
+3. Load today's and yesterday's daily logs for context
+4. Detect schema version ($schema field)
+5. Extract: continue prompt, task, todos, files
+6. Output restoration summary
+7. Restore todos via TodoWrite
+8. Immediately continue working

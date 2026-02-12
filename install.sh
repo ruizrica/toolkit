@@ -265,6 +265,18 @@ install_just_bash() {
     fi
 }
 
+install_memory_dirs() {
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "✓ Would create memory directories"
+        return 0
+    fi
+
+    mkdir -p "$HOME/.claude/agent-memory/daily-logs"
+    mkdir -p "$HOME/.claude/agent-memory/sessions"
+    mkdir -p "$HOME/.claude/agent-memory/procedures"
+    echo "✓ Memory directories created"
+}
+
 install_skills() {
     if [[ "$DRY_RUN" == "true" ]]; then
         echo "✓ Would install skill files"
@@ -425,6 +437,7 @@ main() {
     register_plugin
     install_python_scripts
     install_skills
+    install_memory_dirs
     install_agent_browser
     install_just_bash
     save_config
