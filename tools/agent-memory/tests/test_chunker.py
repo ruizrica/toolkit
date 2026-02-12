@@ -1,9 +1,6 @@
 # ABOUTME: Tests for chunker module — markdown-aware text splitting.
 # ABOUTME: Verifies heading boundaries, overlap, line tracking, and edge cases.
 
-from dataclasses import dataclass
-
-
 def test_chunk_dataclass_fields():
     """Chunk has required fields: text, start_line, end_line, source_path."""
     from agent_memory.chunker import Chunk

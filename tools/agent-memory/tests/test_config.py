@@ -1,7 +1,6 @@
 # ABOUTME: Tests for config module — path resolution and constants.
 # ABOUTME: Verifies defaults, env overrides, and scan pattern generation.
 
-import os
 from pathlib import Path
 
 

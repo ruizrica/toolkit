@@ -4,7 +4,7 @@
 import glob
 import hashlib
 import sqlite3
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 
 from .chunker import Chunk, chunk_markdown

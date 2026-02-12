@@ -1,9 +1,6 @@
 # ABOUTME: Tests for db module — SQLite schema creation and helper functions.
 # ABOUTME: Verifies table creation, sqlite-vec loading, and meta CRUD.
 
-import sqlite3
-
-
 def test_init_db_creates_tables(tmp_db):
     """init_db creates all required tables."""
     from agent_memory.db import init_db
