@@ -11,19 +11,21 @@
 ## Installation
 
 ```bash
-# Clone this repository
-git clone https://github.com/ruizrica/agent-toolkit.git
-
-# Install the toolkit plugin
-claude plugins add ./agent-toolkit/plugins/toolkit
+# One-line install (recommended)
+curl -fsSL https://raw.githubusercontent.com/ruizrica/toolkit/main/install.sh | bash
 ```
 
-### Setup Scripts (Required for /handbook and /review)
+This clones to `~/.toolkit`, registers the plugin, installs scripts/skills, creates agent memory directories (`~/.claude/agent-memory/`), and installs optional tools (agent-browser, just-bash).
+
+### Manual Install
 
 ```bash
+git clone https://github.com/ruizrica/agent-toolkit.git
+claude plugins add ./agent-toolkit/plugins/toolkit
 mkdir -p ~/.claude/slash_commands
 cp plugins/toolkit/scripts/handbook.py ~/.claude/slash_commands/
 cp plugins/toolkit/scripts/coderabbit_workflow.py ~/.claude/slash_commands/
+mkdir -p ~/.claude/agent-memory/{daily-logs,sessions,procedures}
 ```
 
 ---
@@ -42,12 +44,15 @@ Spawns multiple specialized agents to work on your feature in parallel.
 ```
 Runs CodeRabbit review, creates parallel fix tasks, and verifies completion.
 
-### Session Continuity
+### Session Continuity with Agent Memory
 ```bash
-/compact    # Before /clear
-/clear      # Clear context
-/restore    # Resume seamlessly
+/compact      # Save state + write daily log
+/clear        # Clear context
+/restore      # Resume with daily log context
 ```
+Uses a local memory system (`~/.claude/agent-memory/`) with daily logs, session snapshots, and semantic memory. The PreCompact hook automatically captures session snapshots; `/compact` writes a quality daily log entry; `/restore` bootstraps from today's and yesterday's logs.
+
+For a faster, minimal compact without memory writes: `/compact-min`
 
 ### Spec-Driven Development
 ```bash
@@ -85,10 +90,10 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 
 | Section | Description |
 |---------|-------------|
-| [Commands](docs/commands/README.md) | All 13 commands with usage and examples |
+| [Commands](docs/commands/README.md) | All 14 commands with usage and examples |
 | [Agents](docs/agents/README.md) | All 9 specialized agents with invocation patterns |
 | [Skills](docs/skills/README.md) | Skill reference files for CLI tools |
-| [Optional Commands](docs/optional/README.md) | MCP-dependent commands (Commander + Photon) |
+| [Optional Commands](docs/optional/README.md) | MCP-dependent commands |
 
 ---
 
@@ -111,8 +116,9 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 
 | Command | Description | Docs |
 |---------|-------------|------|
-| `/compact` | Save session state | [→](docs/commands/compact.md) |
-| `/restore` | Restore after /clear | [→](docs/commands/restore.md) |
+| `/compact` | Memory-aware session compact (daily log + state) | [→](docs/commands/compact.md) |
+| `/compact-min` | Ultra-minimal session compact (fast, no memory) | [→](docs/commands/compact.md#compact-min) |
+| `/restore` | Restore after /clear (loads daily logs) | [→](docs/commands/restore.md) |
 | `/setup` | Create WIP worktree | [→](docs/commands/setup.md) |
 | `/save` | Commit, merge, cleanup | [→](docs/commands/save.md) |
 | `/stable` | Create stable checkpoint | [→](docs/commands/stable.md) |
@@ -152,6 +158,27 @@ Invoke any agent as a slash command:
 
 ---
 
+## Agent Memory System
+
+The toolkit includes a local memory system at `~/.claude/agent-memory/` that provides continuity across sessions.
+
+| Memory Type | Location | Written By |
+|-------------|----------|------------|
+| **Semantic** | `~/.claude/projects/{key}/memory/MEMORY.md` | `/compact` (stable facts only) |
+| **Daily Logs** | `~/.claude/agent-memory/daily-logs/YYYY-MM-DD.md` | `/compact` + PreCompact hook |
+| **Session Snapshots** | `~/.claude/agent-memory/sessions/{project}-{ts}.md` | PreCompact hook (automatic) |
+| **Procedural** | `~/.claude/agent-memory/procedures/` | Reserved for future use |
+
+**How it works:**
+- `/compact` introspects the session, writes a quality daily log entry, saves session state, and optionally updates MEMORY.md with stable facts
+- The PreCompact hook automatically writes raw session snapshots and daily log entries on every compaction
+- `/restore` reads today's and yesterday's daily logs to bootstrap cross-session context
+- MEMORY.md is auto-loaded by Claude Code every session — stable facts persist without explicit restore
+
+See [/compact docs](docs/commands/compact.md) and [/restore docs](docs/commands/restore.md) for details.
+
+---
+
 ## Requirements
 
 ### Core
@@ -161,9 +188,6 @@ Invoke any agent as a slash command:
 ### Optional
 - **agent-browser** - For /gherkin visual analysis (`npm install -g agent-browser`)
 - **just-bash** - Sandboxed bash for safe exploration (`npm install -g just-bash`)
-- **Commander MCP** - For task orchestration commands
-- **Photon MCP** - For memory and semantic search commands
-
 ---
 
 ## Directory Structure
@@ -172,7 +196,7 @@ Invoke any agent as a slash command:
 agent-toolkit/
 ├── plugins/toolkit/
 │   ├── agents/          # 9 specialized agents
-│   ├── commands/        # 12 commands
+│   ├── commands/        # 14 commands
 │   ├── skills/          # Skill reference files
 │   ├── scripts/         # Python scripts
 │   └── optional/        # MCP-dependent commands
