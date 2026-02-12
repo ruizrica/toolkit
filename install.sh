@@ -265,6 +265,26 @@ install_just_bash() {
     fi
 }
 
+install_agent_memory() {
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "✓ Would install agent-memory"
+        return 0
+    fi
+
+    if command -v agent-memory &> /dev/null; then
+        echo "✓ agent-memory ready"
+        return 0
+    fi
+
+    if command -v pip3 &> /dev/null; then
+        pip3 install -e "$BASE_DIR/tools/agent-memory" 2>/dev/null && \
+            echo "✓ agent-memory installed" || \
+            print_warning "Run: pip3 install -e ~/.toolkit/tools/agent-memory"
+    else
+        print_warning "Run: pip3 install -e ~/.toolkit/tools/agent-memory"
+    fi
+}
+
 install_memory_dirs() {
     if [[ "$DRY_RUN" == "true" ]]; then
         echo "✓ Would create memory directories"
@@ -333,6 +353,7 @@ perform_uninstall() {
     # Remove skill files
     print_status "Removing skill files..."
     rm -f "$HOME/.claude/skills/just-bash.md" 2>/dev/null
+    rm -f "$HOME/.claude/skills/agent-memory.md" 2>/dev/null
     echo "✓ Skill files removed"
     echo ""
 
@@ -440,6 +461,7 @@ main() {
     install_memory_dirs
     install_agent_browser
     install_just_bash
+    install_agent_memory
     save_config
 
     echo ""

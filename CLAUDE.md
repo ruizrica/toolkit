@@ -136,6 +136,22 @@ When you discover something worth remembering:
 
 Both support restoration via `/restore`.
 
+### Search with agent-memory CLI
+
+The `agent-memory` CLI provides hybrid search (vector + BM25) over all memory files:
+
+```bash
+agent-memory search "query"              # Hybrid search (default)
+agent-memory search "query" --vector     # Semantic similarity only
+agent-memory search "query" --keyword    # Exact keyword match only
+agent-memory index                       # Reindex all memory files
+agent-memory status                      # Show DB stats
+agent-memory add "content" --source daily  # Add a memory manually
+agent-memory ask "question"              # Q&A over memories (requires ANTHROPIC_API_KEY)
+```
+
+Use `--json` flag on any command for machine-readable output.
+
 ## Toolkit Commands
 
 **IMPORTANT: For any non-trivial task, prefer `/haiku` to leverage parallel Haiku agents managed by Opus.** This provides faster, more thorough results through parallel execution.

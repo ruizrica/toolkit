@@ -31,6 +31,7 @@
     "./commands/restore.md",
     "./commands/gherkin.md",
     "./commands/kiro.md",
-    "./commands/just-bash.md"
+    "./commands/just-bash.md",
+    "./commands/agent-memory.md"
   ]
 }

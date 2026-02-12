@@ -15,7 +15,7 @@
 curl -fsSL https://raw.githubusercontent.com/ruizrica/toolkit/main/install.sh | bash
 ```
 
-This clones to `~/.toolkit`, registers the plugin, installs scripts/skills, creates agent memory directories (`~/.claude/agent-memory/`), and installs optional tools (agent-browser, just-bash).
+This clones to `~/.toolkit`, registers the plugin, installs scripts/skills, creates agent memory directories (`~/.claude/agent-memory/`), and installs optional tools (agent-browser, just-bash, agent-memory).
 
 ### Manual Install
 
@@ -90,7 +90,7 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 
 | Section | Description |
 |---------|-------------|
-| [Commands](docs/commands/README.md) | All 14 commands with usage and examples |
+| [Commands](docs/commands/README.md) | All 15 commands with usage and examples |
 | [Agents](docs/agents/README.md) | All 9 specialized agents with invocation patterns |
 | [Skills](docs/skills/README.md) | Skill reference files for CLI tools |
 | [Optional Commands](docs/optional/README.md) | MCP-dependent commands |
@@ -111,6 +111,7 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 | `/rlm` | Large document processing | [→](docs/commands/rlm.md) |
 | `/gherkin` | Extract business rules to Gherkin | [→](docs/commands/gherkin.md) |
 | `/kiro` | Spec-driven development with Kiro methodology | [→](docs/commands/kiro.md) |
+| `/agent-memory` | Hybrid search over agent memory files | [→](docs/commands/agent-memory.md) |
 
 ### Session & Git
 
@@ -147,6 +148,7 @@ Skills are reference files installed to `~/.claude/skills/` that teach Claude wh
 | Skill | Description | Docs |
 |-------|-------------|------|
 | **just-bash** | Sandboxed bash (read-only FS, no network, 75+ commands) | [→](docs/skills/just-bash.md) |
+| **agent-memory** | Local hybrid search over agent memory files | [→](docs/skills/agent-memory.md) |
 
 ### Using Agents
 
@@ -175,6 +177,13 @@ The toolkit includes a local memory system at `~/.claude/agent-memory/` that pro
 - `/restore` reads today's and yesterday's daily logs to bootstrap cross-session context
 - MEMORY.md is auto-loaded by Claude Code every session — stable facts persist without explicit restore
 
+**Searching memories:**
+```bash
+agent-memory search "what embedding model?"   # Hybrid search (vector + BM25)
+agent-memory search "TDD" --keyword           # Exact keyword match
+agent-memory index                            # Reindex all memory files
+```
+
 See [/compact docs](docs/commands/compact.md) and [/restore docs](docs/commands/restore.md) for details.
 
 ---
@@ -188,6 +197,8 @@ See [/compact docs](docs/commands/compact.md) and [/restore docs](docs/commands/
 ### Optional
 - **agent-browser** - For /gherkin visual analysis (`npm install -g agent-browser`)
 - **just-bash** - Sandboxed bash for safe exploration (`npm install -g just-bash`)
+- **agent-memory** - Hybrid search over memory files (`pip3 install -e ~/.toolkit/tools/agent-memory`)
+
 ---
 
 ## Directory Structure
@@ -205,6 +216,8 @@ agent-toolkit/
 │   ├── agents/          # Agent documentation
 │   ├── skills/          # Skill documentation
 │   └── optional/        # MCP commands documentation
+├── tools/
+│   └── agent-memory/    # Hybrid search CLI (Python)
 ├── assets/              # Images
 ├── CLAUDE.md            # Global instructions template
 └── LICENSE              # MIT license
