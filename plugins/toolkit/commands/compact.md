@@ -1,48 +1,101 @@
-# Ultra-Minimal Session Compact
+---
+description: "Memory-aware session compact with daily log and session snapshot"
+allowed-tools: ["Read", "Write", "Edit", "Bash"]
+---
 
-Generate a minimal session snapshot for fast context restoration.
+# Memory-Aware Session Compact
+
+Generate a session snapshot and write to the agent memory system before clearing context.
 
 ## Instructions
 
-1. **Introspect the conversation** to extract:
-   - `original_request`: What the user originally asked for (1 sentence)
-   - `current_task`: What you're actively working on right now (1 sentence)
-   - `key_files`: Array of absolute file paths recently read/edited (max 5)
-   - `continuation_prompt`: A detailed prompt that tells a fresh agent exactly how to continue (2-3 sentences, be specific about next steps)
+### Step 1: Introspect Session
 
-2. **Write a single JSON file** to `.plans/session-state.json`:
+Analyze the conversation to extract:
+- `summary`: 2-3 sentence summary of what was accomplished
+- `key_decisions`: Important architectural or design decisions made (array of strings, max 5)
+- `current_task`: What you're actively working on right now (1 sentence)
+- `key_files`: Array of absolute file paths recently read/edited (max 10)
+- `continuation_prompt`: Detailed prompt telling a fresh agent exactly how to continue (2-3 sentences)
+- `stable_facts`: Any stable patterns, conventions, or facts discovered that apply beyond this session (array of strings, may be empty)
+
+### Step 2: Append Daily Log Entry
+
+Append a formatted entry to `~/.claude/agent-memory/daily-logs/YYYY-MM-DD.md`:
+
+```markdown
+## HH:MM - {project_name}
+**Summary:** {summary}
+**Key decisions:** {key_decisions as bullet list}
+**Files:** {key_files, comma-separated}
+**Continue:** {continuation_prompt}
+---
+```
+
+Create the file and directories if they don't exist. Use Bash to get the date:
+```bash
+date +%Y-%m-%d
+```
+
+### Step 3: Update MEMORY.md (Optional)
+
+If `stable_facts` is non-empty, read `~/.claude/projects/{project-key}/memory/MEMORY.md`.
+
+For each stable fact, check if it's already captured. If not, append it under an appropriate heading.
+
+**Skip this step** if no new stable facts were discovered. Do NOT pad MEMORY.md with session-specific information.
+
+**MEMORY.md guidelines:**
+- Keep under 200 lines total
+- Only stable patterns confirmed across interactions
+- Organize by topic, not chronologically
+
+### Step 4: Write Session State
+
+Write `.plans/session-state.json` using V2 schema:
 
 ```json
 {
-  "timestamp": "[ISO timestamp]",
-  "original_request": "[what user asked]",
-  "current_task": "[what you're doing now]",
-  "key_files": ["[file1]", "[file2]"],
-  "continuation_prompt": "[Detailed instructions for continuing. Include: what's done, what's next, any blockers or gotchas discovered.]"
+  "$schema": "session-state-v2",
+  "project": "{project_name}",
+  "cwd": "{cwd}",
+  "ts": "{ISO timestamp}",
+  "continue": "{continuation_prompt}",
+  "task": "{current_task}",
+  "todos": [{"t": "task description", "done": false}],
+  "files": ["{edited files}"],
+  "files_read": ["{read files}"]
 }
 ```
 
-3. **Report completion** with the restore command.
+Include current todo list state if any todos exist.
 
-## Quality Bar for continuation_prompt
+### Step 5: Report Completion
 
-The continuation_prompt is the most important field. It should enable a fresh agent to:
+Output:
+
+```
+Session compacted.
+
+Daily log: ~/.claude/agent-memory/daily-logs/{YYYY-MM-DD}.md
+Session state: .plans/session-state.json
+{if MEMORY.md updated: "MEMORY.md updated with N new facts"}
+
+To restore after /clear:
+/restore
+```
+
+## Quality Bar
+
+The daily log entry is meant for your future self. Write it as if briefing a colleague who needs to understand what happened in this session and why decisions were made.
+
+The continuation_prompt in session-state.json should enable a fresh agent to:
 - Understand the goal immediately
 - Know exactly what step to take next
 - Avoid repeating completed work
 - Be aware of any pitfalls discovered
 
-**Example good prompt**: "User wants a REST API for todo items. Created GET /todos endpoint, tested working. Next: implement POST /todos with validation. Note: the db connection pool maxes at 10, discovered this causes timeouts under load."
+## See Also
 
-**Example bad prompt**: "Working on API stuff."
-
-## Output
-
-After writing, say:
-
-```
-Session compacted to .plans/session-state.json
-
-To restore after /clear:
-/restore
-```
+- `/compact-min` - Ultra-minimal compact (no memory writes, faster)
+- `/restore` - Restore session from snapshot

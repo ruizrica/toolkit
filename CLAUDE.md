@@ -110,6 +110,32 @@ Use `/save` and `/restore` for session continuity:
 
 The restore command will immediately continue working without asking what to do next.
 
+## Agent Memory System
+
+The toolkit uses a local memory system at `~/.claude/agent-memory/` with three active memory types:
+
+### Memory Types
+
+| Type | Location | Purpose |
+|------|----------|---------|
+| **Semantic** | `~/.claude/projects/{key}/memory/MEMORY.md` | Stable facts, patterns, conventions (auto-loaded by Claude Code) |
+| **Daily Logs** | `~/.claude/agent-memory/daily-logs/YYYY-MM-DD.md` | Timestamped session entries — what happened, decisions made, files touched |
+| **Session Snapshots** | `~/.claude/agent-memory/sessions/{project}-{timestamp}.md` | Raw conversation excerpts for detailed recall |
+
+### "Remember This" Routing
+
+When you discover something worth remembering:
+- **Stable fact** (applies across sessions) → Write to MEMORY.md (keep under 200 lines, organize by topic)
+- **Session context** (what happened, decisions made) → `/compact` writes to daily log automatically
+- **Raw conversation** → PreCompact hook writes session snapshots automatically
+
+### Compact Commands
+
+- **`/compact`** — Memory-aware: writes daily log entry + session state, optionally updates MEMORY.md
+- **`/compact-min`** — Ultra-minimal: writes session state only (faster, no memory writes)
+
+Both support restoration via `/restore`.
+
 ## Toolkit Commands
 
 **IMPORTANT: For any non-trivial task, prefer `/haiku` to leverage parallel Haiku agents managed by Opus.** This provides faster, more thorough results through parallel execution.

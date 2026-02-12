@@ -4,7 +4,7 @@
 
 # /restore
 
-Restore a compacted session and immediately continue working. This command reads the session state saved by `/compact` and resumes work without asking what to do next.
+Restore a compacted session and immediately continue working. This command reads the session state saved by `/compact`, loads daily log context for cross-session continuity, and resumes work without asking what to do next.
 
 ## Usage
 
@@ -20,9 +20,18 @@ This command takes no arguments. It automatically reads from `.plans/session-sta
 
 1. **Read** - Load session state from `.plans/session-state.json`
 2. **Handle Missing** - If not found, check for backups in `~/.claude/session-states/`
-3. **Parse** - Detect schema version and extract fields
-4. **Restore Todos** - Recreate the task list if present
-5. **Continue** - Immediately resume work based on continuation prompt
+3. **Daily Log Bootstrap** - Read today's and yesterday's daily logs from `~/.claude/agent-memory/daily-logs/` for cross-session context
+4. **Parse** - Detect schema version and extract fields
+5. **Restore Todos** - Recreate the task list if present
+6. **Continue** - Immediately resume work based on continuation prompt
+
+## Memory Bootstrap
+
+On restore, the agent reads:
+- `~/.claude/agent-memory/daily-logs/{today}.md` — what happened earlier today
+- `~/.claude/agent-memory/daily-logs/{yesterday}.md` — what happened yesterday
+
+This provides continuity across sessions. The agent internalizes this context silently — it won't dump the full log to you, but it knows what was done in prior sessions.
 
 ## Schema Support
 
@@ -81,6 +90,7 @@ Restoring session...
 ## Key Behaviors
 
 - **No Questions** - After successful restore, immediately continues working
+- **Daily Logs** - Reads today's and yesterday's logs for cross-session context
 - **Files First** - If `files` array exists, reads the first file
 - **Todo Restoration** - Recreates the task list for tracking
 - **Fast** - Minimal parsing, immediate action
@@ -98,12 +108,13 @@ Restoring session...
 /restore
 ```
 
-## Backup Locations
+## Data Locations
 
 | Location | Purpose |
 |----------|---------|
 | `.plans/session-state.json` | Project-specific state (primary) |
 | `~/.claude/session-states/*.json` | Global backups (fallback) |
+| `~/.claude/agent-memory/daily-logs/` | Cross-session context (bootstrap) |
 
 ## When to Use
 
@@ -114,5 +125,5 @@ Restoring session...
 
 ## See Also
 
-- [/compact](compact.md) - Save session state
+- [/compact](compact.md) - Save session state with memory writes
 - [/save](save.md) - Commit changes (different purpose)
