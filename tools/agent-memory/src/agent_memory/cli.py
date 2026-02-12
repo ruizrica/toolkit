@@ -10,7 +10,7 @@ def _build_parser() -> argparse.ArgumentParser:
     """Build the argparse parser with all subcommands."""
     parser = argparse.ArgumentParser(
         prog="agent-memory",
-        description="Local hybrid search memory system for Claude agents",
+        description="Local hybrid search memory system for Claude Code",
     )
     sub = parser.add_subparsers(dest="command")
 

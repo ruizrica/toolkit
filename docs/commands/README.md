@@ -1,6 +1,6 @@
 # Commands Overview
 
-The Toolkit provides 14 commands organized into three categories: Core Commands for development workflows, Session Management for context preservation, and Git Workflow for version control.
+The Toolkit provides 15 commands organized into three categories: Core Commands for development workflows, Session Management for context preservation, and Git Workflow for version control.
 
 ## Quick Reference
 
@@ -14,6 +14,7 @@ The Toolkit provides 14 commands organized into three categories: Core Commands 
 | [/rlm](rlm.md) | Large document processing | Core |
 | [/gherkin](gherkin.md) | Extract business rules to Gherkin | Core |
 | [/kiro](kiro.md) | Spec-driven development with Kiro methodology | Core |
+| [/agent-memory](agent-memory.md) | Hybrid search over agent memories | Core |
 | [/compact](compact.md) | Memory-aware session compact (daily log + state) | Session |
 | [/compact-min](compact.md#compact-min) | Ultra-minimal session compact (fast, no memory) | Session |
 | [/restore](restore.md) | Restore session with daily log bootstrap | Session |
@@ -54,6 +55,10 @@ Commands for feature development, code review, and documentation.
 ### Spec-Driven Development
 
 - **[/kiro](kiro.md)** - Spec-driven development using the Kiro methodology. Generates EARS-format requirements, design documents, and task breakdowns through interactive Q&A phases, then executes with parallel agents (Cursor or Haiku).
+
+### Memory & Search
+
+- **[/agent-memory](agent-memory.md)** - Search across all memory files (MEMORY.md, daily logs, session snapshots) using hybrid vector + BM25 search. Fully local, zero API calls.
 
 ---
 

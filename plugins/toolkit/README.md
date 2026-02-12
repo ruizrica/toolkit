@@ -24,7 +24,7 @@ claude plugins add ./plugins/toolkit
 | droid-agent | Enterprise code generation |
 | rlm-subcall | Chunk analysis for RLM workflow |
 
-### Commands (12)
+### Commands (13)
 
 | Command | Description |
 |---------|-------------|
@@ -35,17 +35,19 @@ claude plugins add ./plugins/toolkit
 | `/haiku` | Spawn team of 10 Haiku agents managed by Opus |
 | `/rlm` | Recursive Language Model for large documents |
 | `/gherkin` | Extract business rules into Gherkin specs |
+| `/agent-memory` | Search and manage agent memories with hybrid search |
 | `/setup` | Create WIP branch and worktree |
 | `/save` | Commit, merge WIP to main, cleanup |
 | `/stable` | Create stable checkpoint with tags |
 | `/compact` | Save session state before /clear |
 | `/restore` | Restore session from saved state |
 
-### Skills (1)
+### Skills (2)
 
 | Skill | Description |
 |-------|-------------|
 | just-bash | Sandboxed bash execution (read-only FS, no network, in-memory writes) |
+| agent-memory | Local hybrid search (vector + BM25) for memory files |
 
 Skills are reference files installed to `~/.claude/skills/` that teach Claude when and how to use specific CLI tools.
 

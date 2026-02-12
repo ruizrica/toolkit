@@ -10,6 +10,7 @@ Skills are reference files installed to `~/.claude/skills/` that teach Claude wh
 | Skill | CLI Tool | Description |
 |-------|----------|-------------|
 | [just-bash](just-bash.md) | `just-bash` | Sandboxed bash with 75+ commands, read-only FS, no network |
+| [agent-memory](agent-memory.md) | `agent-memory` | Local hybrid search (vector + BM25) over all memory files |
 
 ## How Skills Work
 
