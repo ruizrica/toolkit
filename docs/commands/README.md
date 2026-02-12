@@ -1,6 +1,6 @@
 # Commands Overview
 
-The Toolkit provides 13 commands organized into three categories: Core Commands for development workflows, Session Management for context preservation, and Git Workflow for version control.
+The Toolkit provides 14 commands organized into three categories: Core Commands for development workflows, Session Management for context preservation, and Git Workflow for version control.
 
 ## Quick Reference
 
@@ -14,8 +14,9 @@ The Toolkit provides 13 commands organized into three categories: Core Commands 
 | [/rlm](rlm.md) | Large document processing | Core |
 | [/gherkin](gherkin.md) | Extract business rules to Gherkin | Core |
 | [/kiro](kiro.md) | Spec-driven development with Kiro methodology | Core |
-| [/compact](compact.md) | Save session state before /clear | Session |
-| [/restore](restore.md) | Restore session after /clear | Session |
+| [/compact](compact.md) | Memory-aware session compact (daily log + state) | Session |
+| [/compact-min](compact.md#compact-min) | Ultra-minimal session compact (fast, no memory) | Session |
+| [/restore](restore.md) | Restore session with daily log bootstrap | Session |
 | [/setup](setup.md) | Create WIP branch and worktree | Git |
 | [/save](save.md) | Commit, merge, cleanup worktree | Git |
 | [/stable](stable.md) | Create stable checkpoint | Git |
@@ -60,15 +61,22 @@ Commands for feature development, code review, and documentation.
 
 Commands for preserving context across `/clear` operations.
 
-- **[/compact](compact.md)** - Save minimal session state to `.plans/session-state.json` before clearing context. Captures original request, current task, key files, and continuation instructions.
+- **[/compact](compact.md)** - Memory-aware session compact. Writes a daily log entry to `~/.claude/agent-memory/daily-logs/`, saves session state to `.plans/session-state.json`, and optionally updates MEMORY.md with stable facts discovered during the session.
 
-- **[/restore](restore.md)** - Restore session from saved state and immediately continue working. Supports multiple schema versions.
+- **[/compact-min](compact.md#compact-min)** - Ultra-minimal session compact. Writes only `.plans/session-state.json` with no memory system writes. Faster when you just need a quick checkpoint.
+
+- **[/restore](restore.md)** - Restore session from saved state and immediately continue working. Bootstraps context from today's and yesterday's daily logs. Supports multiple schema versions.
 
 **Workflow:**
 ```bash
-/compact    # Save state
-/clear      # Clear context
-/restore    # Resume seamlessly
+/compact      # Save state + write daily log
+/clear        # Clear context
+/restore      # Resume with daily log context
+```
+
+For a faster checkpoint without memory writes:
+```bash
+/compact-min  # Save state only
 ```
 
 ---
