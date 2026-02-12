@@ -11,19 +11,21 @@
 ## Installation
 
 ```bash
-# Clone this repository
-git clone https://github.com/ruizrica/agent-toolkit.git
-
-# Install the toolkit plugin
-claude plugins add ./agent-toolkit/plugins/toolkit
+# One-line install (recommended)
+curl -fsSL https://raw.githubusercontent.com/ruizrica/toolkit/main/install.sh | bash
 ```
 
-### Setup Scripts (Required for /handbook and /review)
+This clones to `~/.toolkit`, registers the plugin, installs scripts/skills, creates agent memory directories (`~/.claude/agent-memory/`), and installs optional tools (agent-browser, just-bash).
+
+### Manual Install
 
 ```bash
+git clone https://github.com/ruizrica/agent-toolkit.git
+claude plugins add ./agent-toolkit/plugins/toolkit
 mkdir -p ~/.claude/slash_commands
 cp plugins/toolkit/scripts/handbook.py ~/.claude/slash_commands/
 cp plugins/toolkit/scripts/coderabbit_workflow.py ~/.claude/slash_commands/
+mkdir -p ~/.claude/agent-memory/{daily-logs,sessions,procedures}
 ```
 
 ---
@@ -91,7 +93,7 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 | [Commands](docs/commands/README.md) | All 14 commands with usage and examples |
 | [Agents](docs/agents/README.md) | All 9 specialized agents with invocation patterns |
 | [Skills](docs/skills/README.md) | Skill reference files for CLI tools |
-| [Optional Commands](docs/optional/README.md) | MCP-dependent commands (Commander + Photon) |
+| [Optional Commands](docs/optional/README.md) | MCP-dependent commands |
 
 ---
 
@@ -186,9 +188,6 @@ See [/compact docs](docs/commands/compact.md) and [/restore docs](docs/commands/
 ### Optional
 - **agent-browser** - For /gherkin visual analysis (`npm install -g agent-browser`)
 - **just-bash** - Sandboxed bash for safe exploration (`npm install -g just-bash`)
-- **Commander MCP** - For task orchestration commands
-- **Photon MCP** - For memory and semantic search commands
-
 ---
 
 ## Directory Structure

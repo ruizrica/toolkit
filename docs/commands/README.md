@@ -103,7 +103,4 @@ Commands for isolated development using git worktrees.
 
 ## Optional Commands
 
-Some commands require external MCP servers. See [Optional Commands](../optional/README.md) for:
-
-- **Commander MCP**: `/commander-task`, `/commander-plan`, `/commander-execute`
-- **Photon MCP**: `/photon-compact`, `/photon-restore`, `/photon-index`
+Some commands require external MCP servers. See [Optional Commands](../optional/README.md) for details.
