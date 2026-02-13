@@ -24,8 +24,40 @@ Search and manage the local agent memory system using hybrid search. Fully local
 | `ask <question>` | Q&A over memories (requires `ANTHROPIC_API_KEY`) |
 | `summarize` | Consolidate daily logs (requires `ANTHROPIC_API_KEY`) |
 | `install` | Download embedding model (~67MB) |
+| `code-index <path>` | Build code tree from a codebase |
+| `code-nav <query>` | Navigate code tree to find relevant code |
+| `code-tree` | Display indexed code tree structure |
+| `code-refs <node-id>` | Show cross-references for a code node |
+| `code-summarize` | Generate summaries for indexed code nodes |
 
 ## Arguments
+
+### code-index
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `path` | Yes | Root path of the codebase to index |
+
+### code-nav
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `query` | Yes | Search query for navigation |
+| `--json` | No | JSON output (includes nodes + navigation trace) |
+
+### code-tree
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `path` | No | Filter by file path |
+| `--json` | No | JSON output |
+
+### code-refs
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `node_id` | Yes | Node ID to show references for |
+| `--json` | No | JSON output |
 
 ### search
 
@@ -97,6 +129,8 @@ Search and manage the local agent memory system using hybrid search. Fully local
 | **FastEmbed** | Local embedding model (all-MiniLM-L6-v2, ~67MB) |
 | **sqlite-vec** | Vector similarity search via SQLite extension |
 | **FTS5** | Built-in SQLite full-text search (BM25 scoring) |
+| **tree-sitter** | Accurate AST parsing for 165+ languages |
+| **Navigator** | FTS-based beam search tree descent (width=3) |
 
 ## Search Modes
 
@@ -106,7 +140,26 @@ Search and manage the local agent memory system using hybrid search. Fully local
 | **Vector** | `--vector` | Conceptual/semantic queries ("authentication patterns") |
 | **Keyword** | `--keyword` | Exact term matching ("JWT", "pyproject.toml") |
 
-## Examples
+## Code Navigation Examples
+
+```bash
+# Index a codebase for tree navigation
+/agent-memory code-index ./src
+
+# Navigate to find relevant code (returns trace + matching nodes)
+/agent-memory code-nav "hybrid search"
+
+# View indexed code tree
+/agent-memory code-tree --json
+
+# Generate summaries for better navigation accuracy
+/agent-memory code-summarize
+
+# Show cross-references for a specific node
+/agent-memory code-refs 42 --json
+```
+
+## Memory Search Examples
 
 ```bash
 # Search with default hybrid mode
@@ -150,6 +203,8 @@ The toolkit installer (`install.sh`) handles this automatically.
 - **Before `/restore`** — Search for specific topics across all daily logs and sessions
 - **Cross-session recall** — "What did we decide about X?" instead of scrolling
 - **Adding structured memories** — Store key decisions/patterns for retrieval
+- **Understanding a codebase** — Index and navigate code structure with `code-index` + `code-nav`
+- **Finding specific code** — Navigate hierarchically rather than grep (preserves class→method structure)
 
 ## When NOT to Use
 

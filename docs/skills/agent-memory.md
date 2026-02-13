@@ -52,6 +52,20 @@ agent-memory add "Use --break-system-packages for PEP 668" --source daily --tags
 
 # Q&A over memories (requires ANTHROPIC_API_KEY)
 agent-memory ask "What testing patterns do we follow?"
+
+# --- Code Navigation ---
+
+# Index a codebase (tree-sitter AST parsing)
+agent-memory code-index ./src
+
+# Navigate to find relevant code
+agent-memory code-nav "hybrid search" --json
+
+# View indexed code structure
+agent-memory code-tree
+
+# Generate summaries for indexed nodes
+agent-memory code-summarize
 ```
 
 ## Skill File Location
@@ -66,6 +80,8 @@ Installed to `~/.claude/skills/agent-memory.md` — Claude reads this to underst
 | **sqlite-vec** | Vector similarity search (SQLite extension) |
 | **FTS5** | BM25 keyword search (built-in SQLite) |
 | **Hybrid scoring** | 0.7 * vector + 0.3 * BM25 |
+| **tree-sitter** | AST parsing for 165+ languages |
+| **Navigator** | FTS beam search tree descent (width=3) |
 
 All data stored in `~/.claude/agent-memory/memory.db`. No network calls for search.
 

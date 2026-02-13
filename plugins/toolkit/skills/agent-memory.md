@@ -34,6 +34,13 @@ agent-memory get <id>
 agent-memory ask "what do I know about X?"   # Q&A over memories
 agent-memory summarize                       # Consolidate daily logs
 
+# Code Navigation (tree-sitter AST, 165+ languages)
+agent-memory code-index ./src                # Index codebase
+agent-memory code-nav "hybrid search"        # Navigate to relevant code
+agent-memory code-tree                       # Display tree structure
+agent-memory code-summarize                  # Generate node summaries
+agent-memory code-refs 42                    # Show cross-references
+
 # Setup
 agent-memory install                         # Download ~67MB embedding model
 ```

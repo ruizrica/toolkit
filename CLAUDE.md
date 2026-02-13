@@ -150,6 +150,18 @@ agent-memory add "content" --source daily  # Add a memory manually
 agent-memory ask "question"              # Q&A over memories (requires ANTHROPIC_API_KEY)
 ```
 
+### Code Navigation with agent-memory CLI
+
+Tree-based code navigation using tree-sitter AST parsing (165+ languages):
+
+```bash
+agent-memory code-index ./src            # Index codebase into tree
+agent-memory code-nav "hybrid search"    # Navigate tree to find code
+agent-memory code-tree                   # Display tree structure
+agent-memory code-summarize              # Generate node summaries
+agent-memory code-refs 42               # Show cross-references
+```
+
 Use `--json` flag on any command for machine-readable output.
 
 ## Toolkit Commands
