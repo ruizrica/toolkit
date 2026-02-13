@@ -134,5 +134,5 @@ If merge conflicts occur, you're prompted to choose:
 
 ## See Also
 
-- [/setup](setup.md) - Create WIP worktree
+- [/worktree](worktree.md) - Create and manage isolated worktrees
 - [/stable](stable.md) - Create stable checkpoint

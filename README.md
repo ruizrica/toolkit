@@ -79,7 +79,8 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 
 ### Git Worktree Workflow
 ```bash
-/setup      # Create isolated worktree
+/setup      # Initialize project context
+/worktree   # Create and manage isolated worktree
 # ... develop ...
 /save       # Merge back to main
 ```
@@ -90,7 +91,7 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 
 | Section | Description |
 |---------|-------------|
-| [Commands](docs/commands/README.md) | All 15 commands with usage and examples |
+| [Commands](docs/commands/README.md) | All 16 commands with usage and examples |
 | [Agents](docs/agents/README.md) | All 9 specialized agents with invocation patterns |
 | [Skills](docs/skills/README.md) | Skill reference files for CLI tools |
 | [Optional Commands](docs/optional/README.md) | MCP-dependent commands |
@@ -120,7 +121,8 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 | `/compact` | Memory-aware session compact (daily log + state) | [→](docs/commands/compact.md) |
 | `/compact-min` | Ultra-minimal session compact (fast, no memory) | [→](docs/commands/compact.md#compact-min) |
 | `/restore` | Restore after /clear (loads daily logs) | [→](docs/commands/restore.md) |
-| `/setup` | Create WIP worktree | [→](docs/commands/setup.md) |
+| `/setup` | Initialize context and run agent-memory index | [→](docs/commands/setup.md) |
+| `/worktree` | Manage isolated worktrees | [→](docs/commands/worktree.md) |
 | `/save` | Commit, merge, cleanup | [→](docs/commands/save.md) |
 | `/stable` | Create stable checkpoint | [→](docs/commands/stable.md) |
 
@@ -218,7 +220,7 @@ See [/compact docs](docs/commands/compact.md) and [/restore docs](docs/commands/
 agent-toolkit/
 ├── plugins/toolkit/
 │   ├── agents/          # 9 specialized agents
-│   ├── commands/        # 14 commands
+│   ├── commands/        # 15 commands
 │   ├── skills/          # Skill reference files
 │   ├── scripts/         # Python scripts
 │   └── optional/        # MCP-dependent commands

@@ -22,6 +22,7 @@
     "./commands/handbook.md",
     "./commands/@implement.md",
     "./commands/setup.md",
+    "./commands/worktree.md",
     "./commands/save.md",
     "./commands/stable.md",
     "./commands/haiku.md",

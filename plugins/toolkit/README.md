@@ -24,7 +24,7 @@ claude plugins add ./plugins/toolkit
 | droid-agent | Enterprise code generation |
 | rlm-subcall | Chunk analysis for RLM workflow |
 
-### Commands (13)
+### Commands (14)
 
 | Command | Description |
 |---------|-------------|
@@ -36,7 +36,8 @@ claude plugins add ./plugins/toolkit
 | `/rlm` | Recursive Language Model for large documents |
 | `/gherkin` | Extract business rules into Gherkin specs |
 | `/agent-memory` | Search and manage agent memories with hybrid search |
-| `/setup` | Create WIP branch and worktree |
+| `/worktree` | Manage git worktrees for isolated agent workflows |
+| `/setup` | Initialize project context and run agent-memory indexing |
 | `/save` | Commit, merge WIP to main, cleanup |
 | `/stable` | Create stable checkpoint with tags |
 | `/compact` | Save session state before /clear |

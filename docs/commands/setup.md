@@ -1,10 +1,6 @@
-<p align="center">
-  <img src="../../assets/toolkit.png" alt="Setup" width="120">
-</p>
-
 # /setup
 
-Create a WIP branch and worktree for isolated development. This command sets up a separate working directory within `.specbook/worktrees/` where you can make changes without affecting the main branch.
+Bootstrap command for project initialization and memory-first context setup.
 
 ## Usage
 
@@ -12,107 +8,67 @@ Create a WIP branch and worktree for isolated development. This command sets up 
 /setup
 ```
 
-## Arguments
+## What it does
 
-This command takes no arguments. It automatically generates names based on the current timestamp.
+1. Validates that the current directory is inside a git repository.
+2. Checks for `agent-memory` in `PATH` and fails fast with a clear message if missing.
+3. Runs `agent-memory index` over the repository.
+4. Creates project context files if missing:
+   - `claude.md`
+   - `agents.md` (reference only, no duplicated context content)
+5. Prints a compact post-setup summary and next `/worktree` usage steps.
 
-## How It Works
+## Idempotent behavior
 
-1. **Verify** - Confirm we're in a git repository
-2. **Generate Names** - Create timestamp-based branch name: `wip-YYYYMMDD-HHMMSS`
-3. **Create Branch** - Create the WIP branch from current HEAD
-4. **Create Worktree** - Set up directory in `.specbook/worktrees/wip-YYYYMMDD-HHMMSS`
-5. **Report** - Display the worktree path and instructions
+- If `claude.md` already exists, the command skips re-writing it.
+- If `agents.md` already exists, the command skips re-writing it.
+- Re-running `/setup` is safe and should not overwrite existing files.
 
-## What Gets Created
+## Constraints satisfied
 
-| Item | Example | Description |
-|------|---------|-------------|
-| Branch | `wip-20260130-103000` | New branch for development |
-| Worktree | `.specbook/worktrees/wip-20260130-103000/` | Separate working directory |
+- Memory tool primacy is explicitly documented in generated `claude.md`.
+- `agent-memory` is required and checked before any file generation.
+- Both `claude.md` and `agents.md` are created only when absent.
+- Git repository validation runs before any operations.
 
-## Directory Structure
+## Generated `claude.md` includes
 
-Before:
-```
-myproject/             ← You are here
-├── src/
-├── .specbook/
-└── ...
-```
+- Primary context guidance: use memory lookup before file reads.
+- Memory query guidance using commands such as `agent-memory query`, `agent-memory recall`, and related variants.
+- Stack and structure notes for this repository.
+- Coding conventions and architectural notes.
 
-After:
-```
-myproject/             ← Main worktree (unchanged)
-├── src/
-├── .specbook/
-│   └── worktrees/     ← New worktrees directory
-│       └── wip-20260130-103000/   ← New WIP worktree
-│           ├── src/
-│           └── ...
-└── ...
-```
+## Generated `agents.md` format
 
-## Output Example
+`agents.md` is intentionally minimal and references the context file only:
 
-```
-Created WIP worktree:
+```markdown
+# Agent Configuration
 
-📁 Worktree: .specbook/worktrees/wip-20260130-103000
-🌿 Branch: wip-20260130-103000
+See [claude.md](./claude.md) for project context, coding standards, and memory tool usage guidelines.
 
-You can work in the worktree without changing directories.
-The agent will handle operations in the worktree context.
-
-When done, run /save to merge back to main
+## Memory Tool Usage
+This project uses the agent-memory CLI. Refer to claude.md for detailed instructions on context retrieval.
 ```
 
-## Benefits
+## Example output
 
-- **Isolation** - Keep main branch clean during development
-- **Parallel Work** - Multiple worktrees can exist simultaneously
-- **Clean Rollback** - Easy to abandon changes by deleting worktree
-- **Safe Experimentation** - Main branch remains untouched
+```text
+Running agent-memory index ...
+agent-memory index complete.
 
-## Git Commands Executed
+Setup summary:
+- agent-memory index: done
+- claude context file: created (./claude.md)
+- agents file: created (./agents.md)
 
-```bash
-git rev-parse --git-dir           # Verify git repo
-git checkout main                 # Switch to main
-git branch wip-YYYYMMDD-HHMMSS    # Create WIP branch
-mkdir -p .specbook/worktrees      # Create worktrees directory
-git worktree add .specbook/worktrees/wip-YYYYMMDD-HHMMSS wip-YYYYMMDD-HHMMSS  # Create worktree
-```
-
-## Requirements
-
-- **Git** - Must be in a git repository
-- **Main/Master branch** - The base branch must exist
-- **Write access** - To parent directory for worktree creation
-
-## When to Use
-
-- Starting a new feature or experiment
-- Making changes you might want to abandon
-- Working on multiple features simultaneously
-- Keeping main branch pristine during development
-
-## Workflow
-
-```bash
-# Create isolated workspace
-/setup
-
-# The agent will now work in .specbook/worktrees/wip-YYYYMMDD-HHMMSS
-# No need to change directories - you stay in your project root
-
-# ... agent does development work in the worktree ...
-
-# Merge back to main when ready
-/save
+Next steps:
+1) Read CLAUDE guidance: /worktree setup <path> <branch>
+2) Use /worktree list to review available worktrees
+3) Use /worktree add ... for additional isolated worktrees
 ```
 
 ## See Also
 
-- [/save](save.md) - Commit, merge, and cleanup
-- [/stable](stable.md) - Create stable checkpoint
+- [/worktree](worktree.md) - worktree lifecycle commands (add/list/remove/setup)
+- [/save](save.md) - commit, merge, and cleanup workflows

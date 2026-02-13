@@ -1,6 +1,6 @@
 # Commands Overview
 
-The Toolkit provides 15 commands organized into three categories: Core Commands for development workflows, Session Management for context preservation, and Git Workflow for version control.
+The Toolkit provides 16 commands organized into three categories: Core Commands for development workflows, Session Management for context preservation, and Git Workflow for version control.
 
 ## Quick Reference
 
@@ -18,7 +18,8 @@ The Toolkit provides 15 commands organized into three categories: Core Commands 
 | [/compact](compact.md) | Memory-aware session compact (daily log + state) | Session |
 | [/compact-min](compact.md#compact-min) | Ultra-minimal session compact (fast, no memory) | Session |
 | [/restore](restore.md) | Restore session with daily log bootstrap | Session |
-| [/setup](setup.md) | Create WIP branch and worktree | Git |
+| [/worktree](worktree.md) | Manage git worktrees (add/list/remove/setup) | Git |
+| [/setup](setup.md) | Initialize project context and index with agent-memory | Git |
 | [/save](save.md) | Commit, merge, cleanup worktree | Git |
 | [/stable](stable.md) | Create stable checkpoint | Git |
 
@@ -90,7 +91,8 @@ For a faster checkpoint without memory writes:
 
 Commands for isolated development using git worktrees.
 
-- **[/setup](setup.md)** - Create a WIP branch and worktree for isolated development. The worktree is created in `.specbook/worktrees/` within the project directory.
+- **[/setup](setup.md)** - Initialize project context and memory tooling (`claude.md`, `agents.md`, `agent-memory index`).
+- **[/worktree](worktree.md)** - Create, list, remove, and setup worktrees for isolated development.
 
 - **[/save](save.md)** - Commit all changes, merge WIP branch to main, and cleanup the worktree and branch. Handles merge conflicts interactively.
 
@@ -98,9 +100,9 @@ Commands for isolated development using git worktrees.
 
 **Workflow:**
 ```bash
-/setup      # Create isolated worktree
-# ... develop feature ...
-/save       # Merge back to main
+/setup      # Initialize project context + index for worktree development
+/worktree setup  # Create isolated worktree + setup automation
+/save       # Merge back to main (for WIP worktree workflows)
 /stable     # Optional: create checkpoint
 ```
 

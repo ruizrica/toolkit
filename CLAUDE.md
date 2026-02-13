@@ -192,6 +192,7 @@ Only skip `/haiku` for truly simple tasks:
 - **`/handbook`** - Generate comprehensive project documentation
 - **`/gherkin [path]`** - Extract business rules into living Gherkin documentation
 - **`/rlm context=<path> query=<question>`** - Process large documents that exceed context limits
-- **`/setup`** - Create WIP branch and worktree for isolated development
+- **`/setup`** - Initialize project context and index memory
+- **`/worktree`** - Manage git worktrees for parallel development
 - **`/save [message]`** - Commit and merge WIP back to main
 - **`/restore`** - Resume session from saved state after `/clear`
