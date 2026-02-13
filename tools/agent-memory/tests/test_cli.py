@@ -41,6 +41,7 @@ def test_cli_no_args_shows_logo():
     assert code == 0
     assert "▄██████▄" in stdout
     assert "████▀" in stdout
+    assert "Created by Ricardo Ruiz - 2026" in stdout
 
 
 def test_cli_help():
