@@ -409,7 +409,9 @@ LOGO = r"""
 ██ ██ ██ ██▄▄▄▄  ██ ██ ██ ██▄▄██ ██     ██▄▄██
 ▀▀ ▀▀ ▀▀  ▀▀▀▀▀  ▀▀ ▀▀ ▀▀  ▀▀▀▀  ▀▀      ▀▀▀██
                                          ████▀
-           Created by Ricardo Ruiz - 2026
+
+Created by Ricardo Ruiz - 2026
+ruizrica.io
 """.strip()
 
 
