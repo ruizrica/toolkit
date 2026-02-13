@@ -77,6 +77,51 @@ def init_db(db_path: Path) -> sqlite3.Connection:
             content_rowid='rowid',
             tokenize='porter unicode61'
         );
+
+        CREATE TABLE IF NOT EXISTS code_nodes (
+            id             INTEGER PRIMARY KEY AUTOINCREMENT,
+            repo_path      TEXT NOT NULL,
+            file_path      TEXT NOT NULL,
+            node_type      TEXT NOT NULL,
+            name           TEXT NOT NULL,
+            qualified_name TEXT NOT NULL DEFAULT '',
+            parent_id      INTEGER REFERENCES code_nodes(id),
+            start_line     INTEGER NOT NULL,
+            end_line       INTEGER NOT NULL,
+            signature      TEXT NOT NULL DEFAULT '',
+            docstring      TEXT NOT NULL DEFAULT '',
+            body_hash      TEXT NOT NULL DEFAULT '',
+            summary        TEXT NOT NULL DEFAULT '',
+            depth          INTEGER NOT NULL DEFAULT 0
+        );
+
+        CREATE TABLE IF NOT EXISTS code_refs (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            source_id   INTEGER NOT NULL,
+            target_id   INTEGER,
+            target_name TEXT NOT NULL,
+            ref_type    TEXT NOT NULL,
+            line        INTEGER NOT NULL DEFAULT 0
+        );
+
+        CREATE TABLE IF NOT EXISTS code_files (
+            path  TEXT PRIMARY KEY,
+            repo  TEXT NOT NULL DEFAULT '',
+            hash  TEXT NOT NULL,
+            mtime REAL NOT NULL,
+            size  INTEGER NOT NULL
+        );
+
+        CREATE VIRTUAL TABLE IF NOT EXISTS code_nodes_fts USING fts5(
+            name,
+            qualified_name,
+            summary,
+            signature,
+            docstring,
+            content='code_nodes',
+            content_rowid='id',
+            tokenize='porter unicode61'
+        );
     """)
 
     # Create vec0 table if sqlite-vec is available
