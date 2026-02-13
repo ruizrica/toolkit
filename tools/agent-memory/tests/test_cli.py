@@ -29,10 +29,18 @@ def _run_cli(*args, env_overrides=None):
 
 
 def test_cli_no_args():
-    """Running with no args shows help and exits cleanly."""
+    """Running with no args shows logo and help and exits cleanly."""
     stdout, stderr, code = _run_cli()
     assert code == 0
     assert "usage" in stdout.lower() or "agent-memory" in stdout.lower()
+
+
+def test_cli_no_args_shows_logo():
+    """Running with no args displays the MEMORY ASCII logo."""
+    stdout, stderr, code = _run_cli()
+    assert code == 0
+    assert "▄██████▄" in stdout
+    assert "████▀" in stdout
 
 
 def test_cli_help():

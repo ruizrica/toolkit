@@ -403,12 +403,23 @@ def cmd_code_summarize(args) -> None:
     print(f"Summarized {count} code nodes")
 
 
+LOGO = r"""
+▄██████▄ ▄████▄  ▄██████▄ ▄████▄ ██▄███ ██  ██
+██ ██ ██ ██▄▄██  ██ ██ ██ ██  ██ ██▀▀   ██  ██
+██ ██ ██ ██▄▄▄▄  ██ ██ ██ ██▄▄██ ██     ██▄▄██
+▀▀ ▀▀ ▀▀  ▀▀▀▀▀  ▀▀ ▀▀ ▀▀  ▀▀▀▀  ▀▀      ▀▀▀██
+                                         ████▀
+""".strip()
+
+
 def main() -> None:
     """CLI entry point."""
     parser = _build_parser()
     args = parser.parse_args()
 
     if args.command is None:
+        print(LOGO)
+        print()
         parser.print_help()
         return
 
