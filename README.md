@@ -182,6 +182,17 @@ The toolkit includes a local memory system at `~/.claude/agent-memory/` that pro
 agent-memory search "what embedding model?"   # Hybrid search (vector + BM25)
 agent-memory search "TDD" --keyword           # Exact keyword match
 agent-memory index                            # Reindex all memory files
+agent-memory add "always use bun" --source daily  # Add a memory manually
+agent-memory get <id-or-prefix>               # Get memory by ID or prefix
+```
+
+**Code navigation** (tree-sitter AST, 165+ languages):
+```bash
+agent-memory code-index ./src                 # Index codebase into tree
+agent-memory code-nav "authentication"        # Navigate tree to find code
+agent-memory code-tree                        # Display tree structure
+agent-memory code-summarize                   # Generate node summaries
+agent-memory code-refs 42                     # Show cross-references
 ```
 
 See [/compact docs](docs/commands/compact.md) and [/restore docs](docs/commands/restore.md) for details.

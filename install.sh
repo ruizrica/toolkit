@@ -271,17 +271,31 @@ install_agent_memory() {
         return 0
     fi
 
+    local needs_install=false
+
     if command -v agent-memory &> /dev/null; then
-        echo "✓ agent-memory ready"
-        return 0
+        # Verify tree-sitter-language-pack is available (required for code-index)
+        local python_bin
+        python_bin=$(head -1 "$(which agent-memory)" | sed 's/^#!//')
+        if [[ -n "$python_bin" ]] && "$python_bin" -c "import tree_sitter_language_pack" 2>/dev/null; then
+            echo "✓ agent-memory ready"
+            return 0
+        else
+            print_warning "agent-memory missing tree-sitter deps, reinstalling..."
+            needs_install=true
+        fi
+    else
+        needs_install=true
     fi
 
-    if command -v pip3 &> /dev/null; then
-        pip3 install --break-system-packages -e "$BASE_DIR/tools/agent-memory" 2>/dev/null && \
-            echo "✓ agent-memory installed" || \
+    if [[ "$needs_install" == "true" ]]; then
+        if command -v pip3 &> /dev/null; then
+            pip3 install --break-system-packages -e "$BASE_DIR/tools/agent-memory" 2>/dev/null && \
+                echo "✓ agent-memory installed" || \
+                print_warning "Run: pip3 install --break-system-packages -e ~/.toolkit/tools/agent-memory"
+        else
             print_warning "Run: pip3 install --break-system-packages -e ~/.toolkit/tools/agent-memory"
-    else
-        print_warning "Run: pip3 install --break-system-packages -e ~/.toolkit/tools/agent-memory"
+        fi
     fi
 }
 
