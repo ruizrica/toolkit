@@ -207,10 +207,12 @@ register_plugin() {
     fi
 
     claude plugins remove toolkit 2>/dev/null || true
-    if claude plugins add "$BASE_DIR/plugins/toolkit" >/dev/null 2>&1; then
+    local add_output
+    if add_output=$(claude plugins add "$BASE_DIR/plugins/toolkit" 2>&1); then
         echo "✓ Plugin registered"
     else
-        print_warning "Plugin registration failed - run: claude plugins add ~/.toolkit/plugins/toolkit"
+        print_error "Plugin registration failed: $add_output"
+        print_warning "Manual fix: claude plugins add ~/.toolkit/plugins/toolkit"
     fi
 }
 
@@ -271,31 +273,12 @@ install_agent_memory() {
         return 0
     fi
 
-    local needs_install=false
-
-    if command -v agent-memory &> /dev/null; then
-        # Verify tree-sitter-language-pack is available (required for code-index)
-        local python_bin
-        python_bin=$(head -1 "$(which agent-memory)" | sed 's/^#!//')
-        if [[ -n "$python_bin" ]] && "$python_bin" -c "import tree_sitter_language_pack" 2>/dev/null; then
-            echo "✓ agent-memory ready"
-            return 0
-        else
-            print_warning "agent-memory missing tree-sitter deps, reinstalling..."
-            needs_install=true
-        fi
-    else
-        needs_install=true
-    fi
-
-    if [[ "$needs_install" == "true" ]]; then
-        if command -v pip3 &> /dev/null; then
-            pip3 install --break-system-packages -e "$BASE_DIR/tools/agent-memory" 2>/dev/null && \
-                echo "✓ agent-memory installed" || \
-                print_warning "Run: pip3 install --break-system-packages -e ~/.toolkit/tools/agent-memory"
-        else
+    if command -v pip3 &> /dev/null; then
+        pip3 install --break-system-packages -e "$BASE_DIR/tools/agent-memory" 2>/dev/null && \
+            echo "✓ agent-memory installed" || \
             print_warning "Run: pip3 install --break-system-packages -e ~/.toolkit/tools/agent-memory"
-        fi
+    else
+        print_warning "pip3 not found. Run: pip3 install --break-system-packages -e ~/.toolkit/tools/agent-memory"
     fi
 }
 
@@ -395,6 +378,7 @@ perform_uninstall() {
 VERBOSE=false
 DRY_RUN=false
 UNINSTALL=false
+REFRESH=false
 
 main() {
     # Parse arguments
@@ -412,6 +396,10 @@ main() {
                 UNINSTALL=true
                 shift
                 ;;
+            --refresh)
+                REFRESH=true
+                shift
+                ;;
             -h|--help)
                 echo "Usage: $0 [OPTIONS]"
                 echo ""
@@ -419,6 +407,7 @@ main() {
                 echo "  -v, --verbose    Show verbose output"
                 echo "  --dry-run        Preview without making changes"
                 echo "  --uninstall      Remove Toolkit"
+                echo "  --refresh        Re-register plugin and skills (after git pull)"
                 echo "  -h, --help       Show this help message"
                 exit 0
                 ;;
@@ -433,6 +422,15 @@ main() {
     # Handle uninstall
     if [[ "$UNINSTALL" == "true" ]]; then
         perform_uninstall
+        exit 0
+    fi
+
+    # Handle refresh
+    if [[ "$REFRESH" == "true" ]]; then
+        print_section "Refreshing Plugin"
+        register_plugin
+        install_skills
+        print_success "Plugin refreshed!"
         exit 0
     fi
 
