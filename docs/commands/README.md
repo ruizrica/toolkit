@@ -18,7 +18,7 @@ The Toolkit provides 16 commands organized into three categories: Core Commands 
 | [/compact](compact.md) | Memory-aware session compact (daily log + state) | Session |
 | [/compact-min](compact.md#compact-min) | Ultra-minimal session compact (fast, no memory) | Session |
 | [/restore](restore.md) | Restore session with daily log bootstrap | Session |
-| [/worktree](worktree.md) | Manage git worktrees (add/list/remove/setup) | Git |
+| [/worktree](worktree.md) | Create isolated git worktrees with setup automation | Git |
 | [/setup](setup.md) | Initialize project context and index with agent-memory | Git |
 | [/save](save.md) | Commit, merge, cleanup worktree | Git |
 | [/stable](stable.md) | Create stable checkpoint | Git |
@@ -92,7 +92,7 @@ For a faster checkpoint without memory writes:
 Commands for isolated development using git worktrees.
 
 - **[/setup](setup.md)** - Initialize project context and memory tooling (`claude.md`, `agents.md`, `agent-memory index`).
-- **[/worktree](worktree.md)** - Create, list, remove, and setup worktrees for isolated development.
+- **[/worktree](worktree.md)** - Create worktrees for isolated development.
 
 - **[/save](save.md)** - Commit all changes, merge WIP branch to main, and cleanup the worktree and branch. Handles merge conflicts interactively.
 
@@ -101,7 +101,7 @@ Commands for isolated development using git worktrees.
 **Workflow:**
 ```bash
 /setup      # Initialize project context + index for worktree development
-/worktree setup  # Create isolated worktree + setup automation
+/worktree  # Create isolated worktree + setup automation
 /save       # Merge back to main (for WIP worktree workflows)
 /stable     # Optional: create checkpoint
 ```

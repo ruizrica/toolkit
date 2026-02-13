@@ -1,24 +1,18 @@
 ---
-description: "Manage git worktrees for isolated agent development"
-argument-hint: "<add|setup|list|remove> [path] [branch]"
+description: "Create a linked worktree for parallel agent development"
+argument-hint: "[path] [branch]"
 ---
 
 # /worktree
 
-Manage worktrees from the current git repository.
+Create and manage git worktrees for parallel agent development.
 
-Subcommands:
-
-- `add [path] [branch]` - create a worktree.
-- `setup [path] [branch]` - create + run setup automation.
-- `list` - list all worktrees.
-- `remove <path-or-branch>` - remove a worktree (use `--force` to remove dirty worktree).
+- `/worktree [path] [branch]` - create a worktree (with setup automation).
 
 ```bash
 !WORKTREE_ARGS="$ARGUMENTS"
 !python3 - <<'PY'
 import os
-import shlex
 import shutil
 import subprocess
 import sys
@@ -96,111 +90,6 @@ def choose_branch(root):
     return branches[0]
 
 
-def get_current_branch(root):
-    result = run(["git", "branch", "--show-current"], root, capture=True)
-    branch = result.stdout.strip()
-    return branch or "main"
-
-
-def parse_args(raw):
-    tokens = shlex.split(raw) if raw.strip() else []
-    if not tokens:
-        return "help", [], {}
-
-    command = tokens[0]
-    rest = tokens[1:]
-    options = {"path": None, "branch": None, "force": False}
-    positional = []
-
-    i = 0
-    while i < len(rest):
-        token = rest[i]
-        if token in {"--path", "-p"}:
-            i += 1
-            if i >= len(rest):
-                fail(f"Missing value for {token}")
-            options["path"] = rest[i]
-        elif token in {"--branch", "-b"}:
-            i += 1
-            if i >= len(rest):
-                fail(f"Missing value for {token}")
-            options["branch"] = rest[i]
-        elif token == "--force":
-            options["force"] = True
-        elif token.startswith("-"):
-            fail(f"Unknown flag: {token}")
-        else:
-            positional.append(token)
-        i += 1
-
-    if positional:
-        options["path"] = positional[0] if options["path"] is None else options["path"]
-        if len(positional) > 1 and options["branch"] is None:
-            options["branch"] = positional[1]
-        if len(positional) > 2:
-            fail(f"Too many positional args: {' '.join(positional)}")
-    return command, positional, options
-
-
-def list_worktrees(root):
-    result = run(["git", "worktree", "list", "--porcelain"], root, capture=True)
-    entries = []
-    current = {}
-    for line in result.stdout.splitlines():
-        if line.startswith("worktree "):
-            if current:
-                entries.append(current)
-                current = {}
-            current["path"] = line.split(" ", 1)[1]
-        elif line.startswith("branch "):
-            current["branch"] = line.split(" ", 1)[1].replace("refs/heads/", "", 1)
-    if current:
-        entries.append(current)
-
-    if not entries:
-        print("No worktrees found.")
-        return
-
-    print("Path\tBranch")
-    print("----\t------")
-    for entry in entries:
-        branch = entry.get("branch", "(detached)")
-        print(f"{entry['path']}\t{branch}")
-
-
-def find_worktree_by_identifier(root, identifier):
-    result = run(["git", "worktree", "list", "--porcelain"], root, capture=True)
-    entries = []
-    current = {}
-    for line in result.stdout.splitlines():
-        if line.startswith("worktree "):
-            if current:
-                entries.append(current)
-            current = {"path": line.split(" ", 1)[1]}
-        elif line.startswith("branch "):
-            current["branch"] = line.split(" ", 1)[1].replace("refs/heads/", "", 1)
-    if current:
-        entries.append(current)
-
-    requested = Path(identifier)
-    requested_path = requested if requested.is_absolute() else root.joinpath(requested).resolve()
-
-    for entry in entries:
-        entry_path = Path(entry["path"])
-        if entry_path == requested_path:
-            return Path(entry["path"])
-        if entry.get("branch") == identifier:
-            return Path(entry["path"])
-        if Path(entry["path"]).name == identifier:
-            return Path(entry["path"])
-    return None
-
-
-def is_dirty_worktree(root, path):
-    check = run(["git", "status", "--short"], path, capture=True, check=False)
-    return check.returncode == 0 and check.stdout.strip()
-
-
 def install_dependencies(root):
     path = Path(root)
     if (path / "package-lock.json").exists() and shutil.which("npm"):
@@ -252,6 +141,18 @@ def open_editor(root, no_editor=False):
         print(f"WARN: editor '{editor}' not found; skipped auto-open.")
 
 
+def parse_args(raw):
+    tokens = raw.split() if raw.strip() else []
+
+    if len(tokens) > 2:
+        fail(f"Too many arguments: {' '.join(tokens)}")
+
+    return {
+        "path": tokens[0] if len(tokens) >= 1 else None,
+        "branch": tokens[1] if len(tokens) >= 2 else None,
+    }
+
+
 def add_worktree(root, path, branch, run_setup, state, open_editor_flag=True):
     command = ["git", "worktree", "add"]
     created = not branch_exists(root, branch)
@@ -282,23 +183,7 @@ def rollback(root, state):
         run(["git", "branch", "-D", state.branch], root, check=False)
 
 
-def cmd_add(root, options):
-    branch = options["branch"] or choose_branch(root)
-    path = options["path"] or f".specbook/worktrees/{branch}"
-    absolute = root / path if not Path(path).is_absolute() else Path(path)
-    absolute.parent.mkdir(parents=True, exist_ok=True)
-
-    state = WorktreeState()
-    try:
-        add_worktree(root, absolute, branch, False, state)
-        print(f"Created worktree: {absolute}")
-        print(f"Branch: {branch}")
-    except Exception:
-        rollback(root, state)
-        raise
-
-
-def cmd_setup(root, options):
+def cmd_create(root, options):
     branch = options["branch"] or choose_branch(root)
     path = options["path"] or f".specbook/worktrees/{branch}"
     absolute = root / path if not Path(path).is_absolute() else Path(path)
@@ -316,47 +201,23 @@ def cmd_setup(root, options):
         raise
 
 
-def cmd_remove(root, options):
-    if options["path"] is None:
-        fail("remove requires <path-or-branch>.")
-
-    target = find_worktree_by_identifier(root, options["path"])
-    if target is None:
-        fail(f"Unable to locate worktree '{options['path']}'.")
-
-    if is_dirty_worktree(root, target) and not options["force"]:
-        fail(f"Worktree {target} has uncommitted changes. Use --force to remove anyway.")
-
-    run(["git", "worktree", "remove"] + (["--force"] if options["force"] else []) + [str(target)], root)
-    print(f"Removed worktree: {target}")
-
 def print_help():
-    print("Usage: /worktree <command> [options]")
-    print("  add [path] [branch]       Create and register worktree")
-    print("  setup [path] [branch]     Create worktree and run setup automation")
-    print("  list                      List all registered worktrees")
-    print("  remove <path-or-branch>   Remove worktree (use --force if dirty)")
-    print("Flags: --path, --branch, --force")
+    print("Usage:")
+    print("  /worktree [path] [branch]")
+    print("Creates a git worktree and runs setup automation in that worktree.")
+    print("If branch is omitted, interactive/fuzzy branch selection is used.")
+    print("If path is omitted, defaults to .specbook/worktrees/<branch>.")
 
 
 def main():
     root = require_git_repo()
-    command, _, options = parse_args(os.environ.get("WORKTREE_ARGS", ""))
-
-    if command == "help":
+    raw_args = os.environ.get("WORKTREE_ARGS", "")
+    if raw_args.strip() in {"help", "--help", "-h"}:
         print_help()
         return
 
-    if command == "list":
-        list_worktrees(root)
-    elif command == "add":
-        cmd_add(root, options)
-    elif command == "setup":
-        cmd_setup(root, options)
-    elif command == "remove":
-        cmd_remove(root, options)
-    else:
-        fail(f"Unknown command '{command}'.")
+    options = parse_args(raw_args)
+    cmd_create(root, options)
 
 
 if __name__ == "__main__":

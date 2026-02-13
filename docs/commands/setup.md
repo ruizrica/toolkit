@@ -63,12 +63,11 @@ Setup summary:
 - agents file: created (./agents.md)
 
 Next steps:
-1) Read CLAUDE guidance: /worktree setup <path> <branch>
-2) Use /worktree list to review available worktrees
-3) Use /worktree add ... for additional isolated worktrees
+1) Read CLAUDE guidance: /worktree <path> <branch>
+2) Use /worktree [path] [branch] for additional isolated worktrees
 ```
 
 ## See Also
 
-- [/worktree](worktree.md) - worktree lifecycle commands (add/list/remove/setup)
+- [/worktree](worktree.md) - create isolated worktrees
 - [/save](save.md) - commit, merge, and cleanup workflows

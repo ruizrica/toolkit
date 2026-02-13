@@ -144,4 +144,4 @@ git push origin checkpoint/stable-20260130-103000
 ## See Also
 
 - [/save](save.md) - Commit and merge (used internally)
-- [/worktree](worktree.md) - Worktree management (add/list/remove/setup)
+- [/worktree](worktree.md) - Worktree creation and setup
