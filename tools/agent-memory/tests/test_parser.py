@@ -335,3 +335,11 @@ def test_qualified_names_nested():
     method = cls.children[0]
     assert cls.qualified_name == "MyClass"
     assert method.qualified_name == "MyClass.my_method"
+
+
+def test_parse_file_imports_tree_sitter():
+    """parse_file can import tree-sitter-language-pack (dependency is installed)."""
+    from tree_sitter_language_pack import get_parser
+    parser = get_parser("python")
+    tree = parser.parse(b"def hello(): pass\n")
+    assert tree.root_node is not None

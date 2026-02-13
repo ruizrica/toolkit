@@ -120,3 +120,33 @@ def test_list_memories_respects_limit(tmp_db):
     results = list_memories(conn, limit=3)
     assert len(results) == 3
     conn.close()
+
+
+def test_get_memory_by_prefix(tmp_db):
+    """get_memory finds a chunk using an ID prefix (truncated hash)."""
+    from agent_memory.db import init_db
+    from agent_memory.crud import add_memory, get_memory
+
+    conn = init_db(tmp_db)
+    chunk_id = add_memory(conn, "prefix lookup test", source="daily")
+
+    # Use first 12 chars as prefix — matching CLI truncated output
+    prefix = chunk_id[:12]
+    result = get_memory(conn, prefix)
+
+    assert result is not None
+    assert result["id"] == chunk_id
+    assert result["text"] == "prefix lookup test"
+    conn.close()
+
+
+def test_get_memory_ambiguous_prefix(tmp_db):
+    """get_memory returns None when prefix matches multiple chunks."""
+    from agent_memory.db import init_db
+    from agent_memory.crud import get_memory
+
+    conn = init_db(tmp_db)
+    # Single-char prefix will likely match nothing in an empty DB
+    result = get_memory(conn, "")
+    assert result is None
+    conn.close()

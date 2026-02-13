@@ -40,6 +40,21 @@ def _row_to_result(row: tuple, score: float) -> SearchResult:
     )
 
 
+def _sanitize_fts_query(query: str) -> str:
+    """Escape a user query for safe use with FTS5 MATCH.
+
+    Wraps each whitespace-delimited token in double quotes so that
+    hyphens, plus signs, and other FTS5 operators are treated as
+    literal characters rather than query syntax.
+    """
+    tokens = query.split()
+    if not tokens:
+        return '""'
+    # Quote each token individually; FTS5 treats adjacent quoted
+    # strings as implicit AND.
+    return " ".join(f'"{t}"' for t in tokens)
+
+
 def _fetch_chunk_by_rowid(conn: sqlite3.Connection, rowid: int) -> tuple | None:
     """Fetch chunk data by rowid."""
     cursor = conn.execute(
@@ -59,11 +74,12 @@ def search_keyword(
 
     Returns results sorted by relevance score (descending).
     """
+    safe_query = _sanitize_fts_query(query)
     n_candidates = limit * CANDIDATE_MULTIPLIER
     cursor = conn.execute(
         "SELECT rowid, rank FROM chunks_fts WHERE chunks_fts MATCH ? "
         "ORDER BY rank LIMIT ?",
-        (query, n_candidates),
+        (safe_query, n_candidates),
     )
     rows = cursor.fetchall()
 
@@ -128,12 +144,13 @@ def search_hybrid(
     n_candidates = limit * CANDIDATE_MULTIPLIER
 
     # Gather BM25 scores
+    safe_query = _sanitize_fts_query(query)
     bm25_scores: dict[int, float] = {}
     try:
         cursor = conn.execute(
             "SELECT rowid, rank FROM chunks_fts WHERE chunks_fts MATCH ? "
             "ORDER BY rank LIMIT ?",
-            (query, n_candidates),
+            (safe_query, n_candidates),
         )
         for rowid, rank in cursor.fetchall():
             bm25_scores[rowid] = 1.0 / (1.0 + abs(rank))

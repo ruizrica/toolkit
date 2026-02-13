@@ -126,3 +126,50 @@ def test_search_scores_sorted_descending(tmp_db, sample_memory_dir):
         for i in range(len(results) - 1):
             assert results[i].score >= results[i + 1].score
     conn.close()
+
+
+def test_keyword_search_with_hyphen(tmp_db, sample_memory_dir):
+    """Keyword search handles hyphens without crashing (FTS5 operator escape)."""
+    from agent_memory.db import init_db
+    from agent_memory.search import search_keyword
+
+    conn = init_db(tmp_db)
+    _index_sample(conn, sample_memory_dir)
+
+    # Should not raise sqlite3.OperationalError
+    results = search_keyword(conn, "sqlite-vec")
+    assert isinstance(results, list)
+    conn.close()
+
+
+def test_keyword_search_with_special_chars(tmp_db, sample_memory_dir):
+    """Keyword search handles other FTS5 special characters safely."""
+    from agent_memory.db import init_db
+    from agent_memory.search import search_keyword
+
+    conn = init_db(tmp_db)
+    _index_sample(conn, sample_memory_dir)
+
+    # These all contain FTS5 operators and should not crash
+    for query in ["tree-sitter", "c++", "NOT OR AND", "term*", '"quoted"']:
+        results = search_keyword(conn, query)
+        assert isinstance(results, list)
+    conn.close()
+
+
+def test_hybrid_search_with_hyphen(tmp_db, sample_memory_dir):
+    """Hybrid search BM25 component handles hyphens correctly."""
+    from agent_memory.db import init_db, has_sqlite_vec
+    from agent_memory.search import search_hybrid
+
+    conn = init_db(tmp_db)
+    if not has_sqlite_vec():
+        conn.close()
+        return
+
+    _index_sample(conn, sample_memory_dir)
+
+    # Should not silently swallow the BM25 error
+    results = search_hybrid(conn, "sqlite-vec")
+    assert isinstance(results, list)
+    conn.close()

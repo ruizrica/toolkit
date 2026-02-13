@@ -2,7 +2,10 @@
 # ABOUTME: Produces CodeNode trees from source files for any supported language.
 
 import hashlib
+import logging
 from dataclasses import dataclass, field
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -430,6 +433,11 @@ def parse_file(
     try:
         from tree_sitter_language_pack import get_parser
     except ImportError:
+        logger.warning(
+            "tree-sitter-language-pack is not installed. "
+            "Code parsing will be skipped. "
+            "Install with: pip install tree-sitter-language-pack"
+        )
         return []
 
     parser = get_parser(language)

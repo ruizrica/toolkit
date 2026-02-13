@@ -287,6 +287,13 @@ def cmd_code_index(args) -> None:
     print(f"Indexed {stats.files_indexed} files, {stats.nodes_created} nodes")
     if stats.files_skipped:
         print(f"Skipped {stats.files_skipped} unchanged files")
+    if stats.files_indexed > 0 and stats.nodes_created == 0:
+        print(
+            "Warning: No code nodes were extracted. "
+            "Is tree-sitter-language-pack installed? "
+            "Install with: pip install tree-sitter-language-pack",
+            file=sys.stderr,
+        )
 
 
 def cmd_code_nav(args) -> None:

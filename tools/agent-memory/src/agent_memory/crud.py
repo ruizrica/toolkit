@@ -54,13 +54,26 @@ def add_memory(
 
 
 def get_memory(conn: sqlite3.Connection, chunk_id: str) -> dict | None:
-    """Retrieve a memory chunk by its ID. Returns None if not found."""
+    """Retrieve a memory chunk by its ID or unique prefix. Returns None if not found."""
     cursor = conn.execute(
         "SELECT id, text, path, source, start_line, end_line, created_at "
         "FROM chunks WHERE id = ?",
         (chunk_id,),
     )
     row = cursor.fetchone()
+
+    # Fall back to prefix match if exact match failed and prefix is non-empty
+    if row is None and chunk_id:
+        cursor = conn.execute(
+            "SELECT id, text, path, source, start_line, end_line, created_at "
+            "FROM chunks WHERE id LIKE ?",
+            (chunk_id + "%",),
+        )
+        rows = cursor.fetchmany(2)
+        # Only return if prefix matches exactly one chunk
+        if len(rows) == 1:
+            row = rows[0]
+
     if row is None:
         return None
     return {
