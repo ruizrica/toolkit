@@ -3,6 +3,17 @@
 ABOUTME: Package README for agent-memory — local hybrid search CLI for Claude Code memory files.
 ABOUTME: Covers installation, quick start, all commands, architecture, and development.
 
+```
+▄██████▄ ▄████▄  ▄██████▄ ▄████▄ ██▄███ ██  ██
+██ ██ ██ ██▄▄██  ██ ██ ██ ██  ██ ██▀▀   ██  ██
+██ ██ ██ ██▄▄▄▄  ██ ██ ██ ██▄▄██ ██     ██▄▄██
+▀▀ ▀▀ ▀▀  ▀▀▀▀▀  ▀▀ ▀▀ ▀▀  ▀▀▀▀  ▀▀      ▀▀▀██
+                                         ████▀
+```
+
+Created by Ricardo Ruiz - 2026
+ruizrica.io
+
 Local hybrid search (vector + BM25) over Claude Code memory files. Zero API calls.
 
 ## Installation
