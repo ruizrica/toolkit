@@ -87,18 +87,24 @@ def store_nodes(
 
     # Delete existing nodes (and FTS entries) for these files
     for fp in file_paths:
-        # Get IDs to delete from FTS
+        # Get nodes to delete — need full data for FTS content-sync delete
         cursor = conn.execute(
-            "SELECT id FROM code_nodes WHERE file_path = ? AND repo_path = ?",
+            "SELECT id, name, qualified_name, summary, signature, docstring "
+            "FROM code_nodes WHERE file_path = ? AND repo_path = ?",
             (fp, repo_path),
         )
-        ids = [row[0] for row in cursor.fetchall()]
-        if ids:
+        rows = cursor.fetchall()
+        if rows:
+            ids = [row[0] for row in rows]
+            # Remove from FTS using content-sync delete command
+            for row in rows:
+                conn.execute(
+                    "INSERT INTO code_nodes_fts(code_nodes_fts, rowid, name, "
+                    "qualified_name, summary, signature, docstring) "
+                    "VALUES('delete', ?, ?, ?, ?, ?, ?)",
+                    row,
+                )
             placeholders = ",".join("?" for _ in ids)
-            conn.execute(
-                f"DELETE FROM code_nodes_fts WHERE rowid IN ({placeholders})",
-                ids,
-            )
             conn.execute(
                 f"DELETE FROM code_refs WHERE source_id IN ({placeholders})",
                 ids,

@@ -76,6 +76,9 @@ def _build_parser() -> argparse.ArgumentParser:
     p_cr.add_argument("node_id", help="Node ID to show references for")
     p_cr.add_argument("--json", action="store_true", dest="as_json", help="JSON output")
 
+    # code-summarize
+    sub.add_parser("code-summarize", help="Generate summaries for indexed code nodes")
+
     return parser
 
 
@@ -380,6 +383,19 @@ def cmd_code_refs(args) -> None:
             print(f"  [{ref_type}] {target} (line {line})")
 
 
+def cmd_code_summarize(args) -> None:
+    """Generate summaries for indexed code nodes."""
+    from .config import get_db_path
+    from .db import init_db
+    from .summarizer import summarize_nodes
+
+    conn = init_db(get_db_path())
+    count = summarize_nodes(conn)
+    conn.close()
+
+    print(f"Summarized {count} code nodes")
+
+
 def main() -> None:
     """CLI entry point."""
     parser = _build_parser()
@@ -403,6 +419,7 @@ def main() -> None:
         "code-nav": cmd_code_nav,
         "code-tree": cmd_code_tree,
         "code-refs": cmd_code_refs,
+        "code-summarize": cmd_code_summarize,
     }
 
     handler = commands.get(args.command)
