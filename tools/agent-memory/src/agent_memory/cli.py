@@ -57,6 +57,25 @@ def _build_parser() -> argparse.ArgumentParser:
     # install
     sub.add_parser("install", help="Download embedding model")
 
+    # code-index
+    p_ci = sub.add_parser("code-index", help="Index a codebase for tree navigation")
+    p_ci.add_argument("path", help="Root path of the codebase to index")
+
+    # code-nav
+    p_cn = sub.add_parser("code-nav", help="Navigate code tree to find relevant code")
+    p_cn.add_argument("query", help="Search query for navigation")
+    p_cn.add_argument("--json", action="store_true", dest="as_json", help="JSON output")
+
+    # code-tree
+    p_ct = sub.add_parser("code-tree", help="Display code tree structure")
+    p_ct.add_argument("path", nargs="?", default=None, help="Filter by file path")
+    p_ct.add_argument("--json", action="store_true", dest="as_json", help="JSON output")
+
+    # code-refs
+    p_cr = sub.add_parser("code-refs", help="Show cross-references for a code node")
+    p_cr.add_argument("node_id", help="Node ID to show references for")
+    p_cr.add_argument("--json", action="store_true", dest="as_json", help="JSON output")
+
     return parser
 
 
@@ -252,6 +271,115 @@ def cmd_install(args) -> None:
     print("Model ready.")
 
 
+def cmd_code_index(args) -> None:
+    """Index a codebase for tree navigation."""
+    from .code_indexer import index_codebase
+    from .config import get_db_path
+    from .db import init_db
+
+    conn = init_db(get_db_path())
+    stats = index_codebase(conn, args.path)
+    conn.close()
+
+    print(f"Indexed {stats.files_indexed} files, {stats.nodes_created} nodes")
+    if stats.files_skipped:
+        print(f"Skipped {stats.files_skipped} unchanged files")
+
+
+def cmd_code_nav(args) -> None:
+    """Navigate code tree to find relevant code."""
+    from .config import get_db_path
+    from .db import init_db
+    from .navigator import format_navigation_result, navigate
+
+    conn = init_db(get_db_path())
+    result = navigate(conn, args.query)
+    conn.close()
+
+    if getattr(args, "as_json", False):
+        data = {
+            "nodes": result.nodes,
+            "steps": [
+                {
+                    "depth": s.depth,
+                    "candidates": s.candidates,
+                    "selected": s.selected,
+                }
+                for s in result.steps
+            ],
+        }
+        print(json.dumps(data, indent=2))
+    else:
+        print(format_navigation_result(result))
+
+
+def cmd_code_tree(args) -> None:
+    """Display code tree structure."""
+    from .config import get_db_path
+    from .db import init_db
+    from .tree import get_children, get_roots
+
+    conn = init_db(get_db_path())
+    roots = get_roots(conn)
+
+    if getattr(args, "as_json", False):
+        def _tree_to_dict(node_dict):
+            children = get_children(conn, node_dict["id"])
+            node_dict["children"] = [_tree_to_dict(c) for c in children]
+            return node_dict
+
+        tree_data = [_tree_to_dict(r) for r in roots]
+        print(json.dumps(tree_data, indent=2))
+    else:
+        def _print_tree(node_dict, indent=0):
+            prefix = "  " * indent
+            ntype = node_dict.get("node_type", "?")
+            name = node_dict.get("name", "?")
+            file_path = node_dict.get("file_path", "")
+            line = node_dict.get("start_line", "")
+            print(f"{prefix}[{ntype}] {name}  ({file_path}:{line})")
+            children = get_children(conn, node_dict["id"])
+            for child in children:
+                _print_tree(child, indent + 1)
+
+        if not roots:
+            print("No code nodes indexed.")
+        for root in roots:
+            _print_tree(root)
+
+    conn.close()
+
+
+def cmd_code_refs(args) -> None:
+    """Show cross-references for a code node."""
+    from .config import get_db_path
+    from .db import init_db
+    from .tree import get_node, resolve_refs
+
+    conn = init_db(get_db_path())
+    node_id = int(args.node_id)
+
+    node = get_node(conn, node_id)
+    if node is None:
+        print(f"Node not found: {node_id}", file=sys.stderr)
+        conn.close()
+        sys.exit(1)
+
+    refs = resolve_refs(conn, node_id)
+    conn.close()
+
+    if getattr(args, "as_json", False):
+        print(json.dumps(refs, indent=2))
+    else:
+        if not refs:
+            print(f"No references from {node['name']}.")
+        for ref in refs:
+            target = ref.get("target_name", "?")
+            ref_type = ref.get("ref_type", "?")
+            line = ref.get("line", "?")
+            print(f"  [{ref_type}] {target} (line {line})")
+
+
 def main() -> None:
     """CLI entry point."""
     parser = _build_parser()
@@ -271,6 +399,10 @@ def main() -> None:
         "ask": cmd_ask,
         "summarize": cmd_summarize,
         "install": cmd_install,
+        "code-index": cmd_code_index,
+        "code-nav": cmd_code_nav,
+        "code-tree": cmd_code_tree,
+        "code-refs": cmd_code_refs,
     }
 
     handler = commands.get(args.command)
