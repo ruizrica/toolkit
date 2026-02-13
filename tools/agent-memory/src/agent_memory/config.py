@@ -25,7 +25,7 @@ def get_memory_dir() -> Path:
     env = os.environ.get("AGENT_MEMORY_DIR")
     if env:
         return Path(env)
-    return Path.home() / ".claude" / "agent-memory"
+    return Path.cwd() / ".agent-memory"
 
 
 def get_db_path() -> Path:
@@ -38,9 +38,9 @@ def get_db_path() -> Path:
 
 def get_scan_patterns() -> list[str]:
     """Return glob patterns for all memory file locations."""
-    home = Path.home()
+    memory_dir = get_memory_dir()
     return [
-        str(home / ".claude" / "projects" / "*" / "memory" / "MEMORY.md"),
-        str(home / ".claude" / "agent-memory" / "daily-logs" / "*.md"),
-        str(home / ".claude" / "agent-memory" / "sessions" / "*.md"),
+        str(memory_dir / "projects" / "*" / "memory" / "MEMORY.md"),
+        str(memory_dir / "daily-logs" / "*.md"),
+        str(memory_dir / "sessions" / "*.md"),
     ]

@@ -4,12 +4,13 @@
 from pathlib import Path
 
 
-def test_default_memory_dir():
-    """MEMORY_DIR defaults to ~/.claude/agent-memory/."""
+def test_default_memory_dir(monkeypatch, tmp_path):
+    """MEMORY_DIR defaults to local project `.agent-memory/`."""
+    monkeypatch.chdir(tmp_path)
     from agent_memory.config import get_memory_dir
 
     result = get_memory_dir()
-    expected = Path.home() / ".claude" / "agent-memory"
+    expected = tmp_path / ".agent-memory"
     assert result == expected
 
 
@@ -21,13 +22,14 @@ def test_memory_dir_env_override(monkeypatch, tmp_path):
     assert get_memory_dir() == tmp_path
 
 
-def test_default_db_path():
+def test_default_db_path(monkeypatch, tmp_path):
     """DB lives inside MEMORY_DIR."""
+    monkeypatch.chdir(tmp_path)
     from agent_memory.config import get_db_path
 
     result = get_db_path()
     assert result.name == "memory.db"
-    assert ".claude/agent-memory" in str(result)
+    assert str(result) == str(tmp_path / ".agent-memory" / "memory.db")
 
 
 def test_db_path_env_override(monkeypatch, tmp_path):
@@ -74,13 +76,14 @@ def test_search_constants():
 
 def test_scan_patterns(monkeypatch, tmp_path):
     """Scan patterns resolve to correct glob patterns."""
-    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.chdir(tmp_path)
     from agent_memory.config import get_scan_patterns
 
     patterns = get_scan_patterns()
+    expected = [
+        str(tmp_path / ".agent-memory" / "projects" / "*" / "memory" / "MEMORY.md"),
+        str(tmp_path / ".agent-memory" / "daily-logs" / "*.md"),
+        str(tmp_path / ".agent-memory" / "sessions" / "*.md"),
+    ]
     assert len(patterns) == 3
-    # Should contain patterns for MEMORY.md, daily-logs, sessions
-    pattern_strs = [str(p) for p in patterns]
-    assert any("MEMORY.md" in s for s in pattern_strs)
-    assert any("daily-logs" in s for s in pattern_strs)
-    assert any("sessions" in s for s in pattern_strs)
+    assert patterns == expected

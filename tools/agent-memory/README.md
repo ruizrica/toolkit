@@ -103,9 +103,13 @@ Source files (*.py, *.ts, *.js, ...)
 
 | Location | Content |
 |----------|---------|
-| `~/.claude/agent-memory/daily-logs/` | Daily session logs |
-| `~/.claude/agent-memory/sessions/` | Session snapshots |
-| `~/.claude/projects/*/memory/MEMORY.md` | Project semantic memory |
+| `<cwd>/.agent-memory/daily-logs/` | Daily session logs |
+| `<cwd>/.agent-memory/sessions/` | Session snapshots |
+| `<cwd>/.agent-memory/projects/*/memory/MEMORY.md` | Project semantic memory |
+
+You can override discovery and database locations with:
+- `AGENT_MEMORY_DIR` for the scan root.
+- `AGENT_MEMORY_DB` for the SQLite DB file path.
 
 ## Development
 
