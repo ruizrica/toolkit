@@ -341,6 +341,33 @@ def test_cli_list_json_empty(tmp_path):
 # --- add subcommand ---
 
 
+def test_cli_add_json(tmp_path):
+    """add --json outputs valid JSON with chunk ID."""
+    db_path = tmp_path / "test.db"
+    env = {"AGENT_MEMORY_DB": str(db_path)}
+
+    stdout, _, code = _run_cli("add", "json add test", "--json", env_overrides=env)
+    assert code == 0
+    data = json.loads(stdout)
+    assert "id" in data
+    assert len(data["id"]) == 64  # SHA-256 hex
+
+
+def test_cli_add_json_with_tags(tmp_path):
+    """add --json with --tags still outputs valid JSON."""
+    db_path = tmp_path / "test.db"
+    env = {"AGENT_MEMORY_DB": str(db_path)}
+
+    stdout, _, code = _run_cli(
+        "add", "tagged json test", "--tags", "a,b", "--json",
+        env_overrides=env,
+    )
+    assert code == 0
+    data = json.loads(stdout)
+    assert "id" in data
+    assert len(data["id"]) == 64
+
+
 def test_cli_add_with_tags(tmp_path):
     """add --tags stores tags in the path field."""
     db_path = tmp_path / "test.db"
@@ -538,6 +565,39 @@ def test_cli_status_reflects_add(tmp_path):
 # --- index subcommand ---
 
 
+def test_cli_index_json(tmp_path):
+    """index --json outputs valid JSON with expected fields."""
+    db_path = tmp_path / "test.db"
+    md_file = tmp_path / "note.md"
+    md_file.write_text("# Note\n\nSome content for indexing.\n")
+    env = {"AGENT_MEMORY_DB": str(db_path)}
+
+    stdout, _, code = _run_cli("index", "--path", str(md_file), "--json", env_overrides=env)
+    assert code == 0
+    data = json.loads(stdout)
+    assert "files_indexed" in data
+    assert "files_skipped" in data
+    assert "chunks_created" in data
+    assert data["files_indexed"] >= 1
+
+
+def test_cli_index_json_skipped(tmp_path):
+    """index --json reports skipped files on re-run."""
+    db_path = tmp_path / "test.db"
+    md_file = tmp_path / "note.md"
+    md_file.write_text("# Note\n\nSome content for indexing.\n")
+    env = {"AGENT_MEMORY_DB": str(db_path)}
+
+    # First run
+    _run_cli("index", "--path", str(md_file), env_overrides=env)
+
+    # Second run — files unchanged
+    stdout, _, code = _run_cli("index", "--path", str(md_file), "--json", env_overrides=env)
+    assert code == 0
+    data = json.loads(stdout)
+    assert data["files_skipped"] >= 1
+
+
 def test_cli_index_reports_skipped(tmp_path, sample_memory_dir):
     """index skips unchanged files on re-run and reports it."""
     db_path = tmp_path / "test.db"
@@ -584,6 +644,24 @@ def test_cli_summarize_without_sdk(tmp_path):
 
 
 # --- code-index subcommand ---
+
+
+def test_cli_code_index_json(tmp_path):
+    """code-index --json outputs valid JSON with expected fields."""
+    db_path = tmp_path / "test.db"
+    src_dir = tmp_path / "src"
+    src_dir.mkdir()
+    (src_dir / "hello.py").write_text("def hello():\n    return 'world'\n")
+    env = {"AGENT_MEMORY_DB": str(db_path)}
+
+    stdout, stderr, code = _run_cli(
+        "code-index", str(src_dir), "--json", env_overrides=env,
+    )
+    assert code == 0
+    data = json.loads(stdout)
+    assert "files_indexed" in data
+    assert "files_skipped" in data
+    assert "nodes_created" in data
 
 
 def test_cli_code_index_subprocess(tmp_path):
@@ -649,6 +727,34 @@ def test_cli_code_summarize_empty(tmp_path):
     stdout, stderr, code = _run_cli("code-summarize", env_overrides=env)
     assert code == 0
     assert "summarized" in stdout.lower()
+
+
+def test_cli_code_summarize_json(tmp_path):
+    """code-summarize --json outputs valid JSON with nodes_summarized."""
+    db_path = tmp_path / "test.db"
+    env = {"AGENT_MEMORY_DB": str(db_path)}
+
+    stdout, _, code = _run_cli("code-summarize", "--json", env_overrides=env)
+    assert code == 0
+    data = json.loads(stdout)
+    assert "nodes_summarized" in data
+    assert data["nodes_summarized"] == 0
+
+
+# --- install subcommand ---
+
+
+def test_cli_install_json(tmp_path):
+    """install --json outputs valid JSON with status field."""
+    db_path = tmp_path / "test.db"
+    env = {"AGENT_MEMORY_DB": str(db_path)}
+
+    stdout, _, code = _run_cli("install", "--json", env_overrides=env)
+    assert code == 0
+    data = json.loads(stdout)
+    assert data["status"] == "ready"
+    # JSON mode should not contain progress text
+    assert "Downloading" not in stdout
 
 
 # --- error handling ---

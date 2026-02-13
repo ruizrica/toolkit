@@ -25,6 +25,7 @@ def _build_parser() -> argparse.ArgumentParser:
     # index
     p_index = sub.add_parser("index", help="Index memory files")
     p_index.add_argument("--path", help="Specific path to index (glob: *.md)")
+    p_index.add_argument("--json", action="store_true", dest="as_json", help="JSON output")
 
     # status
     p_status = sub.add_parser("status", help="Show database status")
@@ -35,6 +36,7 @@ def _build_parser() -> argparse.ArgumentParser:
     p_add.add_argument("content", help="Memory content text")
     p_add.add_argument("--tags", default="", help="Comma-separated tags")
     p_add.add_argument("--source", default="manual", help="Source type")
+    p_add.add_argument("--json", action="store_true", dest="as_json", help="JSON output")
 
     # get
     p_get = sub.add_parser("get", help="Get a memory by ID")
@@ -55,11 +57,13 @@ def _build_parser() -> argparse.ArgumentParser:
     sub.add_parser("summarize", help="Summarize daily logs into MEMORY.md")
 
     # install
-    sub.add_parser("install", help="Download embedding model")
+    p_install = sub.add_parser("install", help="Download embedding model")
+    p_install.add_argument("--json", action="store_true", dest="as_json", help="JSON output")
 
     # code-index
     p_ci = sub.add_parser("code-index", help="Index a codebase for tree navigation")
     p_ci.add_argument("path", help="Root path of the codebase to index")
+    p_ci.add_argument("--json", action="store_true", dest="as_json", help="JSON output")
 
     # code-nav
     p_cn = sub.add_parser("code-nav", help="Navigate code tree to find relevant code")
@@ -77,7 +81,8 @@ def _build_parser() -> argparse.ArgumentParser:
     p_cr.add_argument("--json", action="store_true", dest="as_json", help="JSON output")
 
     # code-summarize
-    sub.add_parser("code-summarize", help="Generate summaries for indexed code nodes")
+    p_cs = sub.add_parser("code-summarize", help="Generate summaries for indexed code nodes")
+    p_cs.add_argument("--json", action="store_true", dest="as_json", help="JSON output")
 
     return parser
 
@@ -134,13 +139,30 @@ def cmd_index(args) -> None:
     else:
         patterns = get_scan_patterns()
 
-    stats = index_all(conn, patterns)
+    try:
+        stats = index_all(conn, patterns)
+    except ImportError as exc:
+        print(str(exc), file=sys.stderr)
+        print(
+            "Install fastembed dependency: pip install fastembed",
+            file=sys.stderr,
+        )
+        conn.close()
+        sys.exit(1)
     meta_set(conn, "last_indexed", datetime.datetime.now().isoformat())
     conn.close()
 
-    print(f"Indexed {stats.files_indexed} files, {stats.chunks_created} chunks")
-    if stats.files_skipped:
-        print(f"Skipped {stats.files_skipped} unchanged files")
+    if getattr(args, "as_json", False):
+        data = {
+            "files_indexed": stats.files_indexed,
+            "files_skipped": stats.files_skipped,
+            "chunks_created": stats.chunks_created,
+        }
+        print(json.dumps(data, indent=2))
+    else:
+        print(f"Indexed {stats.files_indexed} files, {stats.chunks_created} chunks")
+        if stats.files_skipped:
+            print(f"Skipped {stats.files_skipped} unchanged files")
 
 
 def cmd_search(args) -> None:
@@ -194,7 +216,11 @@ def cmd_add(args) -> None:
     conn = init_db(get_db_path())
     chunk_id = add_memory(conn, args.content, source=args.source, tags=args.tags)
     conn.close()
-    print(f"Added: {chunk_id}")
+
+    if getattr(args, "as_json", False):
+        print(json.dumps({"id": chunk_id}, indent=2))
+    else:
+        print(f"Added: {chunk_id}")
 
 
 def cmd_get(args) -> None:
@@ -249,7 +275,11 @@ def cmd_ask(args) -> None:
             file=sys.stderr,
         )
         sys.exit(1)
-    ask_memories(args.question)
+    try:
+        ask_memories(args.question)
+    except ImportError as exc:
+        print(str(exc), file=sys.stderr)
+        sys.exit(1)
 
 
 def cmd_summarize(args) -> None:
@@ -263,15 +293,31 @@ def cmd_summarize(args) -> None:
             file=sys.stderr,
         )
         sys.exit(1)
-    summarize_daily_logs()
+    try:
+        summarize_daily_logs()
+    except ImportError as exc:
+        print(str(exc), file=sys.stderr)
+        sys.exit(1)
 
 
 def cmd_install(args) -> None:
     """Download the embedding model."""
-    print("Downloading embedding model...")
+    if not getattr(args, "as_json", False):
+        print("Downloading embedding model...")
     from .embedder import _get_model
-    _get_model()
-    print("Model ready.")
+    try:
+        _get_model()
+    except ImportError as exc:
+        print(str(exc), file=sys.stderr)
+        print(
+            "Install fastembed dependency: pip install fastembed",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    if getattr(args, "as_json", False):
+        print(json.dumps({"status": "ready"}, indent=2))
+    else:
+        print("Model ready.")
 
 
 def cmd_code_index(args) -> None:
@@ -284,9 +330,17 @@ def cmd_code_index(args) -> None:
     stats = index_codebase(conn, args.path)
     conn.close()
 
-    print(f"Indexed {stats.files_indexed} files, {stats.nodes_created} nodes")
-    if stats.files_skipped:
-        print(f"Skipped {stats.files_skipped} unchanged files")
+    if getattr(args, "as_json", False):
+        data = {
+            "files_indexed": stats.files_indexed,
+            "files_skipped": stats.files_skipped,
+            "nodes_created": stats.nodes_created,
+        }
+        print(json.dumps(data, indent=2))
+    else:
+        print(f"Indexed {stats.files_indexed} files, {stats.nodes_created} nodes")
+        if stats.files_skipped:
+            print(f"Skipped {stats.files_skipped} unchanged files")
     if stats.files_indexed > 0 and stats.nodes_created == 0:
         print(
             "Warning: No code nodes were extracted. "
@@ -330,7 +384,18 @@ def cmd_code_tree(args) -> None:
     from .tree import get_children, get_roots
 
     conn = init_db(get_db_path())
-    roots = get_roots(conn)
+    if args.path:
+        roots = get_roots(conn, repo_path=args.path)
+        if not roots:
+            all_roots = get_roots(conn)
+            roots = [
+                node
+                for node in all_roots
+                if args.path in (node.get("file_path") or "")
+                or args.path in (node.get("repo_path") or "")
+            ]
+    else:
+        roots = get_roots(conn)
 
     if getattr(args, "as_json", False):
         def _tree_to_dict(node_dict):
@@ -366,8 +431,16 @@ def cmd_code_refs(args) -> None:
     from .db import init_db
     from .tree import get_node, resolve_refs
 
+    try:
+        node_id = int(args.node_id)
+    except ValueError:
+        print(
+            f"Invalid node ID: {args.node_id}. Expected an integer.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
     conn = init_db(get_db_path())
-    node_id = int(args.node_id)
 
     node = get_node(conn, node_id)
     if node is None:
@@ -400,7 +473,10 @@ def cmd_code_summarize(args) -> None:
     count = summarize_nodes(conn)
     conn.close()
 
-    print(f"Summarized {count} code nodes")
+    if getattr(args, "as_json", False):
+        print(json.dumps({"nodes_summarized": count}, indent=2))
+    else:
+        print(f"Summarized {count} code nodes")
 
 
 LOGO = r"""
