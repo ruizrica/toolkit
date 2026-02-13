@@ -194,7 +194,7 @@ def cmd_add(args) -> None:
     conn = init_db(get_db_path())
     chunk_id = add_memory(conn, args.content, source=args.source, tags=args.tags)
     conn.close()
-    print(f"Added: {chunk_id[:12]}...")
+    print(f"Added: {chunk_id}")
 
 
 def cmd_get(args) -> None:

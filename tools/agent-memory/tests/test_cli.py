@@ -89,6 +89,25 @@ def test_cli_add_and_list(tmp_path):
     assert any("Test memory content" in item["text"] for item in data)
 
 
+def test_cli_add_prints_full_id(tmp_path):
+    """add prints the full chunk ID, not a truncated version."""
+    db_path = tmp_path / "test.db"
+    env = {"AGENT_MEMORY_DB": str(db_path)}
+
+    stdout, stderr, code = _run_cli(
+        "add", "full id test",
+        env_overrides=env,
+    )
+    assert code == 0
+    # Output should contain a full 64-char hex hash (SHA-256)
+    # Format: "Added: <full_id>"
+    line = stdout.strip()
+    assert line.startswith("Added: ")
+    chunk_id = line.split("Added: ")[1]
+    assert len(chunk_id) == 64
+    assert "..." not in chunk_id
+
+
 def test_cli_search_json(tmp_path, sample_memory_dir):
     """search --json outputs valid JSON array."""
     db_path = tmp_path / "test.db"
