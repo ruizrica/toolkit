@@ -40,6 +40,11 @@ def discover_code_files(root_path: str) -> list[Path]:
     and non-code files.
     """
     root = Path(root_path)
+    if not root.exists():
+        raise ValueError(f"Code index root does not exist: {root_path}")
+    if not root.is_dir():
+        raise ValueError(f"Code index root must be a directory: {root_path}")
+
     files: list[Path] = []
 
     def _walk(directory: Path) -> None:

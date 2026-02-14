@@ -326,8 +326,23 @@ def cmd_code_index(args) -> None:
     from .config import get_db_path
     from .db import init_db
 
+    from pathlib import Path
+
+    code_path = Path(args.path)
+    if not code_path.exists():
+        print(f"Path not found: {args.path}", file=sys.stderr)
+        sys.exit(1)
+    if not code_path.is_dir():
+        print(f"Path is not a directory: {args.path}", file=sys.stderr)
+        sys.exit(1)
+
     conn = init_db(get_db_path())
-    stats = index_codebase(conn, args.path)
+    try:
+        stats = index_codebase(conn, args.path)
+    except (ValueError, OSError) as exc:
+        print(str(exc), file=sys.stderr)
+        conn.close()
+        sys.exit(1)
     conn.close()
 
     if getattr(args, "as_json", False):

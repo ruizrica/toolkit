@@ -144,6 +144,42 @@ def test_cmd_code_tree_json(indexed_db, monkeypatch, capsys):
     assert isinstance(data, list)
 
 
+# --- code-index error handling ---
+
+def test_cmd_code_index_missing_path(tmp_path, monkeypatch, capsys):
+    """code-index shows a clean error when path does not exist."""
+    db_path = tmp_path / "test.db"
+    monkeypatch.setenv("AGENT_MEMORY_DB", str(db_path))
+
+    from agent_memory.cli import cmd_code_index
+    args = SimpleNamespace(path="/tmp/agent-memory-does-not-exist-xyz")
+
+    with pytest.raises(SystemExit) as exc:
+        cmd_code_index(args)
+
+    captured = capsys.readouterr()
+    assert exc.value.code == 1
+    assert "Path not found" in captured.err
+
+
+def test_cmd_code_index_file_path(tmp_path, monkeypatch, capsys):
+    """code-index rejects a non-directory path."""
+    db_path = tmp_path / "test.db"
+    monkeypatch.setenv("AGENT_MEMORY_DB", str(db_path))
+    file_path = tmp_path / "not-a-dir.txt"
+    file_path.write_text("hello")
+
+    from agent_memory.cli import cmd_code_index
+    args = SimpleNamespace(path=str(file_path))
+
+    with pytest.raises(SystemExit) as exc:
+        cmd_code_index(args)
+
+    captured = capsys.readouterr()
+    assert exc.value.code == 1
+    assert "Path is not a directory" in captured.err
+
+
 # --- code-refs command ---
 
 def test_cmd_code_refs(indexed_db, monkeypatch, capsys):

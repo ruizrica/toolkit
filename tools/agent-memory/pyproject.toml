@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-intelligence = ["claude-agent-sdk>=0.1.30"]
+intelligence = ["claude-agent-sdk>=0.1.30", "python-dotenv>=1.0.0"]
 dev = ["pytest>=7.0"]
 
 [project.scripts]
