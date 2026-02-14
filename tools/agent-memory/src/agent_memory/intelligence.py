@@ -15,15 +15,27 @@ def _load_oauth_token() -> str | None:
     """Load OAuth token from environment or .env file.
 
     Checks multiple locations for .env file:
-    1. Current working directory
-    2. Project root (where .git or agent-memory is)
-    3. Parent directories
+    1. Already set in environment (highest priority)
+    2. Project root (where .git is)
+    3. Module directory (agent-memory folder)
+    4. Current working directory (lowest priority)
 
     Maps AGENT_MEMORY_OAUTH_TOKEN to CLAUDE_CODE_OAUTH_TOKEN for SDK compatibility.
     Returns the token if found, None otherwise.
     Ignores placeholder values like "your_oauth_token_here".
     """
-    # Try loading from .env file if python-dotenv is available
+    # First: Check if already set in environment (highest priority)
+    token = os.environ.get("AGENT_MEMORY_OAUTH_TOKEN")
+    if token and not token.startswith("your_") and token != "":
+        if not os.environ.get("CLAUDE_CODE_OAUTH_TOKEN"):
+            os.environ["CLAUDE_CODE_OAUTH_TOKEN"] = token
+        return token
+
+    token = os.environ.get("CLAUDE_CODE_OAUTH_TOKEN")
+    if token and not token.startswith("your_") and token != "":
+        return token
+
+    # Try loading from .env files if python-dotenv is available
     try:
         from dotenv import load_dotenv
 
@@ -45,38 +57,36 @@ def _load_oauth_token() -> str | None:
         # Second: Check this module's package root (agent-memory folder)
         module_dir = Path(__file__).parent.parent.parent  # up to agent-memory root
         if module_dir.exists() and (module_dir / ".env") not in env_paths:
-            env_paths.append(module_dir / ".env")
+            if (module_dir / ".env").exists():
+                env_paths.append(module_dir / ".env")
 
-        # Third: Current working directory (lowest priority, often has placeholder)
+        # Third: Current working directory (lowest priority)
         cwd_env = Path.cwd() / ".env"
         if cwd_env not in env_paths:
-            env_paths.append(cwd_env)
+            if cwd_env.exists():
+                env_paths.append(cwd_env)
 
-        # Load from first existing .env file (without overriding existing env vars)
+        # Try each .env file in priority order, looking for a valid token
         for env_path in env_paths:
-            if env_path.exists():
-                load_dotenv(env_path, override=False)
-                break
+            # Load this .env file temporarily to check its content
+            # Use a fresh environment to avoid polluting the current one
+            import tempfile
+            from dotenv import dotenv_values
+
+            env_vars = dotenv_values(env_path)
+            token = env_vars.get("AGENT_MEMORY_OAUTH_TOKEN") or env_vars.get("CLAUDE_CODE_OAUTH_TOKEN")
+
+            if token and not token.startswith("your_") and token != "":
+                # Found a valid token, load it into environment
+                load_dotenv(env_path, override=True)
+                if not os.environ.get("CLAUDE_CODE_OAUTH_TOKEN"):
+                    os.environ["CLAUDE_CODE_OAUTH_TOKEN"] = token
+                return token
 
     except ImportError:
         pass  # dotenv is optional
 
-    # Check for agent-memory specific token first
-    token = os.environ.get("AGENT_MEMORY_OAUTH_TOKEN")
-
-    # Check for SDK-compatible token
-    if not token:
-        token = os.environ.get("CLAUDE_CODE_OAUTH_TOKEN")
-
-    # Ignore placeholder tokens (but allow actual tokens that may start with sk-)
-    if token and (token.startswith("your_") or token == ""):
-        return None
-
-    # If we found a token, ensure CLAUDE_CODE_OAUTH_TOKEN is set for SDK compatibility
-    if token and not os.environ.get("CLAUDE_CODE_OAUTH_TOKEN"):
-        os.environ["CLAUDE_CODE_OAUTH_TOKEN"] = token
-
-    return token
+    return None
 
 
 def _get_anthropic_client():
