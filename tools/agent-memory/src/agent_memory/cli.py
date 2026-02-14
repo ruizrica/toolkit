@@ -338,12 +338,13 @@ def cmd_code_index(args) -> None:
 
     conn = init_db(get_db_path())
     try:
-        stats = index_codebase(conn, args.path)
-    except (ValueError, OSError) as exc:
-        print(str(exc), file=sys.stderr)
+        try:
+            stats = index_codebase(conn, args.path)
+        except (ValueError, OSError) as exc:
+            print(str(exc), file=sys.stderr)
+            sys.exit(1)
+    finally:
         conn.close()
-        sys.exit(1)
-    conn.close()
 
     if getattr(args, "as_json", False):
         data = {
