@@ -26,6 +26,7 @@
     "./commands/save.md",
     "./commands/stable.md",
     "./commands/haiku.md",
+    "./commands/opus.md",
     "./commands/rlm.md",
     "./commands/compact.md",
     "./commands/compact-min.md",

@@ -24,7 +24,7 @@ claude plugins add ./plugins/toolkit
 | droid-agent | Enterprise code generation |
 | rlm-subcall | Chunk analysis for RLM workflow |
 
-### Commands (14)
+### Commands (15)
 
 | Command | Description |
 |---------|-------------|
@@ -33,10 +33,11 @@ claude plugins add ./plugins/toolkit
 | `/handbook` | Generate comprehensive project handbook |
 | `/@implement` | Process @implement comments into documentation |
 | `/haiku` | Spawn team of 10 Haiku agents managed by Opus |
+| `/opus` | Spawn team of 10 Opus agents managed by Opus |
 | `/rlm` | Recursive Language Model for large documents |
 | `/gherkin` | Extract business rules into Gherkin specs |
 | `/agent-memory` | Search and manage agent memories with hybrid search |
-| `/worktree` | Manage git worktrees for isolated agent workflows |
+| `/worktree` | Create isolated worktree (auto-generates branch and path) |
 | `/setup` | Initialize project context and run agent-memory indexing |
 | `/save` | Commit, merge WIP to main, cleanup |
 | `/stable` | Create stable checkpoint with tags |
@@ -51,19 +52,6 @@ claude plugins add ./plugins/toolkit
 | agent-memory | Local hybrid search (vector + BM25) for memory files |
 
 Skills are reference files installed to `~/.claude/skills/` that teach Claude when and how to use specific CLI tools.
-
-### Optional MCP Commands (6)
-
-Located in `optional/` - require Commander or Photon MCP servers:
-
-| Command | Requires |
-|---------|----------|
-| `/commander-task` | Commander MCP |
-| `/commander-plan` | Commander MCP |
-| `/commander-execute` | Commander MCP |
-| `/photon-compact` | Photon MCP |
-| `/photon-restore` | Photon MCP |
-| `/photon-index` | Photon MCP |
 
 ## Setup Scripts
 
