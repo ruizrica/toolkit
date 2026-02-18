@@ -143,6 +143,20 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 
 ---
 
+## Statusline
+
+The installer configures a Claude Code status line showing model, context usage, and working directory:
+
+```
+opus | 67% | Github-Work/commander
+```
+
+Context percentage is color-coded: gray (<40%), green (40-59%), yellow (60-79%), red (80-94%), bright red (95%+).
+
+To install standalone: `bash ~/.toolkit/plugins/toolkit/scripts/install-statusline.sh`
+
+---
+
 ## Skills
 
 Skills are reference files installed to `~/.claude/skills/` that teach Claude when and how to use specific CLI tools.

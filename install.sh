@@ -310,6 +310,16 @@ install_skills() {
     fi
 }
 
+install_statusline() {
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "✓ Would install statusline"
+        return 0
+    fi
+
+    bash "$BASE_DIR/plugins/toolkit/scripts/install-statusline.sh"
+    echo "✓ Statusline installed"
+}
+
 # -----------------------------------------------------------------------------
 # Configuration
 # -----------------------------------------------------------------------------
@@ -345,6 +355,16 @@ perform_uninstall() {
     rm -f "$SLASH_COMMANDS_DIR/handbook.py" 2>/dev/null
     rm -f "$SLASH_COMMANDS_DIR/rlm_repl.py" 2>/dev/null
     echo "✓ Python scripts removed"
+    echo ""
+
+    # Remove statusline
+    print_status "Removing statusline..."
+    rm -f "$HOME/.claude/statusline-pipe.sh" 2>/dev/null
+    if command -v jq &>/dev/null && [[ -f "$HOME/.claude/settings.json" ]]; then
+        tmp=$(mktemp)
+        jq 'del(.statusLine)' "$HOME/.claude/settings.json" > "$tmp" && mv "$tmp" "$HOME/.claude/settings.json"
+    fi
+    echo "✓ Statusline removed"
     echo ""
 
     # Remove skill files
@@ -469,6 +489,7 @@ main() {
     clone_repository
     register_plugin
     install_python_scripts
+    install_statusline
     install_skills
     install_memory_dirs
     install_agent_browser
