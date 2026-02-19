@@ -80,7 +80,7 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 ### Git Worktree Workflow
 ```bash
 /setup      # Initialize project context
-/worktree   # Create and manage isolated worktree
+/worktree   # Create isolated worktree (auto-generates branch)
 # ... develop ...
 /save       # Merge back to main
 ```
@@ -94,8 +94,6 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 | [Commands](docs/commands/README.md) | All 16 commands with usage and examples |
 | [Agents](docs/agents/README.md) | All 9 specialized agents with invocation patterns |
 | [Skills](docs/skills/README.md) | Skill reference files for CLI tools |
-| [Optional Commands](docs/optional/README.md) | MCP-dependent commands |
-
 ---
 
 ## Commands at a Glance
@@ -122,7 +120,7 @@ The toolkit installs a skill file (`~/.claude/skills/just-bash.md`) that teaches
 | `/compact-min` | Ultra-minimal session compact (fast, no memory) | [→](docs/commands/compact.md#compact-min) |
 | `/restore` | Restore after /clear (loads daily logs) | [→](docs/commands/restore.md) |
 | `/setup` | Initialize context and run agent-memory index | [→](docs/commands/setup.md) |
-| `/worktree` | Manage isolated worktrees | [→](docs/commands/worktree.md) |
+| `/worktree` | Create isolated worktree (auto-generates branch) | [→](docs/commands/worktree.md) |
 | `/save` | Commit, merge, cleanup | [→](docs/commands/save.md) |
 | `/stable` | Create stable checkpoint | [→](docs/commands/stable.md) |
 
@@ -237,12 +235,10 @@ agent-toolkit/
 │   ├── commands/        # 15 commands
 │   ├── skills/          # Skill reference files
 │   ├── scripts/         # Python scripts
-│   └── optional/        # MCP-dependent commands
 ├── docs/
 │   ├── commands/        # Command documentation
 │   ├── agents/          # Agent documentation
 │   ├── skills/          # Skill documentation
-│   └── optional/        # MCP commands documentation
 ├── tools/
 │   └── agent-memory/    # Hybrid search CLI (Python)
 ├── assets/              # Images

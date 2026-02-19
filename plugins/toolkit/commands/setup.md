@@ -161,8 +161,8 @@ def main():
     print(f"- context file: {context}")
     print("- agents file: agents.md")
     print("\nNext steps:")
-    print("1) Run /worktree [path] [branch] to create your first worktree")
-    print("2) Run /worktree [path] [branch] again for additional worktrees")
+    print("1) Run /worktree to create your first isolated worktree (auto-generates branch)")
+    print("2) Run /worktree again for additional worktrees, or use /worktree [path] [branch] for custom names")
 
 
 if __name__ == "__main__":

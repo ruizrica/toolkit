@@ -63,8 +63,8 @@ Setup summary:
 - agents file: created (./agents.md)
 
 Next steps:
-1) Read CLAUDE guidance: /worktree <path> <branch>
-2) Use /worktree [path] [branch] for additional isolated worktrees
+1) Run /worktree to create your first isolated worktree (auto-generates branch)
+2) Run /worktree again for additional worktrees, or use /worktree [path] [branch] for custom names
 ```
 
 ## See Also
