@@ -32,6 +32,7 @@
     "./commands/compact-min.md",
     "./commands/restore.md",
     "./commands/gherkin.md",
+    "./commands/design.md",
     "./commands/kiro.md",
     "./commands/just-bash.md",
     "./commands/agent-memory.md"

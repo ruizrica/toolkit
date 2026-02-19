@@ -1,6 +1,6 @@
 # Commands Overview
 
-The Toolkit provides 16 commands organized into three categories: Core Commands for development workflows, Session Management for context preservation, and Git Workflow for version control.
+The Toolkit provides 17 commands organized into three categories: Core Commands for development workflows, Session Management for context preservation, and Git Workflow for version control.
 
 ## Quick Reference
 
@@ -14,11 +14,12 @@ The Toolkit provides 16 commands organized into three categories: Core Commands 
 | [/rlm](rlm.md) | Large document processing | Core |
 | [/gherkin](gherkin.md) | Extract business rules to Gherkin | Core |
 | [/kiro](kiro.md) | Spec-driven development with Kiro methodology | Core |
+| [/design](design.md) | Interactive design system generator | Core |
 | [/agent-memory](agent-memory.md) | Hybrid search over agent memories | Core |
 | [/compact](compact.md) | Memory-aware session compact (daily log + state) | Session |
 | [/compact-min](compact.md#compact-min) | Ultra-minimal session compact (fast, no memory) | Session |
 | [/restore](restore.md) | Restore session with daily log bootstrap | Session |
-| [/worktree](worktree.md) | Create isolated git worktrees with setup automation | Git |
+| [/worktree](worktree.md) | Create isolated worktree (auto-generates branch and path) | Git |
 | [/setup](setup.md) | Initialize project context and index with agent-memory | Git |
 | [/save](save.md) | Commit, merge, cleanup worktree | Git |
 | [/stable](stable.md) | Create stable checkpoint | Git |
@@ -57,6 +58,10 @@ Commands for feature development, code review, and documentation.
 
 - **[/kiro](kiro.md)** - Spec-driven development using the Kiro methodology. Generates EARS-format requirements, design documents, and task breakdowns through interactive Q&A phases, then executes with parallel agents (Cursor or Haiku).
 
+### Design Systems
+
+- **[/design](design.md)** — Interactive design token pipeline. Gathers brand preferences through Q&A, generates semantic tokens (brand-*, content-*, surface-*) with Tailwind integration and optional CSS/SCSS/iOS/Android outputs.
+
 ### Memory & Search
 
 - **[/agent-memory](agent-memory.md)** - Search across all memory files (MEMORY.md, daily logs, session snapshots) using hybrid vector + BM25 search. Fully local, zero API calls.
@@ -92,7 +97,7 @@ For a faster checkpoint without memory writes:
 Commands for isolated development using git worktrees.
 
 - **[/setup](setup.md)** - Initialize project context and memory tooling (`claude.md`, `agents.md`, `agent-memory index`).
-- **[/worktree](worktree.md)** - Create worktrees for isolated development.
+- **[/worktree](worktree.md)** - Create isolated worktree with auto-generated branch (wip-YYYYMMDD-HHMMSS). Simple form: `/worktree` with no args.
 
 - **[/save](save.md)** - Commit all changes, merge WIP branch to main, and cleanup the worktree and branch. Handles merge conflicts interactively.
 
@@ -101,13 +106,8 @@ Commands for isolated development using git worktrees.
 **Workflow:**
 ```bash
 /setup      # Initialize project context + index for worktree development
-/worktree  # Create isolated worktree + setup automation
+/worktree  # Create isolated worktree (auto-generates branch)
 /save       # Merge back to main (for WIP worktree workflows)
 /stable     # Optional: create checkpoint
 ```
 
----
-
-## Optional Commands
-
-Some commands require external MCP servers. See [Optional Commands](../optional/README.md) for details.
