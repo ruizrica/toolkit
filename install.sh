@@ -192,7 +192,9 @@ clone_repository() {
     fi
 
     if [[ -d "$BASE_DIR/.git" ]]; then
-        (cd "$BASE_DIR" && git pull --ff-only 2>/dev/null) || true
+        if ! (cd "$BASE_DIR" && git pull --ff-only 2>/dev/null); then
+            echo "⚠ git pull failed in $BASE_DIR (may need manual update)"
+        fi
     else
         rm -rf "$BASE_DIR" 2>/dev/null || true
         git clone --quiet "$REPO_URL" "$BASE_DIR" 2>/dev/null
