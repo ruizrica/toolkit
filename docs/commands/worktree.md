@@ -1,32 +1,41 @@
 # /worktree
 
-Git worktree manager for isolated agent workflows.
+Create an isolated development worktree with automatic branch and path generation.
 
 ## Usage
 
 ```bash
-/worktree [path] [branch]
+/worktree              # Auto-create with timestamp-based branch (wip-YYYYMMDD-HHMMSS)
+/worktree [path]       # Custom path, auto-generated branch
+/worktree [path] [branch]  # Custom path and branch
 ```
 
 ## Commands
 
-- `/worktree [path] [branch]` - create a worktree
-  - Installs dependencies, copies `.env.example` to `.env` (if present), and opens the editor when possible.
+- `/worktree` - Quick start: creates worktree with auto-generated wip-YYYYMMDD-HHMMSS branch
+- `/worktree [path] [branch]` - Advanced: specify custom path and branch
+
+Both versions run setup automation:
+- Installs dependencies (npm, pnpm, yarn, or pip)
+- Copies `.env.example` to `.env` (if present)
+- Opens `$EDITOR`/`$VISUAL` when available
 
 ## Why this command exists
 
-The previous `/setup` worktree flow has moved here to keep bootstrap and worktree management separate.
+Provides isolated development environments using git worktrees. The simple form (no args) auto-generates a timestamp-based wip branch for quick starts, while the full form allows custom naming.
 
 ## Behavior
 
-- `/worktree [path] [branch]` (default behavior):
-  - Creates `.specbook/worktrees/<branch-or-timestamp>` by default when path is omitted.
-  - Uses `git worktree add <path> -b <branch>` when the branch does not exist.
-  - Accepts fuzzy/TUI branch selection when `branch` is omitted (uses `fzf` when available).
-  - Rolls back created worktree/branch if setup fails.
-  - Dependency install (`npm`, `pnpm`, `yarn`, or `python3 -m pip -r requirements.txt`) when lockfiles are found.
-  - Copies `.env.example` to `.env` in the new worktree when missing.
-  - Opens `$EDITOR`/`$VISUAL` pointing to the new worktree path if available.
+- `/worktree` (no arguments):
+  - Generates branch name: `wip-YYYYMMDD-HHMMSS`
+  - Creates worktree at: `.specbook/worktrees/wip-YYYYMMDD-HHMMSS`
+  - No interactive prompts - fully automatic
+
+- `/worktree [path] [branch]` (with arguments):
+  - Uses specified path and/or branch
+  - When only path provided, auto-generates branch name
+  - When branch doesn't exist, creates it with `git worktree add -b`
+  - Rolls back created worktree/branch if setup fails
 
 ## Error handling
 

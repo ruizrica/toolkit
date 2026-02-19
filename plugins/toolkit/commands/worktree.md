@@ -1,13 +1,15 @@
 ---
-description: "Create a linked worktree for parallel agent development"
+description: "Create an isolated development worktree (auto-generates branch and path)"
 argument-hint: "[path] [branch]"
 ---
 
 # /worktree
 
-Create and manage git worktrees for parallel agent development.
+Create an isolated development worktree. Auto-generates branch and path when not specified.
 
-- `/worktree [path] [branch]` - create a worktree (with setup automation).
+- `/worktree` - create worktree with auto-generated branch (wip-YYYYMMDD-HHMMSS)
+- `/worktree [path]` - create worktree at custom path, auto-generate branch
+- `/worktree [path] [branch]` - create worktree with custom path and branch
 
 ```bash
 !WORKTREE_ARGS="$ARGUMENTS"
@@ -65,7 +67,17 @@ def get_branches(root):
     return [line.strip() for line in result.stdout.splitlines() if line.strip()]
 
 
+def generate_wip_names():
+    """Generate timestamp-based wip branch and path names."""
+    from datetime import datetime
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    branch_name = f"wip-{timestamp}"
+    path = f".specbook/worktrees/{branch_name}"
+    return path, branch_name
+
+
 def choose_branch(root):
+    """Interactive branch selection (used when explicitly requested)."""
     branches = get_branches(root)
     if not branches:
         fail("No local branches exist.")
@@ -184,7 +196,10 @@ def rollback(root, state):
 
 
 def cmd_create(root, options):
-    branch = options["branch"] or choose_branch(root)
+    # Auto-generate branch and path if not provided
+    auto_path, auto_branch = generate_wip_names()
+    
+    branch = options["branch"] or auto_branch
     path = options["path"] or f".specbook/worktrees/{branch}"
     absolute = root / path if not Path(path).is_absolute() else Path(path)
     absolute.parent.mkdir(parents=True, exist_ok=True)
@@ -203,10 +218,13 @@ def cmd_create(root, options):
 
 def print_help():
     print("Usage:")
-    print("  /worktree [path] [branch]")
+    print("  /worktree          - Auto-create worktree with timestamp-based branch")
+    print("  /worktree [path]   - Create worktree at custom path, auto-generate branch")
+    print("  /worktree [path] [branch]  - Create worktree with custom path and branch")
+    print("")
     print("Creates a git worktree and runs setup automation in that worktree.")
-    print("If branch is omitted, interactive/fuzzy branch selection is used.")
-    print("If path is omitted, defaults to .specbook/worktrees/<branch>.")
+    print("When run without arguments, generates wip-YYYYMMDD-HHMMSS branch automatically.")
+    print("Setup includes: dependency install, .env copy, editor launch.")
 
 
 def main():
