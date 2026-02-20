@@ -1,7 +1,7 @@
 {
   "name": "toolkit",
   "description": "Complete Claude Code power-user configuration with multi-agent orchestration, TDD workflows, and advanced productivity commands",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": {
     "name": "Ricardo"
   },
@@ -27,6 +27,7 @@
     "./commands/stable.md",
     "./commands/haiku.md",
     "./commands/opus.md",
+    "./commands/sonnet.md",
     "./commands/rlm.md",
     "./commands/compact.md",
     "./commands/compact-min.md",
