@@ -35,11 +35,6 @@ transcript_path="$(echo "$input" | jq -r '.transcript_path // empty')"
 # Read context window size from Claude Code input (default 200K)
 context_size=$(echo "$input" | jq -r '.context_window.context_window_size // 200000')
 
-# Show context tier in model name
-if [ "$context_size" -ge 1000000 ]; then
-  model="${model}(1M)"
-fi
-
 # Get last 2 path components for short display
 parent=$(basename "$(dirname "$workdir")")
 current=$(basename "$workdir")
