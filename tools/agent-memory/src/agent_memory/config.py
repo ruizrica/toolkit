@@ -25,7 +25,7 @@ def get_memory_dir() -> Path:
     env = os.environ.get("AGENT_MEMORY_DIR")
     if env:
         return Path(env)
-    return Path.cwd() / ".agent-memory"
+    return Path.cwd() / ".context"
 
 
 def get_db_path() -> Path:

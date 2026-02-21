@@ -8,8 +8,8 @@ def test_classify_source():
     """classify_source returns correct source type based on path."""
     from agent_memory.indexer import classify_source
 
-    assert classify_source("/home/.agent-memory/daily-logs/2026.md") == "daily"
-    assert classify_source("/home/.agent-memory/sessions/snap.md") == "session"
+    assert classify_source("/home/.context/daily-logs/2026.md") == "daily"
+    assert classify_source("/home/.context/sessions/snap.md") == "session"
     assert classify_source("/home/.claude/projects/foo/memory/MEMORY.md") == "memory"
     assert classify_source("/some/other/file.md") == "other"
 

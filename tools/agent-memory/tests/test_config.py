@@ -10,7 +10,7 @@ def test_default_memory_dir(monkeypatch, tmp_path):
     from agent_memory.config import get_memory_dir
 
     result = get_memory_dir()
-    expected = tmp_path / ".agent-memory"
+    expected = tmp_path / ".context"
     assert result == expected
 
 
@@ -29,7 +29,7 @@ def test_default_db_path(monkeypatch, tmp_path):
 
     result = get_db_path()
     assert result.name == "memory.db"
-    assert str(result) == str(tmp_path / ".agent-memory" / "memory.db")
+    assert str(result) == str(tmp_path / ".context" / "memory.db")
 
 
 def test_db_path_env_override(monkeypatch, tmp_path):
@@ -81,9 +81,9 @@ def test_scan_patterns(monkeypatch, tmp_path):
 
     patterns = get_scan_patterns()
     expected = [
-        str(tmp_path / ".agent-memory" / "projects" / "*" / "memory" / "MEMORY.md"),
-        str(tmp_path / ".agent-memory" / "daily-logs" / "*.md"),
-        str(tmp_path / ".agent-memory" / "sessions" / "*.md"),
+        str(tmp_path / ".context" / "projects" / "*" / "memory" / "MEMORY.md"),
+        str(tmp_path / ".context" / "daily-logs" / "*.md"),
+        str(tmp_path / ".context" / "sessions" / "*.md"),
     ]
     assert len(patterns) == 3
     assert patterns == expected

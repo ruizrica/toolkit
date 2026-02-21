@@ -103,9 +103,9 @@ Source files (*.py, *.ts, *.js, ...)
 
 | Location | Content |
 |----------|---------|
-| `<cwd>/.agent-memory/daily-logs/` | Daily session logs |
-| `<cwd>/.agent-memory/sessions/` | Session snapshots |
-| `<cwd>/.agent-memory/projects/*/memory/MEMORY.md` | Project semantic memory |
+| `<cwd>/.context/daily-logs/` | Daily session logs |
+| `<cwd>/.context/sessions/` | Session snapshots |
+| `<cwd>/.context/projects/*/memory/MEMORY.md` | Project semantic memory |
 
 You can override discovery and database locations with:
 - `AGENT_MEMORY_DIR` for the scan root.
