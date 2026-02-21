@@ -50,9 +50,9 @@ For each stable fact, check if it's already captured. If not, append it under an
 - Only stable patterns confirmed across interactions
 - Organize by topic, not chronologically
 
-### Step 4: Write Session State
-
-Write `.plans/session-state.json` using V2 schema:
+### Step 4
+IMPORTANT: For Step 3, you must use the EXACT file path `.context/session-state.json`. Do not save it anywhere else.
+Write `.context/session-state.json` using V2 schema:
 
 ```json
 {
@@ -78,7 +78,7 @@ Output:
 Session compacted.
 
 Daily log: ~/.claude/agent-memory/daily-logs/{YYYY-MM-DD}.md
-Session state: .plans/session-state.json
+Session state: .context/session-state.json
 {if MEMORY.md updated: "MEMORY.md updated with N new facts"}
 
 To restore after /clear:

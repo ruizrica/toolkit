@@ -11,7 +11,7 @@ Restore a compacted session and immediately continue working.
 
 ### Step 1: Read Session State
 
-Read `.plans/session-state.json` from the current project root.
+Read `.context/session-state.json` from the current project root.
 
 ### Step 2: Handle Missing File
 

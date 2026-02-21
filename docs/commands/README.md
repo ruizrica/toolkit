@@ -72,9 +72,9 @@ Commands for feature development, code review, and documentation.
 
 Commands for preserving context across `/clear` operations.
 
-- **[/compact](compact.md)** - Memory-aware session compact. Writes a daily log entry to `~/.claude/agent-memory/daily-logs/`, saves session state to `.plans/session-state.json`, and optionally updates MEMORY.md with stable facts discovered during the session.
+- **[/compact](compact.md)** - Memory-aware session compact. Writes a daily log entry to `~/.claude/agent-memory/daily-logs/`, saves session state to `.context/session-state.json`, and optionally updates MEMORY.md with stable facts discovered during the session.
 
-- **[/compact-min](compact.md#compact-min)** - Ultra-minimal session compact. Writes only `.plans/session-state.json` with no memory system writes. Faster when you just need a quick checkpoint.
+- **[/compact-min](compact.md#compact-min)** - Ultra-minimal session compact. Writes only `.context/session-state.json` with no memory system writes. Faster when you just need a quick checkpoint.
 
 - **[/restore](restore.md)** - Restore session from saved state and immediately continue working. Bootstraps context from today's and yesterday's daily logs. Supports multiple schema versions.
 

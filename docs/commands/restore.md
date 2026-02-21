@@ -14,11 +14,11 @@ Restore a compacted session and immediately continue working. This command reads
 
 ## Arguments
 
-This command takes no arguments. It automatically reads from `.plans/session-state.json`.
+This command takes no arguments. It automatically reads from `.context/session-state.json`.
 
 ## How It Works
 
-1. **Read** - Load session state from `.plans/session-state.json`
+1. **Read** - Load session state from `.context/session-state.json`
 2. **Handle Missing** - If not found, check for backups in `~/.claude/session-states/`
 3. **Daily Log Bootstrap** - Read today's and yesterday's daily logs from `~/.claude/agent-memory/daily-logs/` for cross-session context
 4. **Parse** - Detect schema version and extract fields
@@ -65,7 +65,7 @@ The command supports two schema versions:
 
 ## Missing File Handling
 
-If `.plans/session-state.json` is not found, the command:
+If `.context/session-state.json` is not found, the command:
 
 1. Checks for backups in `~/.claude/session-states/`
 2. Lists available backup files
@@ -112,7 +112,7 @@ Restoring session...
 
 | Location | Purpose |
 |----------|---------|
-| `.plans/session-state.json` | Project-specific state (primary) |
+| `.context/session-state.json` | Project-specific state (primary) |
 | `~/.claude/session-states/*.json` | Global backups (fallback) |
 | `~/.claude/agent-memory/daily-logs/` | Cross-session context (bootstrap) |
 

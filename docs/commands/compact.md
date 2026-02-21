@@ -21,7 +21,7 @@ This command takes no arguments. It introspects the current conversation to extr
 1. **Introspect** - Analyze the conversation to extract summary, key decisions, files, continuation prompt, and any stable facts
 2. **Daily Log** - Append a formatted entry to `~/.claude/agent-memory/daily-logs/YYYY-MM-DD.md`
 3. **MEMORY.md** - If stable facts were discovered, update the project's MEMORY.md (optional)
-4. **Session State** - Write `.plans/session-state.json` (V2 schema)
+4. **Session State** - Write `.context/session-state.json` (V2 schema)
 5. **Report** - Confirm completion and provide restore instructions
 
 ## Daily Log Format
@@ -60,7 +60,7 @@ Each `/compact` appends an entry like:
 | File | Purpose |
 |------|---------|
 | `~/.claude/agent-memory/daily-logs/YYYY-MM-DD.md` | Daily log entry |
-| `.plans/session-state.json` | Session state for `/restore` |
+| `.context/session-state.json` | Session state for `/restore` |
 | `~/.claude/projects/{key}/memory/MEMORY.md` | Stable facts (if updated) |
 
 ## When to Use
@@ -78,7 +78,7 @@ For a faster, minimal compact that skips memory writes:
 /compact-min
 ```
 
-This writes only `.plans/session-state.json` — no daily log, no MEMORY.md update. Use when speed matters more than memory continuity.
+This writes only `.context/session-state.json` — no daily log, no MEMORY.md update. Use when speed matters more than memory continuity.
 
 ## Workflow
 

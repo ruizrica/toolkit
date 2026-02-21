@@ -14,7 +14,8 @@ Generate a minimal session snapshot for fast context restoration.
    - `key_files`: Array of absolute file paths recently read/edited (max 5)
    - `continuation_prompt`: A detailed prompt that tells a fresh agent exactly how to continue (2-3 sentences, be specific about next steps)
 
-2. **Write a single JSON file** to `.plans/session-state.json`:
+2. **Write a single JSON file** to `.context/session-state.json`:
+IMPORTANT: You must use the EXACT file path `.context/session-state.json`. Do not save it anywhere else or use quotes around the path unless required by the shell.
 
 ```json
 {
