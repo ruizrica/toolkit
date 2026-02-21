@@ -7,7 +7,7 @@ set -e
 
 # Repository configuration
 REPO_URL="https://github.com/ruizrica/toolkit"
-TOOLKIT_VERSION="1.0.1"
+TOOLKIT_VERSION="1.0.2"
 
 # Installation paths
 BASE_DIR="$HOME/.toolkit"
@@ -350,6 +350,40 @@ install_env() {
     fi
 }
 
+install_claude_md() {
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "✓ Would install CLAUDE.md file"
+        return 0
+    fi
+
+    local claude_src="$BASE_DIR/CLAUDE.md"
+    local claude_dst="$PWD/CLAUDE.md"
+    if [[ -f "$PWD/claude.md" ]]; then
+        claude_dst="$PWD/claude.md"
+    elif [[ -f "$PWD/Claude.md" ]]; then
+        claude_dst="$PWD/Claude.md"
+    fi
+
+    if [[ -f "$claude_src" ]]; then
+        if [[ -f "$claude_dst" ]]; then
+            if ! grep -q "Toolkit Commands" "$claude_dst"; then
+                print_status "Appending CLAUDE.md template to existing local file..."
+                echo "" >> "$claude_dst"
+                echo "" >> "$claude_dst"
+                echo "---" >> "$claude_dst"
+                echo "" >> "$claude_dst"
+                echo "# Added by agent-toolkit installer" >> "$claude_dst"
+                cat "$claude_src" >> "$claude_dst"
+                echo "✓ CLAUDE.md template appended"
+            fi
+        else
+            print_status "Copying CLAUDE.md template..."
+            cp "$claude_src" "$claude_dst"
+            echo "✓ CLAUDE.md template copied"
+        fi
+    fi
+}
+
 save_config() {
     if [[ "$DRY_RUN" == "true" ]]; then
         return 0
@@ -522,6 +556,7 @@ main() {
     install_just_bash
     install_agent_memory
     install_env
+    install_claude_md
     save_config
 
     echo ""
