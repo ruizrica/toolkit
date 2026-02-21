@@ -32,6 +32,14 @@ model="$(echo "$input" | jq -r '.model.display_name' | tr '[:upper:]' '[:lower:]
 workdir="$(echo "$input" | jq -r '.workspace.current_dir')"
 transcript_path="$(echo "$input" | jq -r '.transcript_path // empty')"
 
+# Read context window size from Claude Code input (default 200K)
+context_size=$(echo "$input" | jq -r '.context_window.context_window_size // 200000')
+
+# Show context tier in model name
+if [ "$context_size" -ge 1000000 ]; then
+  model="${model}(1M)"
+fi
+
 # Get last 2 path components for short display
 parent=$(basename "$(dirname "$workdir")")
 current=$(basename "$workdir")
@@ -49,11 +57,12 @@ if [ -f "$transcript_path" ]; then
 
     output_tokens=$(echo "$last_msg" | jq -r '.message.usage.output_tokens // 0' 2>/dev/null || echo 0)
 
-    # Calculate percentage of 200k context window
+    # Calculate percentage of actual context window
     # Sum all token types (input, output, cached reads, and cache creation) for accurate total
-    overhead=32000
+    # Scale overhead proportionally (16% of window)
+    overhead=$((context_size * 16 / 100))
     total_tokens=$((input_tokens + output_tokens + cache_read + cache_creation))
-    context_percent=$((total_tokens * 100 / (200000 - overhead)))
+    context_percent=$((total_tokens * 100 / (context_size - overhead)))
     [ $context_percent -gt 100 ] && context_percent=100
   fi
 fi
