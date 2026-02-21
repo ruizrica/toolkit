@@ -7,7 +7,7 @@ set -e
 
 # Repository configuration
 REPO_URL="https://github.com/ruizrica/toolkit"
-TOOLKIT_VERSION="1.0.0"
+TOOLKIT_VERSION="1.0.1"
 
 # Installation paths
 BASE_DIR="$HOME/.toolkit"
@@ -326,6 +326,30 @@ install_statusline() {
 # Configuration
 # -----------------------------------------------------------------------------
 
+install_env() {
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "✓ Would install .env file"
+        return 0
+    fi
+
+    local env_src="$BASE_DIR/.env"
+    local env_dst="$PWD/.env"
+
+    if [[ -f "$env_src" ]]; then
+        if [[ -f "$env_dst" ]]; then
+            print_status "Appending .env template to existing local .env..."
+            echo "" >> "$env_dst"
+            echo "# Added by agent-toolkit installer" >> "$env_dst"
+            cat "$env_src" >> "$env_dst"
+            echo "✓ .env template appended"
+        else
+            print_status "Copying .env template..."
+            cp "$env_src" "$env_dst"
+            echo "✓ .env template copied"
+        fi
+    fi
+}
+
 save_config() {
     if [[ "$DRY_RUN" == "true" ]]; then
         return 0
@@ -497,6 +521,7 @@ main() {
     install_agent_browser
     install_just_bash
     install_agent_memory
+    install_env
     save_config
 
     echo ""
