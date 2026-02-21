@@ -1,6 +1,6 @@
 # CLAUDE.md - Global Instructions Template
 
-This file provides guidance to Claude Code when working with any project. Customize it to match your team's workflow and preferences.
+This file provides guidance to Claude Code when working with any project.
 
 ## Working Philosophy
 
@@ -113,8 +113,8 @@ Use the `TodoWrite` tool or direct file edits to track progress:
 
 *(See also [Toolkit Commands](#other-toolkit-commands))*
 
-Use `/save` and `/restore` for session continuity:
-- **Before `/clear`**: Run `/save` to snapshot your session to `.context/session-state.json`
+Use `/compact` and `/restore` for session continuity:
+- **Before `/clear`**: Run `/compact` to snapshot your session to `.context/session-state.json`
 - **After `/clear`**: Run `/restore` to resume seamlessly
 
 The restore command will immediately continue working without asking what to do next.
@@ -196,6 +196,8 @@ Only skip `/haiku` for truly simple tasks:
 
 ### Other Toolkit Commands
 
+- **`/opus [task]`** - Spawn a team of 10 Opus agents managed by Opus. Use this for VERY complex tasks. Elite Dev Team.
+- **`/sonnet [task]`** - Spawn a team of 10 Sonnet agents managed by Sonnet. Use this for complex tasks. One level above Haiku.
 - **`/team [task]`** - Coordinate multiple specialized agents (gemini, cursor, codex, qwen, etc.) for complex implementation
 - **`/review [options]`** - Run CodeRabbit review with parallel agent fixes
 - **`/handbook`** - Generate comprehensive project documentation

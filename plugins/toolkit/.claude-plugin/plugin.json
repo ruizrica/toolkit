@@ -1,7 +1,7 @@
 {
   "name": "toolkit",
   "description": "Complete Claude Code power-user configuration with multi-agent orchestration, TDD workflows, and advanced productivity commands",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "author": {
     "name": "Ricardo"
   },
