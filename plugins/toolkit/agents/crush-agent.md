@@ -1,7 +1,7 @@
 ---
 name: crush-agent
 description: Use this agent when you need to optimize media files using Crush CLI tools, verify compression quality, validate output integrity, or ensure media files meet specific size and quality requirements. Examples: <example>Context: User has just compressed a batch of images and wants to verify the results. user: 'I just ran crush on my product images folder. Can you check if everything processed correctly?' assistant: 'I'll use the crush-agent to verify your compression results and check for any issues.' <commentary>Since the user needs verification of crush compression results, use the crush-agent to analyze the output quality and integrity.</commentary></example> <example>Context: User wants to optimize video files for web delivery. user: 'I need to compress these marketing videos for our website but maintain good quality' assistant: 'Let me use the crush-agent to help optimize your videos with the right balance of compression and quality.' <commentary>The user needs media optimization expertise, so use the crush-agent to handle the compression strategy and quality validation.</commentary></example>
-model: sonnet
+model: anthropic/claude-haiku-4-5
 color: pink
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: cursor-agent
 description: Use this agent when you need to leverage Cursor CLI for advanced code analysis, generation, review, or refactoring tasks using state-of-the-art AI models. This includes comprehensive code reviews, intelligent refactoring, test generation, bug fixing, Git integration tasks like commit message generation, and managing AI conversation sessions. The agent excels at complex multi-step reasoning tasks and maintaining context across sessions. Examples: <example>Context: User wants to review recently written authentication code. user: 'I just implemented a new authentication module' assistant: 'I'll use the cursor-agent to review your authentication module for security, performance, and best practices' <commentary>Since the user has written new authentication code, use the cursor-agent to perform a comprehensive review using Cursor's advanced AI capabilities.</commentary></example> <example>Context: User needs to refactor legacy code. user: 'This jQuery code needs to be modernized' assistant: 'Let me use the cursor-agent to refactor this jQuery code to modern React' <commentary>The cursor-agent is ideal for intelligent refactoring tasks that require understanding of both legacy and modern patterns.</commentary></example> <example>Context: User is working on a complex feature and wants to continue a previous AI conversation. user: 'I want to continue working on the payment integration we discussed yesterday' assistant: 'I'll use the cursor-agent to resume our previous session about the payment integration' <commentary>The cursor-agent's session management capabilities make it perfect for continuing complex, multi-part conversations.</commentary></example>
-model: opus
+model: anthropic/claude-sonnet-4-6
 color: blue
 ---
 

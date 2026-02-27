@@ -1,7 +1,7 @@
 ---
 name: droid-agent
 description: Use this agent when you need to leverage Factory's Droid CLI for enterprise-grade code generation, codebase analysis, and collaborative development tasks. This includes architecture analysis, code modifications with transparent review, security audits, Git operations, and integration with enterprise tools like Jira, Notion, and Slack. The agent excels at understanding codebases contextually and making thoughtful, reviewable changes. <example>Context: User wants to understand a codebase. user: 'Analyze this project and explain the architecture' assistant: 'I'll use the Task tool to launch the droid-agent to analyze the codebase and provide comprehensive architectural insights' <commentary>Since the user needs codebase analysis, use the Task tool to launch the droid-agent to leverage Droid's contextual understanding capabilities.</commentary></example> <example>Context: User needs to implement a feature from a ticket. user: 'Implement the feature described in PROJ-123' assistant: 'Let me use the Task tool to launch the droid-agent to read the ticket context and implement the feature following team conventions' <commentary>The droid-agent is ideal for enterprise workflows that integrate with tools like Jira and follow organizational standards.</commentary></example> <example>Context: User wants a security audit. user: 'Audit this codebase for security vulnerabilities' assistant: 'I'll use the Task tool to launch the droid-agent to perform a security audit and create a remediation plan' <commentary>The droid-agent's enterprise capabilities make it perfect for security-focused analysis tasks.</commentary></example>
-model: opus
+model: anthropic/claude-sonnet-4-6
 color: cyan
 ---
 

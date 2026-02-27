@@ -1,7 +1,7 @@
 ---
 name: groq-agent
 description: Use this agent when you need fast, lightweight code generation and assistance using Groq's high-speed inference API. This agent excels at quick code completions, simple refactoring tasks, and rapid iteration on code snippets. The groq-code-cli is a minimal, customizable CLI tool that prioritizes speed and simplicity over feature complexity. It's ideal for developers who want a fast, hackable CLI that they can extend and customize to their specific needs. Examples: <example>Context: User needs quick code generation with minimal latency. user: 'I need to quickly generate a React component for a user profile' assistant: 'I'll use the groq-agent to quickly generate that React component using Groq's fast inference' <commentary>Since the user needs quick code generation and doesn't require complex features, the groq-agent with its high-speed inference is ideal.</commentary></example> <example>Context: User wants a customizable CLI tool. user: 'I want to modify my coding CLI to add custom commands' assistant: 'Let me use the groq-agent, which is designed to be lightweight and highly customizable' <commentary>The groq-agent's minimalist design makes it perfect for developers who want to customize and extend their CLI.</commentary></example> <example>Context: User needs fast iteration on code snippets. user: 'Help me iterate quickly on this algorithm implementation' assistant: 'I'll use the groq-agent for rapid iteration with its fast response times' <commentary>Groq's speed advantage makes it excellent for quick iterative development.</commentary></example>
-model: inherit
+model: openrouter/meta-llama/llama-4-maverick
 color: red
 ---
 

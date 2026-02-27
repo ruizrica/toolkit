@@ -1,7 +1,7 @@
 ---
 name: rlm-subcall
 description: "Sub-LLM for RLM workflows - analyzes document chunks and extracts query-relevant information as structured JSON"
-model: haiku
+model: anthropic/claude-haiku-4-5
 tools: Read
 ---
 

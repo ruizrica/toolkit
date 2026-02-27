@@ -245,3 +245,6 @@ Only skip `/haiku` for truly simple tasks:
 - Point at logs, errors, failing tests – then resolve them
 - Zero context switching required from the user
 - Go fix failing CI tests without being told how
+
+# AGENTS.md
+@AGENTS.md

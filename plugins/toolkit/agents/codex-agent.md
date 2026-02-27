@@ -1,7 +1,7 @@
 ---
 name: codex-agent
 description: Use this agent when you need to leverage OpenAI Codex CLI for advanced code generation, analysis, and problem-solving tasks using OpenAI's Codex models. This includes code completion, code explanation, bug fixing, code translation between languages, documentation generation, and intelligent code suggestions. The agent excels at understanding natural language descriptions and converting them into working code. <example>Context: User wants to generate a function from natural language. user: 'Create a function that validates email addresses using regex' assistant: 'I'll use the Task tool to launch the codex-agent to generate an email validation function with proper regex patterns' <commentary>Since the user needs code generation from natural language, use the Task tool to launch the codex-agent to leverage Codex's natural language to code capabilities.</commentary></example> <example>Context: User needs to understand complex code. user: 'Explain what this recursive algorithm does' assistant: 'Let me use the Task tool to launch the codex-agent to analyze and explain this recursive algorithm step by step' <commentary>The codex-agent is ideal for code explanation tasks that require deep understanding of algorithms and logic.</commentary></example> <example>Context: User wants to translate code between languages. user: 'Convert this Python function to JavaScript' assistant: 'I'll use the Task tool to launch the codex-agent to translate this Python code to JavaScript while maintaining functionality' <commentary>The codex-agent's multi-language capabilities make it perfect for code translation tasks.</commentary></example>
-model: opus
+model: anthropic/claude-sonnet-4-6
 color: orange
 ---
 
