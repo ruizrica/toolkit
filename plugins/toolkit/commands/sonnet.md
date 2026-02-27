@@ -173,24 +173,34 @@ After ALL validators complete:
 
 2. **WAIT FOR COMPLETION**: Never start next phase until ALL agents in current phase complete
 
-3. **USE SONNET MODEL**: All spawned agents MUST use `model: "sonnet"`
+3. **AGENT TYPES**: Use `scout` for context, `builder` for implementation, `reviewer` for validation
 
 4. **STRUCTURED OUTPUT**: Require JSON structured output from all agents
 
 5. **CONTEXT PASSING**: Always pass relevant context from earlier phases to later agents
 
-## Example Task Tool Calls
+## Agent Types
 
-For Phase 1 (Context Gathering), send ONE message with 4 Task calls:
+Use these standard agent types when dispatching:
+
+| Phase | Agent | Role |
+|-------|-------|------|
+| Context | `scout` | Read-only recon — files, patterns, architecture, history |
+| Implementation | `builder` | Code writing — implements changes, runs tests |
+| Validation | `reviewer` | Code review — finds bugs, security issues, style problems |
+
+## Example Dispatch Calls
+
+For Phase 1 (Context Gathering), dispatch 4 scouts IN PARALLEL:
 
 ```
-Task 1: { subagent_type: "Explore", model: "sonnet", prompt: "You are Context Agent 1 - Code Explorer. Task: [user task]. Find relevant files, patterns, similar implementations. Return JSON: {agent, role, findings, recommendations}" }
+dispatch_agent(agent: "scout", task: "Context 1 - Code Explorer. Task: [user task]. Find relevant files, patterns, similar implementations. Return JSON: {agent, role, findings, recommendations}")
 
-Task 2: { subagent_type: "Explore", model: "sonnet", prompt: "You are Context Agent 2 - Architecture Scout. Task: [user task]. Map dependencies, entry points, module structure. Return JSON: {agent, role, findings, recommendations}" }
+dispatch_agent(agent: "scout", task: "Context 2 - Architecture Scout. Task: [user task]. Map dependencies, entry points, module structure. Return JSON: {agent, role, findings, recommendations}")
 
-Task 3: { subagent_type: "Explore", model: "sonnet", prompt: "You are Context Agent 3 - History Investigator. Task: [user task]. Check git history, recent changes, ownership. Return JSON: {agent, role, findings, recommendations}" }
+dispatch_agent(agent: "scout", task: "Context 3 - History Investigator. Task: [user task]. Check git history, recent changes, ownership. Return JSON: {agent, role, findings, recommendations}")
 
-Task 4: { subagent_type: "Explore", model: "sonnet", prompt: "You are Context Agent 4 - Test Analyst. Task: [user task]. Find test patterns, coverage gaps, quality requirements. Return JSON: {agent, role, findings, recommendations}" }
+dispatch_agent(agent: "scout", task: "Context 4 - Test Analyst. Task: [user task]. Find test patterns, coverage gaps, quality requirements. Return JSON: {agent, role, findings, recommendations}")
 ```
 
 ## Begin Execution
