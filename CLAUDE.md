@@ -109,15 +109,29 @@ Use the `TodoWrite` tool or direct file edits to track progress:
 5. **Document Results**: Add a review section to `.context/todo.md`.
 6. **Capture Lessons**: Update `.context/lessons.md` after corrections (See [Self-Improvement Loop](#3-self-improvement-loop)).
 
-## Session Management
+## Session Management & Compaction
 
-*(See also [Toolkit Commands](#other-toolkit-commands))*
+**Compaction is fully automatic.** The `memory-cycle` extension hooks into pi's native compaction system:
 
-Use `/compact` and `/restore` for session continuity:
-- **Before `/clear`**: Run `/compact` to snapshot your session to `.context/session-state.json`
-- **After `/clear`**: Run `/restore` to resume seamlessly
+- **Auto-compaction** triggers when context exceeds thresholds (80% warn, 90% block)
+- **Before compaction**: Daily log entry + session state JSON are saved automatically
+- **After compaction**: Restoration context is injected so the agent continues seamlessly
+- **No manual intervention needed** — the agent resumes work automatically after compaction
 
-The restore command will immediately continue working without asking what to do next.
+### Manual Commands
+
+- **`/cycle [instructions]`** — Full reset: compact → new session → restore memory (fresh context)
+- **`/compact`** — Trigger pi's native compaction (memory saved automatically via hooks)
+- **`/restore`** — Restore context from `.context/session-state.json` + daily logs (for manual `/new` sessions)
+- **`cycle_memory` tool** — LLM-callable version of `/cycle`
+
+### How It Works
+
+1. **Footer extension** monitors context % and triggers `ctx.compact()` when needed
+2. **Memory-cycle `session_before_compact` hook** saves daily log + session state to disk
+3. **Pi's native compaction** summarizes old messages and reclaims tokens
+4. **Memory-cycle `session_compact` hook** injects restoration context as a follow-up message
+5. **Agent resumes** automatically with full awareness of what happened
 
 ## Agent Memory System
 
@@ -127,23 +141,16 @@ The toolkit uses a combination of project-local (`.context/`) and global (`~/.cl
 
 | Type | Location | Purpose |
 |------|----------|---------|
-| **Semantic** | `.context/MEMORY.md` | Stable facts, patterns, conventions (auto-loaded by Claude Code) |
+| **Semantic** | `.context/MEMORY.md` | Stable facts, patterns, conventions (auto-loaded) |
 | **Daily Logs** | `~/.claude/agent-memory/daily-logs/YYYY-MM-DD.md` | Timestamped session entries — what happened, decisions made, files touched |
-| **Session Snapshots** | `~/.claude/agent-memory/sessions/{project}-{timestamp}.md` | Raw conversation excerpts for detailed recall |
+| **Session State** | `.context/session-state.json` | Last task, continuation prompt, files touched |
 
 ### "Remember This" Routing
 
 When you discover something worth remembering:
 - **Stable fact** (applies across sessions) → Write to `.context/MEMORY.md` (keep under 200 lines, organize by topic)
-- **Session context** (what happened, decisions made) → `/compact` writes to daily log automatically
-- **Raw conversation** → PreCompact hook writes session snapshots automatically
-
-### Compact Commands
-
-- **`/compact`** — Memory-aware: writes daily log entry + session state, optionally updates MEMORY.md
-- **`/compact-min`** — Ultra-minimal: writes session state only (faster, no memory writes)
-
-Both support restoration via `/restore`.
+- **Session context** (what happened, decisions made) → Saved automatically on every compaction via hooks
+- **Cross-session recall** → Use `agent-memory search` CLI for hybrid search over all logs
 
 ### Search with agent-memory CLI
 
