@@ -163,6 +163,7 @@ Skills are reference files installed to `~/.claude/skills/` that teach Claude wh
 |-------|-------------|------|
 | **just-bash** | Sandboxed bash (read-only FS, no network, 75+ commands) | [→](docs/skills/just-bash.md) |
 | **agent-memory** | Local hybrid search over agent memory files | [→](docs/skills/agent-memory.md) |
+| **autoresearch** | Autonomous goal-directed iteration (Karpathy's autoresearch pattern) | [→](docs/skills/autoresearch.md) |
 
 ### Using Agents
 
