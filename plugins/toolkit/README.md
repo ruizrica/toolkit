@@ -29,9 +29,9 @@ Then inside any project:
 
 Both installers are idempotent. `/setup` invokes them automatically; you can also run them directly.
 
-Source repos:
-- agent-viewer — `/Users/ricardo/Workshop/GitHub/agent-viewer`
-- agent-memory — `~/.toolkit/tools/agent-memory` (or set `AGENT_MEMORY_SRC`)
+Source repos (bundled inside this plugin):
+- agent-viewer — `plugins/toolkit/tools/agent-viewer/` (override: `AGENT_VIEWER_SRC`)
+- agent-memory — `plugins/toolkit/tools/agent-memory/` (override: `AGENT_MEMORY_SRC`)
 
 ## Contents
 
