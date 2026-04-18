@@ -7,10 +7,15 @@
 </p>
 
 <p align="center">
-  <sub><b>v1.3.0 · refined release</b> — streamlined command surface, bundled external CLI installers, self-bootstrapping <code>/setup</code>, and a single round-trip review skill that replaces the old <code>/plan</code> command.</sub>
+  <sub><b>v1.3.1</b> — bundles agent-viewer and agent-memory source inside the plugin so <code>/setup</code> works from the plugin cache with no external git repos or npm-published packages. Builds on the v1.3.0 refined release.</sub>
 </p>
 
 ---
+
+## What's new in 1.3.1
+
+- **Both CLIs ship inside the plugin** — `agent-viewer` and `agent-memory` sources now live at `plugins/toolkit/tools/{viewer,memory}/`, so `/setup` works from `~/.claude/plugins/cache/toolkit/…` with no external git repos and no npm-published packages.
+- **Installers resolve via `SCRIPT_DIR`** — `install-agent-viewer.sh` and `install-agent-memory.sh` derive the bundled path from their own location; `TOOLKIT_PLUGIN_ROOT` still overrides when needed.
 
 ## What's new in 1.3.0
 
@@ -265,7 +270,7 @@ agent-toolkit/
 │   ├── skills/                       # 4 skills (1 directory-style: codebase-to-course)
 │   ├── scripts/                      # installers, handbook generator, doctor, statusline
 │   ├── templates/agent-viewer/       # canonical rich JSON payload shapes
-│   └── .claude-plugin/plugin.json    # manifest (v1.3.0)
+│   └── .claude-plugin/plugin.json    # manifest (v1.3.1)
 ├── docs/                             # Per-command / per-agent / per-skill documentation
 ├── tools/agent-memory/               # Hybrid search CLI (Python)
 ├── assets/                           # Images
