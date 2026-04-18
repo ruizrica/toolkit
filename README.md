@@ -7,10 +7,16 @@
 </p>
 
 <p align="center">
-  <sub><b>v1.3.2</b> — hotfix: root <code>.gitignore</code> <code>lib/</code> rule was silently excluding the agent-viewer source files. v1.3.1 shipped without <code>lib/</code>, so the CLI couldn't resolve its modules. Builds on the v1.3.0 refined release.</sub>
+  <sub><b>v1.3.3</b> — adds <code>/agent-plan</code> and <code>/agent-spec</code>: interactive, round-trip commands that gather requirements via Q&A, gate on <code>agent-viewer</code> approval, and then execute immediately in the same session. Builds on the v1.3.0 refined release.</sub>
 </p>
 
 ---
+
+## What's new in 1.3.3
+
+- **`/agent-plan`** — interactive single-document plan workflow. Spawns a Haiku scout for context, gathers goal/scope/constraints/risks/verification via `AskUserQuestion`, assembles a maximally robust plan (Mermaid + phased task lists + risks table + rollback + open questions) to `.context/plans/<name>.md`, gates on `agent-viewer plan` approval, then executes inline (or via `--agent haiku|sonnet|opus`) and closes with an auto-generated `agent-viewer completion` report.
+- **`/agent-spec`** — Kiro-pattern sibling of `/agent-plan`, for larger multi-document features. Generates EARS-format requirements, design, and task docs with parallel Haiku research agents; spec-viewer gate is binding before Phase 4 execution.
+- **Docs** — dedicated reference pages at `docs/commands/agent-plan.md` and `docs/commands/agent-spec.md`; command index updated.
 
 ## What's new in 1.3.2
 
@@ -130,7 +136,9 @@ Any time you write a plan, generate a spec set, present a Mermaid diagram, or cl
 | `/setup` | Bootstrap: install CLIs, index memory, seed handbook, install git hooks, write CLAUDE.md | [→](docs/commands/setup.md) |
 | `/haiku [--model …]` | 10-agent team managed by Opus (haiku default; `--model sonnet\|opus` to override) | [→](docs/commands/haiku.md) |
 | `/team` | Multi-agent parallel implementation with external CLIs | [→](docs/commands/team.md) |
-| `/kiro` | Spec-driven development with viewer review at each phase | [→](docs/commands/kiro.md) |
+| `/agent-plan` | Interactive single-doc plan — Q&A → viewer gate → execute → completion report | [→](docs/commands/agent-plan.md) |
+| `/agent-spec` | Interactive Kiro-pattern spec — requirements/design/tasks → viewer gate → execute | [→](docs/commands/agent-spec.md) |
+| `/kiro` | Same workflow as `/agent-spec` (legacy name) | [→](docs/commands/kiro.md) |
 | `/handbook` | Refresh AI-optimized project handbook | [→](docs/commands/handbook.md) |
 | `/code2course` | Turn a codebase into an interactive HTML course | — |
 | `/@implement` | Process `@implement` comments in code | [→](docs/commands/implement.md) |
@@ -274,7 +282,7 @@ agent-toolkit/
 │   ├── skills/                       # 4 skills (1 directory-style: codebase-to-course)
 │   ├── scripts/                      # installers, handbook generator, doctor, statusline
 │   ├── templates/agent-viewer/       # canonical rich JSON payload shapes
-│   └── .claude-plugin/plugin.json    # manifest (v1.3.2)
+│   └── .claude-plugin/plugin.json    # manifest (v1.3.3)
 ├── docs/                             # Per-command / per-agent / per-skill documentation
 ├── tools/agent-memory/               # Hybrid search CLI (Python)
 ├── assets/                           # Images

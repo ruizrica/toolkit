@@ -1,4 +1,4 @@
-# Toolkit · v1.3.2
+# Toolkit · v1.3.3
 
 A cohesive Claude Code plugin. Multi-agent orchestration, round-trip plan/spec/completion review via `agent-viewer`, hybrid semantic memory via `agent-memory`, and an auto-refreshing project handbook.
 
@@ -45,14 +45,16 @@ Source repos (bundled inside this plugin):
 | droid-agent | Enterprise code generation, codebase analysis |
 | opencode-agent | 75+ AI models via OpenRouter |
 
-### Commands (15)
+### Commands (17)
 
 | Command | Description |
 |---------|-------------|
 | `/setup` | Bootstrap: install CLIs, index memory, seed handbook, install git hooks, write CLAUDE.md |
 | `/haiku [--model haiku\|sonnet\|opus] <task>` | Spawn a team of 10 agents managed by Opus (haiku tier by default) |
 | `/team <task>` | Coordinate mixed external-CLI agents (gemini, cursor, codex, droid, opencode) |
-| `/kiro <feature>` | Spec-driven development: requirements → design → tasks → viewer review → execution |
+| `/agent-plan <topic>` | Interactive single-document plan — Q&A → `agent-viewer plan` gate → execute → completion report |
+| `/agent-spec <feature>` | Interactive Kiro-pattern spec — requirements/design/tasks → `agent-viewer spec` gate → execution |
+| `/kiro <feature>` | Same workflow as `/agent-spec` (legacy name) |
 | `/handbook` | Refresh `HANDBOOK.md` on demand (git hooks handle automatic updates) |
 | `/code2course [path]` | Turn a codebase into an interactive HTML course |
 | `/design [name]` | Interactive design-token pipeline (CSS/Tailwind/SCSS/iOS/Android) |

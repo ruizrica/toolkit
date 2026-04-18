@@ -1,7 +1,9 @@
 # Commands Overview
 
-The toolkit ships **15 commands** organized into three categories: **Core** (development workflows), **Session Management** (context preservation), and **Git Workflow** (version control).
+The toolkit ships **17 commands** organized into three categories: **Core** (development workflows), **Session Management** (context preservation), and **Git Workflow** (version control).
 
+> **v1.3.3 adds** `/agent-plan` (interactive single-document plan with viewer gate + auto-execution) and `/agent-spec` (Kiro-pattern sibling to `/agent-plan`). Both use `AskUserQuestion` to gather content, flow through `agent-viewer` for binding approval, and start execution the moment approval returns.
+>
 > **v1.3.0 — refined release.** The command surface was cleaned up so that every entry earns its slot. The three near-identical `/haiku` + `/opus` + `/sonnet` commands collapsed into a single `/haiku [--model …]` meta command. Commands that depended on fragile external setup (`/review`, `/rlm`, `/gherkin`) and the redundant `/plan` + `/just-bash` wrappers were retired. Nothing else was cut.
 
 ## Quick Reference
@@ -11,7 +13,9 @@ The toolkit ships **15 commands** organized into three categories: **Core** (dev
 | [/setup](setup.md) | Bootstrap CLIs, memory index, handbook, git hooks, CLAUDE.md | Core |
 | [/haiku](haiku.md) | 10-agent team — `--model haiku\|sonnet\|opus` (default haiku) | Core |
 | [/team](team.md) | Multi-agent parallel implementation (external CLIs) | Core |
-| [/kiro](kiro.md) | Spec-driven development with Kiro methodology | Core |
+| [/agent-plan](agent-plan.md) | Interactive single-document plan — Q&A → viewer gate → execute | Core |
+| [/agent-spec](agent-spec.md) | Interactive Kiro-pattern spec — requirements/design/tasks → viewer gate → execute | Core |
+| [/kiro](kiro.md) | Spec-driven development with Kiro methodology (same workflow as `/agent-spec`) | Core |
 | [/handbook](handbook.md) | Refresh AI-optimized project handbook | Core |
 | [/code2course](../../plugins/toolkit/commands/code2course.md) | Turn a codebase into an interactive HTML course | Core |
 | [/@implement](implement.md) | Process `@implement` comments | Core |
@@ -52,9 +56,13 @@ Commands for bootstrap, feature development, documentation, and search.
 
 - **[/@implement](implement.md)** — Find `@implement` comments in code, implement the requested functionality, and convert the comments into proper documentation.
 
-### Spec-Driven Development
+### Interactive Planning & Specs
 
-- **[/kiro](kiro.md)** — Generate EARS-format requirements, design docs, and task breakdowns through interactive Q&A phases. Each phase is reviewed through `agent-viewer spec` (editable browser) before moving forward. Execution uses parallel agents (Cursor default, Haiku optional).
+- **[/agent-plan](agent-plan.md)** — Single-document plan workflow. Spawns a Haiku scout agent for context, gathers goal/scope/constraints/risks/verification via `AskUserQuestion`, writes a robust plan with Mermaid + per-phase task lists to `.context/plans/<name>.md`, gates on `agent-viewer plan` approval, executes (inline by default, `--agent haiku|sonnet|opus` optional), and closes with an auto-generated completion report.
+
+- **[/agent-spec](agent-spec.md)** — Multi-document spec workflow following the Kiro pattern. Generates EARS-format requirements, design, and task docs through interactive Q&A phases. Each phase is reviewed through `agent-viewer spec` (editable browser) before moving forward. Execution uses parallel agents (Cursor default, Haiku optional). Storage: `~/.claude/plans/<spec_name>/`.
+
+- **[/kiro](kiro.md)** — Original Kiro-methodology command. Identical workflow to `/agent-spec`; kept for backward compatibility.
 
 ### Design Systems
 
