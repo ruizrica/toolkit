@@ -7,14 +7,14 @@
 </p>
 
 <p align="center">
-  <sub><b>v1.3.4</b> — adds an HTTP-level E2E test suite for the <code>agent-viewer</code> round-trip contract (6 cases covering plan/spec/completion, including edit write-back and comment round-trip) so <code>/agent-plan</code> and <code>/agent-spec</code> sit on a verified foundation. Builds on v1.3.3.</sub>
+  <sub><b>v1.3.5</b> — interactive commands (<code>/agent-plan</code>, <code>/agent-spec</code>, <code>/kiro</code>, <code>/design</code>) now run in the main conversation so <code>AskUserQuestion</code> works natively instead of silently falling back to inline markdown Q&A.</sub>
 </p>
 
 ---
 
-## What's new in 1.3.4
+## What's new in 1.3.5
 
-- **HTTP-level E2E test suite** at `plugins/toolkit/tools/agent-viewer/test/e2e.test.js`. Six cases spawn the CLI as a child process, drive the `/result` endpoint via `fetch`, and assert stdout JSON + on-disk file write-back. Covers plan approve/edit-approve/decline, spec approve/request-changes, and completion done. Full suite runs in ~1.2s via `npm test` (or `npm run test:e2e` for targeted runs). `/agent-plan` and `/agent-spec` now sit on a verified round-trip contract.
+- **Interactive commands get real `AskUserQuestion` popups.** `/agent-plan`, `/agent-spec`, `/kiro`, and `/design` previously declared `AskUserQuestion` in `allowed-tools` but ran under `context: fork`, which spawns a subagent where that tool isn't available — so Q&A silently degraded to inline markdown. Fix drops the fork on all four; `/design` gains `model: opus` to preserve Opus pinning. Heavy work (Repo Scout, execution teams) still delegates via the `Task` tool.
 
 ## What's new in 1.3.0
 
@@ -271,7 +271,7 @@ agent-toolkit/
 │   ├── skills/                       # 4 skills (1 directory-style: codebase-to-course)
 │   ├── scripts/                      # installers, handbook generator, doctor, statusline
 │   ├── templates/agent-viewer/       # canonical rich JSON payload shapes
-│   └── .claude-plugin/plugin.json    # manifest (v1.3.4)
+│   └── .claude-plugin/plugin.json    # manifest (v1.3.5)
 ├── docs/                             # Per-command / per-agent / per-skill documentation
 ├── tools/agent-memory/               # Hybrid search CLI (Python)
 ├── assets/                           # Images
