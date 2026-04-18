@@ -177,9 +177,9 @@ Two external CLIs back the skills that make this cohesive. `/setup` installs bot
 | `agent-viewer` | Editable browser review for plans, specs, completions, reports | `scripts/install-agent-viewer.sh` |
 | `agent-memory` | Hybrid semantic + BM25 search over memory and daily logs | `scripts/install-agent-memory.sh` |
 
-Source repos:
-- **agent-viewer** — bundled at `plugins/toolkit/tools/agent-viewer/` (ships inside the plugin cache)
-- **agent-memory** — bundled at `tools/agent-memory/`
+Source repos (both ship inside the plugin cache):
+- **agent-viewer** — bundled at `plugins/toolkit/tools/agent-viewer/`
+- **agent-memory** — bundled at `plugins/toolkit/tools/agent-memory/`
 
 Canonical JSON payload shapes for `agent-viewer` live at `plugins/toolkit/templates/agent-viewer/`:
 - `plan-payload.json` — single-document plan review

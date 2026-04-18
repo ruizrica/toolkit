@@ -276,11 +276,11 @@ install_agent_memory() {
     fi
 
     if command -v pip3 &> /dev/null; then
-        pip3 install --break-system-packages -e "$BASE_DIR/tools/agent-memory" 2>/dev/null && \
+        pip3 install --break-system-packages -e "$BASE_DIR/plugins/toolkit/tools/agent-memory" 2>/dev/null && \
             echo "✓ agent-memory installed" || \
-            print_warning "Run: pip3 install --break-system-packages -e ~/.toolkit/tools/agent-memory"
+            print_warning "Run: pip3 install --break-system-packages -e ~/.toolkit/plugins/toolkit/tools/agent-memory"
     else
-        print_warning "pip3 not found. Run: pip3 install --break-system-packages -e ~/.toolkit/tools/agent-memory"
+        print_warning "pip3 not found. Run: pip3 install --break-system-packages -e ~/.toolkit/plugins/toolkit/tools/agent-memory"
     fi
 }
 

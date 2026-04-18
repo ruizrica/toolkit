@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ABOUTME: installs the agent-memory CLI so /setup, /restore, /agent-memory, and skills can use it.
-# ABOUTME: prefers pip editable install from ~/.toolkit/tools/agent-memory; falls back to other known paths.
+# ABOUTME: prefers the plugin-bundled copy at plugins/toolkit/tools/agent-memory; falls back to legacy paths.
 
 set -euo pipefail
 
@@ -9,15 +9,21 @@ if command -v agent-memory >/dev/null 2>&1; then
   exit 0
 fi
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGIN_ROOT="${TOOLKIT_PLUGIN_ROOT:-$(dirname "$SCRIPT_DIR")}"
+
 CANDIDATES=(
   "${AGENT_MEMORY_SRC:-}"
+  "$PLUGIN_ROOT/tools/agent-memory"
+  "$HOME/.claude/plugins/cache/toolkit/toolkit/tools/agent-memory"
+  "$HOME/.toolkit/plugins/toolkit/tools/agent-memory"
   "$HOME/.toolkit/tools/agent-memory"
-  "$HOME/Workshop/GitHub/agent-toolkit/tools/agent-memory"
+  "$HOME/Workshop/GitHub/agent-toolkit/plugins/toolkit/tools/agent-memory"
 )
 
 SRC=""
 for candidate in "${CANDIDATES[@]}"; do
-  if [ -n "$candidate" ] && [ -d "$candidate" ] && [ -f "$candidate/pyproject.toml" -o -f "$candidate/setup.py" ]; then
+  if [ -n "$candidate" ] && [ -d "$candidate" ] && { [ -f "$candidate/pyproject.toml" ] || [ -f "$candidate/setup.py" ]; }; then
     SRC="$candidate"
     break
   fi
