@@ -1,4 +1,4 @@
-# Toolkit · v1.3.1
+# Toolkit · v1.3.2
 
 A cohesive Claude Code plugin. Multi-agent orchestration, round-trip plan/spec/completion review via `agent-viewer`, hybrid semantic memory via `agent-memory`, and an auto-refreshing project handbook.
 

@@ -7,10 +7,14 @@
 </p>
 
 <p align="center">
-  <sub><b>v1.3.1</b> — bundles agent-viewer and agent-memory source inside the plugin so <code>/setup</code> works from the plugin cache with no external git repos or npm-published packages. Builds on the v1.3.0 refined release.</sub>
+  <sub><b>v1.3.2</b> — hotfix: root <code>.gitignore</code> <code>lib/</code> rule was silently excluding the agent-viewer source files. v1.3.1 shipped without <code>lib/</code>, so the CLI couldn't resolve its modules. Builds on the v1.3.0 refined release.</sub>
 </p>
 
 ---
+
+## What's new in 1.3.2
+
+- **Hotfix for v1.3.1**: root `.gitignore` had a bare `lib/` rule (inherited from Python template) that silently excluded `plugins/toolkit/tools/agent-viewer/lib/`. The v1.3.1 bundle shipped with no runtime modules; the CLI errored with `Cannot find module '../lib/cli-args.js'`. Rule removed (the `build/` ignore on the line above already covers Python build artifacts); the 14 viewer `lib/` files are now tracked.
 
 ## What's new in 1.3.1
 
@@ -270,7 +274,7 @@ agent-toolkit/
 │   ├── skills/                       # 4 skills (1 directory-style: codebase-to-course)
 │   ├── scripts/                      # installers, handbook generator, doctor, statusline
 │   ├── templates/agent-viewer/       # canonical rich JSON payload shapes
-│   └── .claude-plugin/plugin.json    # manifest (v1.3.1)
+│   └── .claude-plugin/plugin.json    # manifest (v1.3.2)
 ├── docs/                             # Per-command / per-agent / per-skill documentation
 ├── tools/agent-memory/               # Hybrid search CLI (Python)
 ├── assets/                           # Images
