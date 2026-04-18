@@ -1,19 +1,18 @@
 # Agents Overview
 
-The Toolkit includes 8 specialized agents that can be invoked as slash commands. Each agent is optimized for specific use cases and leverages different AI models and CLI tools.
+The toolkit ships **5 specialized agents** that can be invoked as slash commands. Each agent wraps a different external CLI and is optimized for specific use cases.
+
+> **v1.3.0 — refined release.** The agent roster was pruned from 9 to 5. Dropped: `qwen-agent`, `groq-agent`, `crush-agent` (out-of-scope media optimization), and `rlm-subcall` (orphaned with `/rlm`). The surviving 5 cover large-context analysis, review/refactoring, code generation, enterprise workflows, and multi-model routing — no more overlap.
 
 ## Quick Reference
 
 | Agent | Specialty | CLI Tool | Best For |
 |-------|-----------|----------|----------|
-| [gemini-agent](gemini.md) | Large codebase analysis | Gemini CLI | Monorepos >100KB, 1M token context |
-| [cursor-agent](cursor.md) | Code review, refactoring | Cursor CLI | Complex refactoring, sessions |
-| [codex-agent](codex.md) | Natural language → code | Codex CLI | Code generation, translation |
-| [qwen-agent](qwen.md) | Agentic coding workflows | Qwen CLI | Workflow automation, git ops |
-| [opencode-agent](opencode.md) | Multi-model access | OpenCode CLI | Model comparison, cost optimization |
-| [groq-agent](groq.md) | Fast inference | Groq CLI | Quick completions, rapid iteration |
-| [crush-agent](crush.md) | Media optimization | Crush CLI | Image/video compression |
-| [droid-agent](droid.md) | Enterprise development | Droid CLI | Architecture, enterprise integration |
+| [gemini-agent](gemini.md) | Large codebase analysis | Gemini CLI | Monorepos >100KB, 1M-token context, web search |
+| [cursor-agent](cursor.md) | Code review, refactoring | Cursor CLI | Complex refactoring, session management |
+| [codex-agent](codex.md) | Natural language → code | Codex CLI | Code generation, translation across languages |
+| [droid-agent](droid.md) | Enterprise development | Droid CLI | Architecture, Jira/Notion/Slack integration |
+| [opencode-agent](opencode.md) | Multi-model access | OpenCode CLI | Access to 75+ models via OpenRouter, cost optimization |
 
 ---
 
@@ -25,49 +24,58 @@ Invoke any agent as a slash command with the `toolkit:` prefix:
 /toolkit:gemini-agent Analyze the authentication module for security issues
 ```
 
-The format is: `/toolkit:<agent-name> <your prompt>`
+Format: `/toolkit:<agent-name> <your prompt>`.
 
 ---
 
-### By Speed vs. Capability
+## By Capability
 
-| Priority | Agent | Notes |
-|----------|-------|-------|
-| Speed | [groq-agent](groq.md) | Fastest inference, minimal latency |
-| Speed | [opencode-agent](opencode.md) | Free/budget models available |
-| Balance | [cursor-agent](cursor.md) | Good balance of speed and capability |
-| Balance | [qwen-agent](qwen.md) | Strong reasoning with good speed |
-| Capability | [gemini-agent](gemini.md) | Largest context window (1M tokens) |
-| Capability | [codex-agent](codex.md) | Best for complex code generation |
-| Capability | [droid-agent](droid.md) | Enterprise features, review workflow |
+| Need | Agent |
+|------|-------|
+| Massive context (>100 KB, whole-repo reviews) | [gemini-agent](gemini.md) — 1M tokens |
+| Real-time web search during analysis | [gemini-agent](gemini.md) |
+| Session continuity across prompts | [cursor-agent](cursor.md) |
+| Model comparison or cost control | [opencode-agent](opencode.md) |
+| Enterprise integrations (Jira, Notion, Slack) | [droid-agent](droid.md) |
+| Cross-language code translation | [codex-agent](codex.md) |
 
 ---
 
-### By Cost Consideration
+## By Cost
 
-**Free/Budget Options**
-- [opencode-agent](opencode.md) - Access to free models like Qwen 2.5 Coder
-- [groq-agent](groq.md) - Fast and cost-effective
+**Budget / free options**
+- [opencode-agent](opencode.md) — access to free models like Qwen 2.5 Coder, DeepSeek Coder
+- [cursor-agent](cursor.md) — default model is well-optimized for common work
 
 **Standard**
-- [cursor-agent](cursor.md) - Default model is well-optimized
-- [qwen-agent](qwen.md) - ModelScope offers free tier
+- [cursor-agent](cursor.md) — everyday review and refactoring
 
 **Premium**
-- [gemini-agent](gemini.md) - Gemini 2.5 Pro for massive codebases
-- [codex-agent](codex.md) - OpenAI Codex models
-- [droid-agent](droid.md) - Enterprise-grade capabilities
+- [gemini-agent](gemini.md) — Gemini 2.5 Pro for massive codebases
+- [codex-agent](codex.md) — OpenAI Codex models for complex generation
+- [droid-agent](droid.md) — enterprise-grade capabilities
 
 ---
 
-## Agent Comparison Matrix
+## Comparison Matrix
 
-| Feature | gemini | cursor | codex | qwen | opencode | groq | crush | droid |
-|---------|--------|--------|-------|------|----------|------|-------|-------|
-| Large Context | ✅ 1M | ❌ | ❌ | ✅ 256K | ❌ | ❌ | N/A | ❌ |
-| Web Search | ✅ | ❌ | ❌ | ✅ | ❌ | ❌ | N/A | ❌ |
-| Sessions | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ | N/A | ❌ |
-| Multi-Model | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ | N/A | ❌ |
-| Enterprise | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | N/A | ✅ |
-| Offline | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
-| Speed | Medium | Medium | Medium | Medium | Varies | Fast | Fast | Medium |
+| Feature | gemini | cursor | codex | droid | opencode |
+|---------|:------:|:------:|:-----:|:-----:|:--------:|
+| Large context (≥256 K) | ✅ 1M | ❌ | ❌ | ❌ | depends |
+| Web search | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Session management | ❌ | ✅ | ❌ | ❌ | ❌ |
+| Multi-model routing | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Enterprise integrations | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Speed | Medium | Medium | Medium | Medium | Varies by model |
+
+---
+
+## When To Use Which
+
+- **Research / whole-repo analysis** → `gemini-agent` (biggest context)
+- **Targeted code review and refactoring** → `cursor-agent`
+- **Generating new code from spec / translating between languages** → `codex-agent`
+- **Enterprise workflows touching Jira/Notion/Slack** → `droid-agent`
+- **Need a specific model or want to compare outputs** → `opencode-agent`
+
+If you want a team to work on something in parallel, use [`/team`](../commands/team.md) — it dispatches to multiple agents at once.

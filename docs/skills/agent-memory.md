@@ -88,4 +88,4 @@ All data stored in `~/.claude/agent-memory/memory.db`. No network calls for sear
 ## See Also
 
 - [/agent-memory command](../commands/agent-memory.md) — Full command documentation
-- [just-bash](just-bash.md) — Another toolkit skill
+- [agent-viewer](agent-viewer.md) — Round-trip plan/spec/completion review skill

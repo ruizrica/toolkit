@@ -1,8 +1,10 @@
-# Toolkit
+# Toolkit · v1.3.0 (refined)
 
 A cohesive Claude Code plugin. Multi-agent orchestration, round-trip plan/spec/completion review via `agent-viewer`, hybrid semantic memory via `agent-memory`, and an auto-refreshing project handbook.
 
 Every piece knows about the others. Run `/setup` once and the toolkit wires itself together.
+
+> **v1.3.0 is a refined release.** The command surface was cleaned up, duplicates were consolidated, and every remaining command earns its slot. Highlights: `/haiku` is now a single meta command with `--model haiku|sonnet|opus`; the vendored plan-viewer script was replaced by the external `agent-viewer` CLI with an installer; `/setup` now bootstraps the entire dependency chain end-to-end. See the root `README.md` for the full "What's new" list.
 
 ## Installation
 
