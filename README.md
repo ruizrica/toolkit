@@ -7,10 +7,14 @@
 </p>
 
 <p align="center">
-  <sub><b>v1.3.3</b> — adds <code>/agent-plan</code> and <code>/agent-spec</code>: interactive, round-trip commands that gather requirements via Q&A, gate on <code>agent-viewer</code> approval, and then execute immediately in the same session. Builds on the v1.3.0 refined release.</sub>
+  <sub><b>v1.3.4</b> — adds an HTTP-level E2E test suite for the <code>agent-viewer</code> round-trip contract (6 cases covering plan/spec/completion, including edit write-back and comment round-trip) so <code>/agent-plan</code> and <code>/agent-spec</code> sit on a verified foundation. Builds on v1.3.3.</sub>
 </p>
 
 ---
+
+## What's new in 1.3.4
+
+- **HTTP-level E2E test suite** at `plugins/toolkit/tools/agent-viewer/test/e2e.test.js`. Six cases spawn the CLI as a child process, drive the `/result` endpoint via `fetch`, and assert stdout JSON + on-disk file write-back. Covers plan approve/edit-approve/decline, spec approve/request-changes, and completion done. Full suite runs in ~1.2s via `npm test` (or `npm run test:e2e` for targeted runs). `/agent-plan` and `/agent-spec` now sit on a verified round-trip contract.
 
 ## What's new in 1.3.3
 
@@ -282,7 +286,7 @@ agent-toolkit/
 │   ├── skills/                       # 4 skills (1 directory-style: codebase-to-course)
 │   ├── scripts/                      # installers, handbook generator, doctor, statusline
 │   ├── templates/agent-viewer/       # canonical rich JSON payload shapes
-│   └── .claude-plugin/plugin.json    # manifest (v1.3.3)
+│   └── .claude-plugin/plugin.json    # manifest (v1.3.4)
 ├── docs/                             # Per-command / per-agent / per-skill documentation
 ├── tools/agent-memory/               # Hybrid search CLI (Python)
 ├── assets/                           # Images

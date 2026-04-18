@@ -7,7 +7,7 @@ set -e
 
 # Repository configuration
 REPO_URL="https://github.com/ruizrica/toolkit"
-TOOLKIT_VERSION="1.3.3"
+TOOLKIT_VERSION="1.3.4"
 
 # Installation paths
 BASE_DIR="$HOME/.toolkit"
