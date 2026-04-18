@@ -1,0 +1,33 @@
+{
+  "reportType": "reports",
+  "title": "Reports Index",
+  "entries": [
+    {
+      "id": "plan-1",
+      "category": "plan",
+      "title": "Auth Plan",
+      "summary": "Implementation plan for auth flow",
+      "updatedAt": "2026-04-13T03:30:00.000Z",
+      "sourceLabel": ".context/todo.md",
+      "searchText": "auth plan implementation"
+    },
+    {
+      "id": "spec-1",
+      "category": "spec",
+      "title": "Auth Spec",
+      "summary": "Requirements, design, and tasks for auth flow",
+      "updatedAt": "2026-04-13T03:35:00.000Z",
+      "sourceLabel": "~/.claude/plans/auth-spec",
+      "searchText": "auth spec design tasks"
+    },
+    {
+      "id": "completion-1",
+      "category": "completion",
+      "title": "Auth Complete",
+      "summary": "Completion report for auth flow",
+      "updatedAt": "2026-04-13T03:45:00.000Z",
+      "sourceLabel": "completion report",
+      "searchText": "auth completion report"
+    }
+  ]
+}

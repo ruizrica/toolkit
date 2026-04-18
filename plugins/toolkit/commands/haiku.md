@@ -1,55 +1,63 @@
 ---
-description: "Spawn a team of Haiku agents managed by Opus for any task"
-argument-hint: "[task description - research, analyze, implement, etc.]"
+description: "Spawn a team of 10 agents managed by Opus. Defaults to Haiku tier; override with --model sonnet|opus."
+argument-hint: "[--model haiku|sonnet|opus] [task description]"
 allowed-tools: ["Task", "Read", "Glob", "Grep", "Bash", "Write", "Edit"]
 context: fork
 agent: general-purpose
 ---
 
-# Haiku Team Command
+# Meta Team Command (Haiku default)
 
-You are an Opus orchestrator managing a team of 10 Haiku agents to accomplish the user's task.
+You are an Opus orchestrator managing a team of 10 agents to accomplish the user's task. The tier of the spawned agents is controlled by the `--model` flag; Haiku is the default.
+
+## Parse Arguments
+
+Read `$ARGUMENTS` and extract:
+- `--model haiku|sonnet|opus` — the tier for all spawned subagents (default: `haiku`)
+- remainder — the task description passed to the agents
+
+Call the resolved tier `{tier}` below. Wherever the protocol says "tier agent" or "`{tier}` agent", spawn subagents at that tier. The orchestrator (you) remain Opus regardless of tier.
 
 ## User's Task
 
-$ARGUMENTS
+The task description remaining after `--model` is stripped out.
 
 ## Team Structure (11 agents total)
 
-- **You (Opus)** - Orchestrator: parse task, assign work, synthesize results
-- **4 Context Haikus** - Gather context before implementation begins
-- **4 Implementation Haikus** - Execute the main work in parallel
-- **2 Validator Haikus** - Verify and cross-check results
+- **You (Opus)** — Orchestrator: parse task, assign work, synthesize results
+- **4 Context {tier}** — Gather context before implementation begins
+- **4 Implementation {tier}** — Execute the main work in parallel
+- **2 Validator {tier}** — Verify and cross-check results
 
 ## Execution Protocol
 
 ### Phase 1: Context Gathering
 
-Spawn 4 Context Haiku agents IN PARALLEL (single message, 4 Task tool calls) to gather context:
+Spawn 4 Context `{tier}` agents IN PARALLEL (single message, 4 Task tool calls) to gather context:
 
 ```
-Context 1 - Code Explorer:
+Context 1 — Code Explorer:
 - Find relevant files and patterns
 - Locate similar implementations
 - Identify code conventions
 
-Context 2 - Architecture Scout:
+Context 2 — Architecture Scout:
 - Map dependencies and imports
 - Identify entry points
 - Understand module structure
 
-Context 3 - History Investigator:
+Context 3 — History Investigator:
 - Check git history for related changes
 - Find recent modifications
 - Identify file ownership patterns
 
-Context 4 - Test Analyst:
+Context 4 — Test Analyst:
 - Find existing test patterns
 - Identify coverage gaps
 - Note quality requirements
 ```
 
-Each Context Haiku MUST return structured findings as JSON:
+Each Context agent MUST return structured findings as JSON:
 ```json
 {
   "agent": "Context [N]",
@@ -65,7 +73,7 @@ Each Context Haiku MUST return structured findings as JSON:
 
 ### Phase 2: Task Decomposition
 
-After ALL 4 Context Haikus complete:
+After ALL 4 Context agents complete:
 1. Analyze their combined findings
 2. Classify the task type (research, implementation, analysis)
 3. Create 4 specific subtasks informed by the gathered context
@@ -73,42 +81,42 @@ After ALL 4 Context Haikus complete:
 
 ### Phase 3: Implementation
 
-Spawn 4 Implementation Haiku agents IN PARALLEL (single message, 4 Task tool calls).
+Spawn 4 Implementation `{tier}` agents IN PARALLEL (single message, 4 Task tool calls).
 
 Assign roles dynamically based on task type:
 
 **For Research Tasks:**
-- Deep Dive Reader - Thorough file analysis
-- Documentation Analyzer - Docs, comments, README
-- Pattern Finder - Similar code patterns
-- Edge Case Hunter - Find gotchas, edge cases
+- Deep Dive Reader — Thorough file analysis
+- Documentation Analyzer — Docs, comments, README
+- Pattern Finder — Similar code patterns
+- Edge Case Hunter — Find gotchas, edge cases
 
 **For Implementation Tasks:**
-- Core Implementer - Main logic
-- Test Writer - Unit/integration tests
-- API Handler - Endpoints/interfaces
-- Integration Specialist - Wire components together
+- Core Implementer — Main logic
+- Test Writer — Unit/integration tests
+- API Handler — Endpoints/interfaces
+- Integration Specialist — Wire components together
 
 **For Analysis Tasks:**
-- Code Quality Reviewer - Issues, smells
-- Performance Investigator - Bottlenecks
-- Security Auditor - Vulnerabilities
-- Test Coverage Analyzer - Gaps in testing
+- Code Quality Reviewer — Issues, smells
+- Performance Investigator — Bottlenecks
+- Security Auditor — Vulnerabilities
+- Test Coverage Analyzer — Gaps in testing
 
-Each Implementation Haiku prompt MUST include:
+Each Implementation agent prompt MUST include:
 1. The specific subtask to accomplish
 2. Relevant context from Phase 1 findings
 3. Expected output format
 4. Success criteria
 
-Each Implementation Haiku MUST return structured results:
+Each Implementation agent MUST return structured results:
 ```json
 {
   "agent": "Implementation [N]",
   "role": "[role name]",
   "task": "[assigned subtask]",
   "results": {
-    "completed": true/false,
+    "completed": true,
     "output": "[main output]",
     "files_touched": ["file1", "file2"],
     "key_findings": ["finding1", "finding2"]
@@ -119,15 +127,15 @@ Each Implementation Haiku MUST return structured results:
 
 ### Phase 4: Validation
 
-After ALL 4 Implementation Haikus complete, spawn 2 Validator Haiku agents IN PARALLEL:
+After ALL 4 Implementation agents complete, spawn 2 Validator `{tier}` agents IN PARALLEL:
 
 ```
-Validator 1 - Completeness Checker:
+Validator 1 — Completeness Checker:
 - Verify all subtasks were addressed
 - Check for gaps in coverage
 - Ensure nothing was missed
 
-Validator 2 - Quality Checker:
+Validator 2 — Quality Checker:
 - Cross-check consistency across outputs
 - Verify accuracy of findings
 - Check for contradictions
@@ -135,16 +143,16 @@ Validator 2 - Quality Checker:
 
 Provide validators with:
 1. The original user task
-2. All Implementation Haiku outputs
+2. All Implementation agent outputs
 3. Specific validation criteria
 
-Each Validator Haiku MUST return:
+Each Validator agent MUST return:
 ```json
 {
   "agent": "Validator [N]",
   "role": "[role name]",
   "validation": {
-    "passed": true/false,
+    "passed": true,
     "issues_found": ["issue1", "issue2"],
     "gaps": ["gap1", "gap2"],
     "recommendations": ["rec1", "rec2"]
@@ -155,7 +163,7 @@ Each Validator Haiku MUST return:
 ### Phase 5: Synthesis
 
 After ALL validators complete:
-1. Synthesize all findings from all 10 Haiku agents
+1. Synthesize all findings from all 10 agents
 2. Address any issues raised by validators
 3. Present a cohesive final output to the user
 4. Include:
@@ -167,42 +175,34 @@ After ALL validators complete:
 ## Critical Rules
 
 1. **PARALLEL LAUNCH**: Always launch agents in groups using SINGLE messages with MULTIPLE Task tool calls:
-   - Phase 1: 4 Context Haikus in ONE message
-   - Phase 3: 4 Implementation Haikus in ONE message
+   - Phase 1: 4 Context agents in ONE message
+   - Phase 3: 4 Implementation agents in ONE message
    - Phase 4: 2 Validators in ONE message
 
 2. **WAIT FOR COMPLETION**: Never start next phase until ALL agents in current phase complete
 
-3. **AGENT TYPES**: Use `scout` for context, `builder` for implementation, `reviewer` for validation
+3. **AGENT TYPES**: Use `scout` for context, `builder` for implementation, `reviewer` for validation — and set the model to the selected `{tier}`.
 
 4. **STRUCTURED OUTPUT**: Require JSON structured output from all agents
 
 5. **CONTEXT PASSING**: Always pass relevant context from earlier phases to later agents
 
-## Agent Types
+## Tier Mapping
 
-Use these standard agent types when dispatching:
+| Phase | Agent type | Role | Model |
+|-------|-----------|------|-------|
+| Context | `scout` | Read-only recon — files, patterns, architecture, history | `{tier}` |
+| Implementation | `builder` | Code writing — implements changes, runs tests | `{tier}` |
+| Validation | `reviewer` | Code review — finds bugs, security issues, style problems | `{tier}` |
 
-| Phase | Agent | Role |
-|-------|-------|------|
-| Context | `scout` | Read-only recon — files, patterns, architecture, history |
-| Implementation | `builder` | Code writing — implements changes, runs tests |
-| Validation | `reviewer` | Code review — finds bugs, security issues, style problems |
-
-## Example Dispatch Calls
-
-For Phase 1 (Context Gathering), dispatch 4 scouts IN PARALLEL:
+## Usage Examples
 
 ```
-dispatch_agent(agent: "scout", task: "Context 1 - Code Explorer. Task: [user task]. Find relevant files, patterns, similar implementations. Return JSON: {agent, role, findings, recommendations}")
-
-dispatch_agent(agent: "scout", task: "Context 2 - Architecture Scout. Task: [user task]. Map dependencies, entry points, module structure. Return JSON: {agent, role, findings, recommendations}")
-
-dispatch_agent(agent: "scout", task: "Context 3 - History Investigator. Task: [user task]. Check git history, recent changes, ownership. Return JSON: {agent, role, findings, recommendations}")
-
-dispatch_agent(agent: "scout", task: "Context 4 - Test Analyst. Task: [user task]. Find test patterns, coverage gaps, quality requirements. Return JSON: {agent, role, findings, recommendations}")
+/haiku investigate the auth module                       → haiku tier (default)
+/haiku --model sonnet refactor the payment pipeline      → sonnet tier
+/haiku --model opus design a distributed event system    → opus tier
 ```
 
 ## Begin Execution
 
-Start now by spawning the 4 Context Haiku agents in parallel to gather context for the task.
+Start now by spawning the 4 Context agents in parallel at the selected tier to gather context for the task.

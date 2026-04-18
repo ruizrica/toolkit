@@ -1,6 +1,8 @@
 # Toolkit
 
-Complete Claude Code power-user configuration with multi-agent orchestration, TDD workflows, and advanced productivity commands.
+A cohesive Claude Code plugin. Multi-agent orchestration, round-trip plan/spec/completion review via `agent-viewer`, hybrid semantic memory via `agent-memory`, and an auto-refreshing project handbook.
+
+Every piece knows about the others. Run `/setup` once and the toolkit wires itself together.
 
 ## Installation
 
@@ -8,60 +10,102 @@ Complete Claude Code power-user configuration with multi-agent orchestration, TD
 claude plugins add ./plugins/toolkit
 ```
 
+Then inside any project:
+
+```bash
+/setup
+```
+
+`/setup` detects missing dependencies (`agent-memory`, `agent-viewer`), installs them, indexes the codebase, generates `HANDBOOK.md`, installs git hooks that keep it fresh, and writes a `CLAUDE.md` with the orchestration manifest.
+
+## External CLI dependencies
+
+| CLI | Purpose | Installer |
+|-----|---------|-----------|
+| `agent-viewer` | Editable browser review for plans, specs, completions, reports | `scripts/install-agent-viewer.sh` |
+| `agent-memory` | Hybrid semantic + BM25 search over memory and daily logs | `scripts/install-agent-memory.sh` |
+
+Both installers are idempotent. `/setup` invokes them automatically; you can also run them directly.
+
+Source repos:
+- agent-viewer — `/Users/ricardo/Workshop/GitHub/agent-viewer`
+- agent-memory — `~/.toolkit/tools/agent-memory` (or set `AGENT_MEMORY_SRC`)
+
 ## Contents
 
-### Agents (9)
+### Agents (5)
 
 | Agent | Specialty |
 |-------|-----------|
 | gemini-agent | Large codebase analysis (1M tokens), Google Search |
 | cursor-agent | Advanced code review, refactoring, sessions |
 | codex-agent | Natural language to code, multi-language |
-| qwen-agent | Agentic coding, workflow automation |
+| droid-agent | Enterprise code generation, codebase analysis |
 | opencode-agent | 75+ AI models via OpenRouter |
-| groq-agent | Fast inference, lightweight tasks |
-| crush-agent | Media compression/optimization |
-| droid-agent | Enterprise code generation |
-| rlm-subcall | Chunk analysis for RLM workflow |
 
 ### Commands (15)
 
 | Command | Description |
 |---------|-------------|
-| `/team` | Coordinate multi-agent team for parallel implementation |
-| `/review` | CodeRabbit review + parallel fixes + verification |
-| `/handbook` | Generate comprehensive project handbook |
-| `/@implement` | Process @implement comments into documentation |
-| `/haiku` | Spawn team of 10 Haiku agents managed by Opus |
-| `/opus` | Spawn team of 10 Opus agents managed by Opus |
-| `/rlm` | Recursive Language Model for large documents |
-| `/gherkin` | Extract business rules into Gherkin specs |
-| `/agent-memory` | Search and manage agent memories with hybrid search |
-| `/worktree` | Create isolated worktree (auto-generates branch and path) |
-| `/setup` | Initialize project context and run agent-memory indexing |
-| `/save` | Commit, merge WIP to main, cleanup |
-| `/stable` | Create stable checkpoint with tags |
-| `/compact` | Save session state before /clear |
-| `/restore` | Restore session from saved state |
+| `/setup` | Bootstrap: install CLIs, index memory, seed handbook, install git hooks, write CLAUDE.md |
+| `/haiku [--model haiku\|sonnet\|opus] <task>` | Spawn a team of 10 agents managed by Opus (haiku tier by default) |
+| `/team <task>` | Coordinate mixed external-CLI agents (gemini, cursor, codex, droid, opencode) |
+| `/kiro <feature>` | Spec-driven development: requirements → design → tasks → viewer review → execution |
+| `/handbook` | Refresh `HANDBOOK.md` on demand (git hooks handle automatic updates) |
+| `/code2course [path]` | Turn a codebase into an interactive HTML course |
+| `/design [name]` | Interactive design-token pipeline (CSS/Tailwind/SCSS/iOS/Android) |
+| `/@implement [target]` | Convert `@implement` comments to implementations + documentation |
+| `/agent-memory <subcmd>` | Dispatcher for the `agent-memory` CLI (search, add, index, code-nav) |
+| `/compact` | Memory-aware compaction (delegates to pi's native hook) |
+| `/compact-min` | Ultra-minimal session snapshot |
+| `/restore` | Restore session context after `/clear` or new session |
+| `/worktree` | Create isolated git worktree with auto-generated wip branch |
+| `/save [msg]` | Commit, merge WIP back to main, cleanup worktree |
+| `/stable` | Tag a stable checkpoint and create a recovery branch |
 
-### Skills (2)
+### Skills (4)
 
 | Skill | Description |
 |-------|-------------|
-| just-bash | Sandboxed bash execution (read-only FS, no network, in-memory writes) |
-| agent-memory | Local hybrid search (vector + BM25) for memory files |
+| agent-viewer | Round-trip review loop for plans, specs, completions, reports, diagrams — triggers in plan mode and when visuals are needed |
+| agent-memory | Local hybrid search (vector + BM25) for memory files and daily logs |
+| autoresearch | Autonomous goal-directed iteration (Karpathy-style loop) |
+| codebase-to-course | Generate interactive single-page HTML course from a codebase |
 
-Skills are reference files installed to `~/.claude/skills/` that teach Claude when and how to use specific CLI tools.
+### Scripts (`scripts/`)
 
-## Setup Scripts
+| Script | Purpose |
+|--------|---------|
+| `install-agent-viewer.sh` | Install the `agent-viewer` CLI |
+| `install-agent-memory.sh` | Install the `agent-memory` CLI + embedding model |
+| `install-git-hooks.sh` | Install post-commit/post-merge hooks that auto-refresh the handbook |
+| `update-handbook.sh` | Called by the git hooks; regenerates `HANDBOOK.md` |
+| `handbook.py` | Deterministic handbook generator (no LLM required) |
+| `install-statusline.sh` | Install the status-line script for Claude Code |
+| `doctor.sh` | Readiness check — reports whether every dependency is wired correctly |
 
-For `/handbook` and `/review` commands:
+### Templates (`templates/agent-viewer/`)
 
-```bash
-mkdir -p ~/.claude/slash_commands
-cp scripts/handbook.py ~/.claude/slash_commands/
-cp scripts/coderabbit_workflow.py ~/.claude/slash_commands/
-```
+Canonical JSON payload shapes for the four `agent-viewer` report types:
+
+- `plan-payload.json` — single-document plan review
+- `spec-payload.json` — multi-document spec review (Kiro)
+- `completion-payload.json` — rich completion summary with Mermaid, diffs, task checklist
+- `reports-payload.json` — historical reports index
+
+`skills/agent-viewer.md` enforces payloads match these shapes.
+
+## Cohesion rules
+
+These rules are written into the `CLAUDE.md` generated by `/setup`, so any agent working in a setup-initialized project follows them automatically:
+
+1. **Handbook-first** — read the relevant layer of `HANDBOOK.md` for architecture/module questions.
+2. **Memory-first** — query `agent-memory search` before reading files for "what did we decide / where is X" questions.
+3. **Memory-write** — record significant decisions via `agent-memory add` (compaction auto-logs everything else).
+4. **Plan-via-viewer** — plan mode + plan files go through `agent-viewer plan` and require approval.
+5. **Spec-via-viewer** — Kiro's 3-document set goes through `agent-viewer spec` with the rich `documents[]` payload.
+6. **Completion-via-viewer** — finished work produces a rich `completion-payload.json` shown via `agent-viewer completion`.
+7. **Compact/restore loop** — new sessions auto-restore; long sessions auto-compact.
 
 ## License
 

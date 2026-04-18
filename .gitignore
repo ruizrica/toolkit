@@ -47,3 +47,10 @@ logs/
 # Cache
 .cache/
 *.cache
+
+# Per-project session and memory state (toolkit: agent-memory, compact/restore)
+.context/
+.agent-memory/
+
+# Scratch
+tmp/

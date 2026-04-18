@@ -6,16 +6,22 @@ context: fork
 agent: general-purpose
 ---
 
-I'll generate a comprehensive project handbook using the handbook generator.
+Generate a comprehensive, AI-optimized handbook for this project.
 
-Let me analyze your project and create an AI-optimized handbook with the following structure:
-- **Layer 1**: System Overview (Purpose, Tech Stack, Architecture)
-- **Layer 2**: Module Map (Core Modules, Data Layer, Utilities)
-- **Layer 3**: Integration Guide (APIs, Interfaces, Configuration)
-- **Layer 4**: Extension Points (Design Patterns, Customization Areas)
+Structure:
+- **Layer 1** — System Overview (Purpose, Tech Stack, Architecture)
+- **Layer 2** — Module Map (Core Modules, Data Layer, Utilities)
+- **Layer 3** — Integration Guide (APIs, Interfaces, Configuration)
+- **Layer 4** — Extension Points (Design Patterns, Customization Areas)
+
+The generator is bundled with the plugin at `scripts/handbook.py`. `/setup` seeds `HANDBOOK.md` on first run, and git hooks keep it fresh on every commit/merge — call this command only when you want to refresh on demand or pass custom flags.
 
 Running handbook generation with arguments: $ARGUMENTS
 
 ```bash
-python3 ~/.claude/slash_commands/handbook.py $ARGUMENTS
+!TOOLKIT_PLUGIN_ROOT="${TOOLKIT_PLUGIN_ROOT:-$HOME/.claude/plugins/cache/toolkit/toolkit}"
+if [ ! -f "$TOOLKIT_PLUGIN_ROOT/scripts/handbook.py" ]; then
+  TOOLKIT_PLUGIN_ROOT="$HOME/Workshop/GitHub/agent-toolkit/plugins/toolkit"
+fi
+python3 "$TOOLKIT_PLUGIN_ROOT/scripts/handbook.py" $ARGUMENTS
 ```

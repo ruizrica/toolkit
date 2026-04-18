@@ -180,40 +180,50 @@ agent-memory code-refs 42               # Show cross-references
 
 Use `--json` flag on any command for machine-readable output.
 
-## Toolkit Commands
+## Toolkit Orchestration Manifest
 
-**IMPORTANT: For any non-trivial task, prefer `/haiku` to leverage parallel Haiku agents managed by Opus.** This provides faster, more thorough results through parallel execution.
+This project uses the toolkit plugin. All pieces are designed to interweave — run `/setup` once to install CLIs, seed `HANDBOOK.md`, install git hooks, and write a project-local `CLAUDE.md` with cohesion rules.
 
-### Primary Command (Use by Default)
+### Tool inventory
+- **HANDBOOK.md** — AI-optimized multi-layer project reference (git hooks keep it fresh)
+- **agent-memory CLI** — hybrid semantic + BM25 search
+- **agent-viewer CLI** — editable browser review for plans, specs, completions, reports
 
-- **`/haiku [task]`** - Spawn a team of 10 Haiku agents managed by Opus. Use this for:
-  - Research and analysis tasks
-  - Implementation tasks
-  - Code reviews and audits
-  - Any task that benefits from parallel exploration
-  - **When in doubt, use `/haiku`**
+### Cohesion rules (mandatory)
 
-### When NOT to Use /haiku
+1. **Handbook-first** — read the relevant layer of `HANDBOOK.md` for architecture/module questions.
+2. **Memory-first** — `agent-memory search "<query>"` before reading files for "what did we decide / where is X" questions.
+3. **Memory-write** — `agent-memory add "<fact>" --tags "…"` for significant decisions. Compaction auto-logs the rest.
+4. **Plan-via-viewer** — plan mode + plan files MUST go through `agent-viewer plan --file <path> --json` and reach `approved` before implementation. See `skills/agent-viewer.md`.
+5. **Spec-via-viewer** — Kiro's 3-document set uses `agent-viewer spec` with the rich `documents[]` payload.
+6. **Completion-via-viewer** — when work wraps, build a rich `completion-payload.json` (summary + Mermaid + diffs + checklist) and show via `agent-viewer completion`. Payload shape in `plugins/toolkit/templates/agent-viewer/completion-payload.json`.
+7. **Compact/restore loop** — new sessions begin with `/restore` if `.context/session-state.json` exists; long sessions trigger `/compact` via the memory-cycle hook.
 
-Only skip `/haiku` for truly simple tasks:
-- Single-line fixes or typo corrections
-- Reading a specific file
-- Running a single command
-- Answering a quick question from memory
+### Primary command
 
-### Other Toolkit Commands
+**For any non-trivial task, prefer `/haiku`** — spawns 10 parallel agents managed by Opus. Haiku is the default tier; `--model sonnet` or `--model opus` overrides.
 
-- **`/opus [task]`** - Spawn a team of 10 Opus agents managed by Opus. Use this for VERY complex tasks. Elite Dev Team.
-- **`/sonnet [task]`** - Spawn a team of 10 Sonnet agents managed by Sonnet. Use this for complex tasks. One level above Haiku.
-- **`/team [task]`** - Coordinate multiple specialized agents (gemini, cursor, codex, qwen, etc.) for complex implementation
-- **`/review [options]`** - Run CodeRabbit review with parallel agent fixes
-- **`/handbook`** - Generate comprehensive project documentation
-- **`/gherkin [path]`** - Extract business rules into living Gherkin documentation
-- **`/rlm context=<path> query=<question>`** - Process large documents that exceed context limits
-- **`/setup`** - Initialize project context and index memory
-- **`/worktree`** - Create isolated worktree (auto-generates branch and path)
-- **`/save [message]`** - Snapshot session state, commit, and merge WIP back to main
-- **`/restore`** - Resume session from saved state after `/clear`
+- **`/haiku [task]`** — haiku tier (default)
+- **`/haiku --model sonnet [task]`** — sonnet tier (complex tasks)
+- **`/haiku --model opus [task]`** — opus tier (very complex / elite)
+
+### When NOT to use /haiku
+Only skip for trivial tasks: single-line fixes, typo corrections, reading a specific file, running a single command, answering a quick question from memory.
+
+### Other commands
+
+- **`/setup`** — bootstrap dependencies, seed handbook, install git hooks
+- **`/team [task]`** — coordinate external-CLI agents (gemini, cursor, codex, droid, opencode)
+- **`/kiro <feature>`** — spec-driven development with viewer review at each phase
+- **`/handbook`** — refresh `HANDBOOK.md` on demand
+- **`/code2course [path]`** — turn a codebase into an interactive HTML course
+- **`/design [name]`** — interactive design-token pipeline
+- **`/@implement [target]`** — convert `@implement` comments to implementations + docs
+- **`/agent-memory <subcmd>`** — search, add, index memory
+- **`/worktree`** — isolated git worktree with auto wip branch
+- **`/save [msg]`** — commit, merge WIP to main, cleanup
+- **`/stable`** — tag stable checkpoint + recovery branch
+- **`/compact`**, **`/compact-min`**, **`/restore`** — session lifecycle
 
 ## Workflow Orchestration
 

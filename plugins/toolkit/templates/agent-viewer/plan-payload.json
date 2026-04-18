@@ -1,0 +1,5 @@
+{
+  "title": "Implementation Plan",
+  "filePath": "./examples/sample-plan.md",
+  "markdown": "# Plan: Add completion viewer\n\n## Context\n\nUse this sample to preview the plan review workflow.\n\n## Phase 1: Define viewer contract\n\n- Add a new command\n- Reuse the result shape\n- Add tests and docs\n"
+}

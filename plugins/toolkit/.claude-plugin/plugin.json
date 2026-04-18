@@ -1,7 +1,7 @@
 {
   "name": "toolkit",
-  "description": "Complete Claude Code power-user configuration with multi-agent orchestration, TDD workflows, and advanced productivity commands",
-  "version": "1.2.5",
+  "description": "Cohesive Claude Code power-user plugin: multi-agent orchestration, TDD workflows, round-trip plan/spec/completion review via agent-viewer, hybrid memory search via agent-memory, auto-refreshing handbook.",
+  "version": "1.3.0",
   "author": {
     "name": "Ricardo"
   },
@@ -9,33 +9,30 @@
     "./agents/gemini-agent.md",
     "./agents/cursor-agent.md",
     "./agents/codex-agent.md",
-    "./agents/qwen-agent.md",
-    "./agents/opencode-agent.md",
-    "./agents/groq-agent.md",
-    "./agents/crush-agent.md",
     "./agents/droid-agent.md",
-    "./agents/rlm-subcall.md"
+    "./agents/opencode-agent.md"
   ],
   "commands": [
     "./commands/team.md",
-    "./commands/review.md",
+    "./commands/haiku.md",
     "./commands/handbook.md",
     "./commands/@implement.md",
     "./commands/setup.md",
     "./commands/worktree.md",
     "./commands/save.md",
     "./commands/stable.md",
-    "./commands/haiku.md",
-    "./commands/opus.md",
-    "./commands/sonnet.md",
-    "./commands/rlm.md",
     "./commands/compact.md",
     "./commands/compact-min.md",
     "./commands/restore.md",
-    "./commands/gherkin.md",
     "./commands/design.md",
     "./commands/kiro.md",
-    "./commands/just-bash.md",
-    "./commands/agent-memory.md"
+    "./commands/agent-memory.md",
+    "./commands/code2course.md"
+  ],
+  "skills": [
+    "./skills/agent-memory.md",
+    "./skills/agent-viewer.md",
+    "./skills/autoresearch.md",
+    "./skills/codebase-to-course"
   ]
 }

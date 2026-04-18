@@ -24,6 +24,22 @@ The Kiro workflow has **4 phases**:
 
 Each phase pauses for user Q&A to refine scope and approach.
 
+## Mandatory Spec Review Rule
+
+Before moving from generated spec documents to execution, you must present them through the `agent-viewer` CLI and treat its result as binding.
+
+Full rules live in `skills/agent-viewer.md`. In short:
+
+```bash
+agent-viewer spec --folder ~/.claude/plans/{spec_name} --json
+```
+
+- `approved` — continue
+- `changes_requested` — revise spec files and re-run the CLI
+- `declined` — do not continue; revise and re-run
+
+Do not proceed to implementation until the spec viewer returns `approved`. If `agent-viewer` is not installed, run `bash plugins/toolkit/scripts/install-agent-viewer.sh` (or `/setup`) first.
+
 ## Parse Arguments
 
 Extract from `$ARGUMENTS`:
@@ -263,7 +279,22 @@ Create `3-tasks.md` with structure:
 [Code quality, testing quality, documentation quality]
 ```
 
-### Step 3.2: Q&A Pause
+### Step 3.2: Mandatory Spec Viewer Review
+
+After generating or updating `1-requirements.md`, `2-design.md`, and `3-tasks.md`, run:
+
+```bash
+agent-viewer spec --folder ~/.claude/plans/{spec_name} --json
+```
+
+Follow the review rules defined in `skills/agent-viewer.md`:
+- If `approved`, continue to execution
+- If `changes_requested` or `declined`, update the relevant spec files based on the returned comments/edits and run the viewer again
+- Repeat until approval
+
+If `agent-viewer` is not on PATH, run `bash plugins/toolkit/scripts/install-agent-viewer.sh` (or `/setup`) first.
+
+### Step 3.3: Q&A Pause
 
 Use AskUserQuestion to clarify:
 - **Granularity**: "Should any tasks be broken down further?"
