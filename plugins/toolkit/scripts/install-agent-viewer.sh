@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ABOUTME: installs the agent-viewer CLI globally so /kiro and skills/agent-viewer.md can use it.
-# ABOUTME: prefers `npm install -g` when the package is published; falls back to the local sibling repo.
+# ABOUTME: prefers the bundled copy at ~/.toolkit/tools/agent-viewer; falls back to sibling repo or npm registry.
 
 set -euo pipefail
 
@@ -9,16 +9,35 @@ if command -v agent-viewer >/dev/null 2>&1; then
   exit 0
 fi
 
-LOCAL_SRC="${AGENT_VIEWER_SRC:-$HOME/Workshop/GitHub/agent-viewer}"
+CANDIDATES=(
+  "${AGENT_VIEWER_SRC:-}"
+  "$HOME/.toolkit/tools/agent-viewer"
+  "$HOME/Workshop/GitHub/agent-toolkit/tools/agent-viewer"
+  "$HOME/Workshop/GitHub/agent-viewer"
+)
 
-if [ -d "$LOCAL_SRC" ] && [ -f "$LOCAL_SRC/install.sh" ]; then
-  echo "Installing agent-viewer from local source: $LOCAL_SRC"
-  (cd "$LOCAL_SRC" && bash install.sh)
+SRC=""
+for candidate in "${CANDIDATES[@]}"; do
+  if [ -n "$candidate" ] && [ -d "$candidate" ] && [ -f "$candidate/package.json" ]; then
+    SRC="$candidate"
+    break
+  fi
+done
+
+if [ -n "$SRC" ]; then
+  if ! command -v npm >/dev/null 2>&1; then
+    echo "ERROR: npm not found — cannot install agent-viewer from $SRC" >&2
+    echo "Install Node.js/npm first (https://nodejs.org)." >&2
+    exit 1
+  fi
+  echo "Installing agent-viewer from: $SRC"
+  npm install -g "$SRC"
 elif command -v npm >/dev/null 2>&1; then
   echo "Attempting npm install -g agent-viewer ..."
   npm install -g agent-viewer
 else
-  echo "ERROR: agent-viewer not found at $LOCAL_SRC and npm is not available" >&2
+  echo "ERROR: agent-viewer source not found and npm is not available" >&2
+  echo "Tried: ${CANDIDATES[@]}" >&2
   echo "Set AGENT_VIEWER_SRC=/path/to/agent-viewer or install Node.js/npm first." >&2
   exit 1
 fi

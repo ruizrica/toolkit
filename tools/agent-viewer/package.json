@@ -1,0 +1,42 @@
+{
+  "name": "agent-viewer",
+  "version": "0.1.0",
+  "description": "Lightweight editable browser-based report viewer CLI for plans, specs, and future report types",
+  "license": "MIT",
+  "type": "commonjs",
+  "bin": {
+    "agent-viewer": "./bin/agent-viewer.js"
+  },
+  "files": [
+    "bin/",
+    "lib/",
+    "assets/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "smoke": "node ./test/smoke.js",
+    "check": "npm run test && npm run smoke"
+  },
+  "keywords": [
+    "cli",
+    "viewer",
+    "markdown",
+    "spec",
+    "plan",
+    "review",
+    "mermaid"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/agent-viewer.git"
+  },
+  "homepage": "https://github.com/your-org/agent-viewer#readme",
+  "bugs": {
+    "url": "https://github.com/your-org/agent-viewer/issues"
+  }
+}

@@ -1,0 +1,33 @@
+name: Feature request
+description: Propose a new viewer capability or CLI workflow improvement
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: What workflow are you trying to support?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the command, viewer type, or UX change you want.
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example payload or files
+      description: Share sample markdown, JSON, or folder structures if relevant.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - CLI ergonomics
+        - Plan viewer
+        - Spec viewer
+        - New viewer family
+        - Docs/examples
+        - Testing/CI

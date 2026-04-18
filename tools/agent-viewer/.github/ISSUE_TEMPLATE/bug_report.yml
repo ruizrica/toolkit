@@ -1,0 +1,34 @@
+name: Bug report
+description: Report a problem with the CLI or browser viewer workflow
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: input
+    id: command
+    attributes:
+      label: Command run
+      placeholder: agent-viewer plan --file examples/sample-plan.md --json
+    validations:
+      required: true
+  - type: textarea
+    id: input-payload
+    attributes:
+      label: Input payload or file structure
+      description: Paste the JSON payload, markdown, or describe the input files used.
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: macOS 14, Node 20.19.5

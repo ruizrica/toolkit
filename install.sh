@@ -284,6 +284,21 @@ install_agent_memory() {
     fi
 }
 
+install_agent_viewer() {
+    if [[ "$DRY_RUN" == "true" ]]; then
+        echo "✓ Would install agent-viewer"
+        return 0
+    fi
+
+    if command -v npm &> /dev/null; then
+        npm install -g "$BASE_DIR/tools/agent-viewer" 2>/dev/null && \
+            echo "✓ agent-viewer installed" || \
+            print_warning "Run: npm install -g ~/.toolkit/tools/agent-viewer"
+    else
+        print_warning "npm not found. Run: npm install -g ~/.toolkit/tools/agent-viewer"
+    fi
+}
+
 install_memory_dirs() {
     if [[ "$DRY_RUN" == "true" ]]; then
         echo "✓ Would create memory directories"
@@ -555,6 +570,7 @@ main() {
     install_agent_browser
     install_just_bash
     install_agent_memory
+    install_agent_viewer
     install_env
     install_claude_md
     save_config

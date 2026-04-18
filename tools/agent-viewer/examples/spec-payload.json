@@ -1,0 +1,21 @@
+{
+  "title": "Sample Auth Spec",
+  "folderPath": "./examples/sample-spec",
+  "documents": [
+    {
+      "filePath": "requirements.md",
+      "label": "Requirements",
+      "markdown": "# Requirements\n\n- Users can sign in\n- Users can sign out\n- Reviewers can leave comments"
+    },
+    {
+      "filePath": "design.md",
+      "label": "Design",
+      "markdown": "# Design\n\n```mermaid\ngraph LR\n  CLI --> Viewer\n  Viewer --> Browser\n```"
+    },
+    {
+      "filePath": "tasks.md",
+      "label": "Tasks",
+      "markdown": "# Tasks\n\n- [ ] Add auth routes\n- [ ] Add tests\n- [ ] Add docs"
+    }
+  ]
+}
