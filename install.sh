@@ -291,11 +291,11 @@ install_agent_viewer() {
     fi
 
     if command -v npm &> /dev/null; then
-        npm install -g "$BASE_DIR/tools/agent-viewer" 2>/dev/null && \
+        npm install -g "$BASE_DIR/plugins/toolkit/tools/agent-viewer" 2>/dev/null && \
             echo "✓ agent-viewer installed" || \
-            print_warning "Run: npm install -g ~/.toolkit/tools/agent-viewer"
+            print_warning "Run: npm install -g ~/.toolkit/plugins/toolkit/tools/agent-viewer"
     else
-        print_warning "npm not found. Run: npm install -g ~/.toolkit/tools/agent-viewer"
+        print_warning "npm not found. Run: npm install -g ~/.toolkit/plugins/toolkit/tools/agent-viewer"
     fi
 }
 

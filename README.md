@@ -178,7 +178,7 @@ Two external CLIs back the skills that make this cohesive. `/setup` installs bot
 | `agent-memory` | Hybrid semantic + BM25 search over memory and daily logs | `scripts/install-agent-memory.sh` |
 
 Source repos:
-- **agent-viewer** — bundled at `tools/agent-viewer/`
+- **agent-viewer** — bundled at `plugins/toolkit/tools/agent-viewer/` (ships inside the plugin cache)
 - **agent-memory** — bundled at `tools/agent-memory/`
 
 Canonical JSON payload shapes for `agent-viewer` live at `plugins/toolkit/templates/agent-viewer/`:

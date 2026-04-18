@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ABOUTME: installs the agent-viewer CLI globally so /kiro and skills/agent-viewer.md can use it.
-# ABOUTME: prefers the bundled copy at ~/.toolkit/tools/agent-viewer; falls back to sibling repo or npm registry.
+# ABOUTME: prefers the plugin-bundled copy at plugins/toolkit/tools/agent-viewer; falls back to legacy paths and npm.
 
 set -euo pipefail
 
@@ -9,10 +9,16 @@ if command -v agent-viewer >/dev/null 2>&1; then
   exit 0
 fi
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PLUGIN_ROOT="${TOOLKIT_PLUGIN_ROOT:-$(dirname "$SCRIPT_DIR")}"
+
 CANDIDATES=(
   "${AGENT_VIEWER_SRC:-}"
+  "$PLUGIN_ROOT/tools/agent-viewer"
+  "$HOME/.claude/plugins/cache/toolkit/toolkit/tools/agent-viewer"
+  "$HOME/.toolkit/plugins/toolkit/tools/agent-viewer"
   "$HOME/.toolkit/tools/agent-viewer"
-  "$HOME/Workshop/GitHub/agent-toolkit/tools/agent-viewer"
+  "$HOME/Workshop/GitHub/agent-toolkit/plugins/toolkit/tools/agent-viewer"
   "$HOME/Workshop/GitHub/agent-viewer"
 )
 
