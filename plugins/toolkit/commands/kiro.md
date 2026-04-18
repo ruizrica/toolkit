@@ -2,8 +2,6 @@
 description: "Spec-driven development: generate requirements, design, and tasks using Kiro methodology, then execute with Cursor agents"
 argument-hint: "[feature idea] [--project PATH] [--name SPEC_NAME] [--agent cursor|haiku]"
 allowed-tools: ["Task", "Read", "Write", "Glob", "Grep", "Bash", "AskUserQuestion", "Edit"]
-context: fork
-agent: general-purpose
 ---
 
 # Kiro Spec-Driven Development

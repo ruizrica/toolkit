@@ -2,8 +2,7 @@
 description: "Interactive design system generator: gather brand tokens through Q&A, scaffold CSS/Tailwind/SCSS/iOS/Android outputs, then create sample UI with /frontend-design"
 argument-hint: "[project name or path]"
 allowed-tools: ["Read", "Write", "Bash", "Glob", "Grep", "AskUserQuestion", "Edit", "Skill"]
-context: fork
-agent: opus
+model: opus
 ---
 
 # Interactive Design Token Pipeline

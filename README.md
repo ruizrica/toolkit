@@ -16,21 +16,6 @@
 
 - **HTTP-level E2E test suite** at `plugins/toolkit/tools/agent-viewer/test/e2e.test.js`. Six cases spawn the CLI as a child process, drive the `/result` endpoint via `fetch`, and assert stdout JSON + on-disk file write-back. Covers plan approve/edit-approve/decline, spec approve/request-changes, and completion done. Full suite runs in ~1.2s via `npm test` (or `npm run test:e2e` for targeted runs). `/agent-plan` and `/agent-spec` now sit on a verified round-trip contract.
 
-## What's new in 1.3.3
-
-- **`/agent-plan`** — interactive single-document plan workflow. Spawns a Haiku scout for context, gathers goal/scope/constraints/risks/verification via `AskUserQuestion`, assembles a maximally robust plan (Mermaid + phased task lists + risks table + rollback + open questions) to `.context/plans/<name>.md`, gates on `agent-viewer plan` approval, then executes inline (or via `--agent haiku|sonnet|opus`) and closes with an auto-generated `agent-viewer completion` report.
-- **`/agent-spec`** — Kiro-pattern sibling of `/agent-plan`, for larger multi-document features. Generates EARS-format requirements, design, and task docs with parallel Haiku research agents; spec-viewer gate is binding before Phase 4 execution.
-- **Docs** — dedicated reference pages at `docs/commands/agent-plan.md` and `docs/commands/agent-spec.md`; command index updated.
-
-## What's new in 1.3.2
-
-- **Hotfix for v1.3.1**: root `.gitignore` had a bare `lib/` rule (inherited from Python template) that silently excluded `plugins/toolkit/tools/agent-viewer/lib/`. The v1.3.1 bundle shipped with no runtime modules; the CLI errored with `Cannot find module '../lib/cli-args.js'`. Rule removed (the `build/` ignore on the line above already covers Python build artifacts); the 14 viewer `lib/` files are now tracked.
-
-## What's new in 1.3.1
-
-- **Both CLIs ship inside the plugin** — `agent-viewer` and `agent-memory` sources now live at `plugins/toolkit/tools/{viewer,memory}/`, so `/setup` works from `~/.claude/plugins/cache/toolkit/…` with no external git repos and no npm-published packages.
-- **Installers resolve via `SCRIPT_DIR`** — `install-agent-viewer.sh` and `install-agent-memory.sh` derive the bundled path from their own location; `TOOLKIT_PLUGIN_ROOT` still overrides when needed.
-
 ## What's new in 1.3.0
 
 This release is a **cleanup pass** that makes the toolkit act as one cohesive system instead of a bag of independent commands. Nothing useful was lost — duplicates and dead weight were consolidated.
