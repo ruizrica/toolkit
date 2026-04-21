@@ -1,0 +1,11 @@
+{
+  "name": "toolkit",
+  "description": "Multi-agent orchestration, TDD workflows, round-trip plan/spec/completion review via agent-viewer, hybrid memory search via agent-memory, auto-refreshing handbook. Works with both Claude Code and GitHub Copilot CLI.",
+  "version": "1.4.0",
+  "author": {
+    "name": "Ricardo"
+  },
+  "agents": "agents/",
+  "skills": "skills/",
+  "commands": "commands/"
+}
