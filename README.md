@@ -7,10 +7,16 @@
 </p>
 
 <p align="center">
-  <sub><b>v1.3.5</b> — interactive commands (<code>/agent-plan</code>, <code>/agent-spec</code>, <code>/kiro</code>, <code>/design</code>) now run in the main conversation so <code>AskUserQuestion</code> works natively instead of silently falling back to inline markdown Q&A.</sub>
+  <sub><b>v1.4.0</b> — GitHub Copilot CLI is now a first-class orchestrator. All commands, agents, and skills work natively in both Claude Code and Copilot CLI. See <a href="#github-copilot-cli--first-class-support">Copilot CLI support</a>.</sub>
 </p>
 
 ---
+
+## What's new in 1.4.0
+
+- **GitHub Copilot CLI is now a first-class orchestrator.** All 17 commands, 5 agents, and 4 skills work natively inside Copilot CLI — the same experience as Claude Code. Install once, use from either CLI. The installer detects which CLIs you have and registers the plugin with both. See the [Copilot CLI section](#github-copilot-cli--first-class-support) below.
+- **Skills restructured** to the directory-based format (`SKILL.md` inside subdirectories) for cross-CLI compatibility.
+- **Version bump to 1.4.0** — dual-CLI support, updated installer, docs.
 
 ## What's new in 1.3.5
 
@@ -38,13 +44,18 @@ See [`CHANGELOG`](plugins/toolkit/.claude-plugin/plugin.json) for the full manif
 curl -fsSL https://raw.githubusercontent.com/ruizrica/toolkit/main/install.sh | bash
 ```
 
-This clones to `~/.toolkit`, registers the plugin, installs scripts and skills, and creates agent-memory directories under `~/.claude/agent-memory/`.
+This clones to `~/.toolkit`, detects which AI CLIs you have installed (Claude Code, GitHub Copilot, or both), and registers the plugin with each.
 
 ### Manual Install
 
 ```bash
 git clone https://github.com/ruizrica/agent-toolkit.git
+
+# Register with Claude Code
 claude plugins add ./agent-toolkit/plugins/toolkit
+
+# Register with GitHub Copilot CLI
+copilot plugin install ./agent-toolkit/plugins/toolkit
 ```
 
 Then inside any project:
@@ -54,6 +65,70 @@ Then inside any project:
 ```
 
 `/setup` detects and installs the two external CLIs (`agent-viewer`, `agent-memory`), indexes the codebase, generates `HANDBOOK.md`, installs post-commit/post-merge git hooks that keep the handbook fresh, and writes a `CLAUDE.md` that encodes the cohesion rules. Idempotent — re-run anytime to refresh.
+
+---
+
+## GitHub Copilot CLI — First-Class Support
+
+GitHub Copilot CLI is a **first-class orchestrator** for this toolkit. Every command, agent, and skill that works in Claude Code works identically in Copilot CLI — same slash commands, same agents, same workflows.
+
+This is possible because Copilot CLI and Claude Code share a compatible plugin architecture. The toolkit ships a single plugin that both CLIs can load natively.
+
+### How It Works
+
+| Feature | Claude Code | Copilot CLI |
+|---------|-------------|-------------|
+| **Plugin install** | `claude plugins add` | `copilot plugin install` |
+| **Commands** | `/team`, `/haiku`, `/setup`, etc. | Same slash commands |
+| **Agents** | `/toolkit:gemini-agent`, etc. | `--agent gemini-agent`, etc. |
+| **Skills** | Auto-loaded from `skills/` | Auto-loaded from `skills/` |
+| **Custom instructions** | `CLAUDE.md` | `AGENTS.md` + `.github/copilot-instructions.md` |
+| **MCP servers** | `~/.claude/mcp.json` | `~/.copilot/mcp-config.json` |
+| **Non-interactive mode** | `claude -p "prompt"` | `copilot -p "prompt"` |
+
+### Getting Started with Copilot CLI
+
+```bash
+# Install Copilot CLI (if not already installed)
+brew install copilot-cli
+# Or: npm install -g @github/copilot
+
+# Authenticate
+copilot /login
+# Or: export GITHUB_TOKEN="your-fine-grained-pat"
+
+# Install the toolkit plugin
+copilot plugin install ~/.toolkit/plugins/toolkit
+
+# Use it — same commands as Claude Code
+copilot -i "/team Build a REST API for user management"
+```
+
+### Copilot CLI Models
+
+Copilot CLI supports multiple model families. Set your preferred model:
+
+```bash
+# Inside a Copilot session
+/model claude-sonnet-4.6
+/model gpt-5.2-codex
+/model gemini-3-pro-preview
+```
+
+### Copilot-Specific Features
+
+When running the toolkit inside Copilot CLI, you also get access to:
+
+- **`.github/copilot-instructions.md`** — repository-scoped team coding standards
+- **Compliance hooks** — pre/post execution policy validation (`.github/hooks/` or `~/.copilot/hooks/`)
+- **GitHub MCP server** — built-in access to GitHub APIs (PRs, Issues, Actions, code search)
+- **Autopilot mode** — `copilot --autopilot -p "task"` for fully autonomous execution
+
+For more information:
+- [GitHub Copilot overview](https://docs.github.com/en/copilot)
+- [Copilot CLI best practices](https://docs.github.com/en/copilot/how-tos/copilot-cli/cli-best-practices)
+- [Copilot CLI plugin reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-plugin-reference)
+- [Custom agents configuration](https://docs.github.com/en/copilot/reference/custom-agents-configuration)
 
 ---
 
@@ -248,8 +323,8 @@ agent-memory code-refs 42
 
 ## Requirements
 
-### Core
-- Claude Code 2.1+
+### Core (at least one AI CLI required)
+- Claude Code 2.1+ **and/or** GitHub Copilot CLI 0.0.400+
 - Python 3.8+ (for `/handbook` and `/setup` scripts)
 - Node.js 20+ (for the `agent-viewer` CLI)
 

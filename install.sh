@@ -7,7 +7,7 @@ set -e
 
 # Repository configuration
 REPO_URL="https://github.com/ruizrica/toolkit"
-TOOLKIT_VERSION="1.3.4"
+TOOLKIT_VERSION="1.4.0"
 
 # Installation paths
 BASE_DIR="$HOME/.toolkit"
@@ -169,16 +169,30 @@ check_prerequisites() {
         ((failed++))
     fi
 
-    # Check for Claude Code CLI
-    if ! command -v claude &> /dev/null; then
-        print_error "Claude Code CLI not found (https://claude.ai/code)"
+    # Check for at least one AI CLI (Claude Code or GitHub Copilot)
+    local has_claude=false
+    local has_copilot=false
+    if command -v claude &> /dev/null; then
+        has_claude=true
+    fi
+    if command -v copilot &> /dev/null; then
+        has_copilot=true
+    fi
+    if [[ "$has_claude" != "true" ]] && [[ "$has_copilot" != "true" ]]; then
+        print_error "No AI CLI found. Install at least one:"
+        print_status "  Claude Code: https://claude.ai/code"
+        print_status "  GitHub Copilot: npm install -g @github/copilot"
         ((failed++))
     fi
 
     if (( failed > 0 )); then
         exit 1
     fi
-    echo "✓ Prerequisites: git, python, claude"
+
+    local cli_list="git, python"
+    [[ "$has_claude" == "true" ]] && cli_list="$cli_list, claude"
+    [[ "$has_copilot" == "true" ]] && cli_list="$cli_list, copilot"
+    echo "✓ Prerequisites: $cli_list"
 }
 
 # -----------------------------------------------------------------------------
@@ -208,13 +222,38 @@ register_plugin() {
         return 0
     fi
 
-    claude plugins remove toolkit 2>/dev/null || true
-    local add_output
-    if add_output=$(claude plugins add "$BASE_DIR/plugins/toolkit" 2>&1); then
-        echo "✓ Plugin registered"
-    else
-        print_error "Plugin registration failed: $add_output"
-        print_warning "Manual fix: claude plugins add ~/.toolkit/plugins/toolkit"
+    local registered=false
+
+    # Register with Claude Code if available
+    if command -v claude &> /dev/null; then
+        claude plugins remove toolkit 2>/dev/null || true
+        local add_output
+        if add_output=$(claude plugins add "$BASE_DIR/plugins/toolkit" 2>&1); then
+            echo "✓ Plugin registered with Claude Code"
+            registered=true
+        else
+            print_warning "Claude Code plugin registration failed: $add_output"
+        fi
+    fi
+
+    # Register with GitHub Copilot CLI if available
+    if command -v copilot &> /dev/null; then
+        copilot plugin uninstall toolkit 2>/dev/null || true
+        local copilot_output
+        if copilot_output=$(copilot plugin install "$BASE_DIR/plugins/toolkit" 2>&1); then
+            echo "✓ Plugin registered with GitHub Copilot CLI"
+            registered=true
+        else
+            print_warning "Copilot plugin registration failed: $copilot_output"
+            print_status "  Manual fix: copilot plugin install ~/.toolkit/plugins/toolkit"
+        fi
+    fi
+
+    if [[ "$registered" != "true" ]]; then
+        print_error "Plugin registration failed for all available CLIs"
+        print_warning "Manual fix:"
+        print_status "  claude plugins add ~/.toolkit/plugins/toolkit"
+        print_status "  copilot plugin install ~/.toolkit/plugins/toolkit"
     fi
 }
 
@@ -422,6 +461,7 @@ perform_uninstall() {
     # Remove plugin registration
     print_status "Removing plugin registration..."
     claude plugins remove toolkit 2>/dev/null || true
+    copilot plugin uninstall toolkit 2>/dev/null || true
     echo "✓ Plugin unregistered"
     echo ""
 
@@ -543,9 +583,10 @@ main() {
     echo ""
 
     # Description
-    echo "A Claude Code plugin with commands, agents, and scripts to optimize developer workflows."
-    echo -e "${YELLOW}Commands:${NC} /team /review /haiku /handbook /gherkin /rlm"
-    echo -e "${YELLOW}Agents:${NC} gemini, cursor, codex, qwen, opencode, groq, crush, droid"
+    echo "A plugin for Claude Code and GitHub Copilot CLI with commands, agents, and scripts to optimize developer workflows."
+    echo -e "${YELLOW}Commands:${NC} /team /haiku /handbook /kiro /setup /worktree /save"
+    echo -e "${YELLOW}Agents:${NC} gemini, cursor, codex, droid, opencode"
+    echo -e "${YELLOW}CLIs:${NC} Claude Code (claude) and/or GitHub Copilot (copilot)"
 
     print_section "Installation"
 
@@ -577,7 +618,13 @@ main() {
 
     echo ""
     print_success "Toolkit installed!"
-    echo -e "Run ${YELLOW}claude${NC} then try ${YELLOW}/team \"hello\"${NC}"
+    if command -v claude &> /dev/null && command -v copilot &> /dev/null; then
+        echo -e "Run ${YELLOW}claude${NC} or ${YELLOW}copilot${NC} then try ${YELLOW}/team \"hello\"${NC}"
+    elif command -v copilot &> /dev/null; then
+        echo -e "Run ${YELLOW}copilot${NC} then try ${YELLOW}/team \"hello\"${NC}"
+    else
+        echo -e "Run ${YELLOW}claude${NC} then try ${YELLOW}/team \"hello\"${NC}"
+    fi
 }
 
 main "$@"

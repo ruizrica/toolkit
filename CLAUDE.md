@@ -182,7 +182,7 @@ Use `--json` flag on any command for machine-readable output.
 
 ## Toolkit Orchestration Manifest
 
-This project uses the toolkit plugin. All pieces are designed to interweave — run `/setup` once to install CLIs, seed `HANDBOOK.md`, install git hooks, and write a project-local `CLAUDE.md` with cohesion rules.
+This project uses the toolkit plugin. It works with both **Claude Code** and **GitHub Copilot CLI** — all commands, agents, and skills are cross-compatible. Run `/setup` once to install CLIs, seed `HANDBOOK.md`, install git hooks, and write a project-local `CLAUDE.md` with cohesion rules.
 
 ### Tool inventory
 - **HANDBOOK.md** — AI-optimized multi-layer project reference (git hooks keep it fresh)
